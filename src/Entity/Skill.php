@@ -1,0 +1,68 @@
+<?php
+
+namespace App\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * Skill
+ *
+ * @ORM\Table(name="skill")
+ * @ORM\Entity
+ */
+class Skill
+{
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="id", type="integer", nullable=false)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $id;
+
+    /**
+     * @var string|null
+     *
+     * @ORM\Column(name="skill", type="string", length=45, nullable=true)
+     */
+    private $skill;
+
+    /**
+     * @var bool
+     *
+     * @ORM\Column(name="enabled", type="boolean", nullable=false)
+     */
+    private $enabled;
+
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
+
+    public function getSkill(): ?string
+    {
+        return $this->skill;
+    }
+
+    public function setSkill(?string $skill): self
+    {
+        $this->skill = $skill;
+
+        return $this;
+    }
+
+    public function getEnabled(): ?bool
+    {
+        return $this->enabled;
+    }
+
+    public function setEnabled(bool $enabled): self
+    {
+        $this->enabled = $enabled;
+
+        return $this;
+    }
+
+
+}
