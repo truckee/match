@@ -1,9 +1,7 @@
 <?php
 
 /*
- * This file is part of the Truckee\Match package.
- *
- * (c) George W. Brooks
+ * (c) GWB truckeesolutions@gmail.com
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -13,12 +11,18 @@
 
 namespace App\Controller;
 
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Routing\Annotation\Route;
+
 /**
- * Description of DefaultController
- *
- * @author George Brooks <truckeesolutions@gmail.com>
+ * @Route("/")
  */
-class DefaultController
+class DefaultController extends AbstractController
 {
-    //put your code here
+    /**
+     * @Route("/", name="home")
+     */
+    public function index() {
+        return $this->render('Default/home.html.twig');
+    }
 }
