@@ -23,6 +23,7 @@ class DefaultController extends AbstractController
      * @Route("/", name="home")
      */
     public function index() {
+//        return $this->render('Default/index.html');
         return $this->render('Default/home.html.twig');
     }
 }

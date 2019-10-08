@@ -9,7 +9,24 @@
         {% endblock %}
     </head>
     <body>
-        {% block body %}{% endblock %}
+        <div class="container">
+            <div>
+                
+            </div>
+            {% block nav %}
+                {% include 'Default/mainMenu.html.twig' %}
+            {% endblock nav %}
+            {% for label, messages in app.flashes %}
+                {% for message in messages %}
+                    <div class="alert alert-{{label}}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endfor %}
+            {% block body %}{% endblock %}
+
+        </div>
+
         {% block javascripts %}
             {{ encore_entry_script_tags('app') }}
         {% endblock %}
