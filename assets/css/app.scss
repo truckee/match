@@ -1,2 +1,10 @@
 @import "./jquery-ui.min.css";
 @import "~bootstrap/scss/bootstrap";
+
+.overlay span{
+  position:absolute;
+  top:40%;
+  left:50%;
+  transform:translate(-50%,-40%);
+  color:#fff;
+}
