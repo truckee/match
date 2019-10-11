@@ -1,0 +1,42 @@
+{% extends 'base.html.twig' %}
+{% block body %}
+    <div class="m4">
+        <div class="d-flex justify-content-center p-2" style="font-size: 24px;">
+            Volunteering
+        </div>
+
+        <div class="row">
+            <div class="col-3">"<i>The greatest virtues are those which are most 
+                    useful to other persons.</i>"<br />
+                Aristotle
+            </div>
+            <div class="col-6">
+                Search for an opportunity. Non-profit organizations have listed 
+                many requests for volunteers here. You can look at all of them, 
+                or search by an organization's focus, or search for opportunities 
+                requiring certain skills. When you find something you'd like to 
+                do, please contact the organization directly. Let us know how it 
+                works out.
+            </div>
+            <div class="3">
+                <img src="{{ asset('build/images/vol_crew.jpg') }}" alt="hands on" />
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-3">
+                <img src="{{ asset('build/images/vol_hands.jpg') }}" alt="hands on" />
+            </div>
+            <div class="col-6">
+                Register to be notified of new opportunities - they're coming in 
+                all the time. You'll be asked for an email address where we can 
+                send information about new volunteer opportunities. And we'd 
+                like to know what your focuses are so we can select opportunities 
+                that best match your focuses. That's all we do with the information 
+                you provide.
+            </div>
+
+
+        </div>
+
+    </div>
+{% endblock %}
