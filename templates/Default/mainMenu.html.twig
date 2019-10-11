@@ -3,9 +3,12 @@
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>
-    <a class="navbar-brand" href="#"><img src="{{ asset('build/images/community-foundation-of-western-nevada.png') }}" alt="Community Foundation of Western Nevada"></a>
+    <a class="navbar-brand" href="{{ path('home') }}"><img src="{{ asset('build/images/community-foundation-of-western-nevada.png') }}" alt="Community Foundation of Western Nevada"></a>
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav ml-auto">
+            <li class="nav-item">
+                <a class="nav-link" href="{{ path('home') }}">Home</a>
+            </li>
             <li class="nav-item">
                 <a class="nav-link" href="{{ path('vol_index') }}">Volunteer</a>
             </li>
@@ -19,7 +22,7 @@
                 </div>
             </li>#}
             <li class="nav-item">
-                <a class="nav-link" href="{{ path('home') }}">Nonprofits</a>
+                <a class="nav-link" href="{{ path('nonprofit_index') }}">Nonprofits</a>
             </li>
             {% if is_granted('ROLE_ADMIN') %}
                 <li class="nav-item dropdown">
