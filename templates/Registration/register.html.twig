@@ -1,0 +1,44 @@
+{% extends 'base.html.twig' %}
+
+{% block anon %}
+    {{ form_start(form) }}
+    <div class="card border  w-50 border-info" style="padding: 1rem;">
+        <div class="card-header text-white bg-primary " style="padding: 1rem;">
+            {{ headerText }}
+        </div>
+        <div class="card-body">
+            <div class="row m-1">
+                <div class="col-4 form-inline">
+                    {{ form.vars.value.fname }} {{ form.vars.value.sname }}
+                </div>
+            </div>
+            <div class="row m-1">
+                <div class="col-9 form-inline">
+                    User name: {{ form.vars.value.username }}
+                </div>
+            </div>
+            <div class="row m-1">
+                <div class="col-9 form-inline">
+                    Email: {{ form.vars.value.email }}
+                </div>
+            </div>
+            <div class="row m-1">
+                <div class="col-4 form-inline">
+                    {{ form_row(form.plainPassword.first) }}
+                </div>
+            </div>
+            <div class="row m-1 form-inline">
+                <div class="col-4 form-inline">
+                    {{ form_row(form.plainPassword.second) }}
+                </div>
+            </div>
+            <div class="row m-1">
+                <div class="col-4">
+                    {{ form_row(form._token) }}
+                    <button class="btn btn-info" type="submit">Create!</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    {{ form_end(form) }}
+{% endblock %}

@@ -1,6 +1,5 @@
 #index:
 #    path: /
 #    controller: App\Controller\DefaultController::index
-#controllers:
-#    resource: '../src/Controller/'
-#    type:     annotation
+app_logout:
+    path: /logout

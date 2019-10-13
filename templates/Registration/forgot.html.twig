@@ -1,0 +1,17 @@
+{% extends 'base.html.twig' %}
+{% block anon %}
+    <div class="row">
+        <div class="col-3">
+        </div>
+        <div class="col-6">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    Reset password form
+                </div>
+                <div class="card-body">
+                    {{ form(form) }}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
