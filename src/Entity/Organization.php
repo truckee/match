@@ -12,6 +12,11 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Organization
 {
+    public function __construct() {
+        // organizations must be activated manually
+        $this->temp = true;
+    }
+    
     /**
      * @var int
      *
@@ -85,25 +90,9 @@ class Organization
     private $temp;
 
     /**
-     * @var \DateTime|null
-     *
-     * @ORM\Column(name="add_date", type="datetime", nullable=true)
+     * @ORM\Column(name="add_date", type="datetime")
      */
     private $addDate;
-
-    /**
-     * @var bool|null
-     *
-     * @ORM\Column(name="background", type="boolean", nullable=true)
-     */
-    private $background;
-
-    /**
-     * @var string|null
-     *
-     * @ORM\Column(name="email", type="string", length=255, nullable=true)
-     */
-    private $email;
 
     /**
      * @var int|null
@@ -111,6 +100,11 @@ class Organization
      * @ORM\Column(name="areacode", type="integer", nullable=true)
      */
     private $areacode;
+
+    /**
+     * @ORM\Column(type="string", length=12)
+     */
+    private $ein;
 
     public function getId(): ?int
     {
@@ -230,36 +224,12 @@ class Organization
         return $this->addDate;
     }
 
-    public function setAddDate(?\DateTimeInterface $addDate): self
-    {
-        $this->addDate = $addDate;
-
-        return $this;
-    }
-
-    public function getBackground(): ?bool
-    {
-        return $this->background;
-    }
-
-    public function setBackground(?bool $background): self
-    {
-        $this->background = $background;
-
-        return $this;
-    }
-
-    public function getEmail(): ?string
-    {
-        return $this->email;
-    }
-
-    public function setEmail(?string $email): self
-    {
-        $this->email = $email;
-
-        return $this;
-    }
+//    public function setAddDate(?\DateTimeInterface $addDate): self
+//    {
+//        $this->addDate = $addDate;
+//
+//        return $this;
+//    }
 
     public function getAreacode(): ?int
     {
@@ -269,6 +239,18 @@ class Organization
     public function setAreacode(?int $areacode): self
     {
         $this->areacode = $areacode;
+
+        return $this;
+    }
+
+    public function getEin(): ?string
+    {
+        return $this->ein;
+    }
+
+    public function setEin(string $ein): self
+    {
+        $this->ein = $ein;
 
         return $this;
     }

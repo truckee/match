@@ -87,6 +87,13 @@ class Opportunity
      */
     private $orgid;
 
+    /**
+     * @var bool|null
+     *
+     * @ORM\Column(name="background", type="boolean", nullable=true)
+     */
+    private $background;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -196,6 +203,18 @@ class Opportunity
     public function setOrgid(?Organization $orgid): self
     {
         $this->orgid = $orgid;
+
+        return $this;
+    }
+
+    public function getBackground(): ?bool
+    {
+        return $this->background;
+    }
+
+    public function setBackground(?bool $background): self
+    {
+        $this->background = $background;
 
         return $this;
     }

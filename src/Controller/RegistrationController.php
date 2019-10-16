@@ -12,8 +12,9 @@
 namespace App\Controller;
 
 use App\Entity\User;
-use App\Form\UserEmailType;
-use App\Form\NewUserType;
+//use App\Form\UserEmailType;
+//use App\Form\NewUserType;
+use App\Form\Type\UserType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -138,17 +139,17 @@ class RegistrationController extends AbstractController
             $token = md5(uniqid(rand(), true));
             $expiry = new \DateTime();
             $user->setPasswordExpiresAt($expiry->add(new \DateInterval('PT3H')));
-            
+
             $forgotView = $this->renderView(
                 'Email/forgotten.html.twig',
                 [
                         'fname' => $user->getFname(),
                         'token' => $token,
                         'expiresAt' => $expiry,
-                        ]
-                    )
+                    ]
+            )
             ;
-            
+
             $message = (new \Swift_Message('Project MANA forgotten password'))
                     ->setFrom($sender)
                     ->setTo($email)
@@ -208,7 +209,7 @@ class RegistrationController extends AbstractController
                     'danger',
                     'Password forgotten link has expired'
                 );
-                
+
                 return $this->redirectToRoute('home');
             }
         }
@@ -239,6 +240,30 @@ class RegistrationController extends AbstractController
         return $this->render('Registration/register.html.twig', [
                     'form' => $form->createView(),
                     'headerText' => 'Set new password',
+        ]);
+    }
+
+    /**
+     * @Route("/volunteer", name="register_vol")
+     */
+    public function registerVolunteer(Request $request)
+    {
+        $form = $this->createForm(UserType::class, null, ['is_volunteer' => true]);
+
+        return $this->render('User/testRegister.html.twig', [
+                    'form' => $form->createView()
+        ]);
+    }
+
+    /**
+     * @Route("/organization", name="register_vol")
+     */
+    public function registerOrganiztion(Request $request)
+    {
+        $form = $this->createForm(UserType::class, null, ['is_staff' => true]);
+
+        return $this->render('User/testRegister.html.twig', [
+                    'form' => $form->createView()
         ]);
     }
 }
