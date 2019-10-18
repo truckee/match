@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -9,6 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
  *
  * @ORM\Table(name="focus")
  * @ORM\Entity
+ * @UniqueEntity("focus", message="Focus has already been used")
  */
 class Focus
 {
@@ -34,6 +36,11 @@ class Focus
      * @ORM\Column(name="enabled", type="boolean", nullable=false)
      */
     private $enabled;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="Organization", mappedBy="focuses")
+     */
+    protected $organizations;
 
     public function getId(): ?int
     {

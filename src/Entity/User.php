@@ -20,9 +20,13 @@ use Symfony\Component\Security\Core\User\UserInterface;
  * @ORM\Table(name="usertable")
  * @ORM\Entity
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
+ * @ORM\InheritanceType("JOINED")
+ * @ORM\DiscriminatorColumn(name="type", type="string")
+ * @ORM\DiscriminatorMap({"staff" = "Staff", "volunteer" = "Volunteer", "admin"="Admin"})
+ * @UniqueEntity(fields = "username", message="Username already registered")
  * @UniqueEntity(fields="email", message="Email already registered")
  */
-class User implements UserInterface
+abstract class User implements UserInterface
 {
 
     /**
@@ -62,7 +66,6 @@ class User implements UserInterface
      */
     private $sname;
 
-    // BEGIN legacy field names retained for backwards compatibility
     /**
      * @ORM\Column(type="string", nullable=false)
      */
@@ -83,47 +86,36 @@ class User implements UserInterface
      */
     private $passwordExpiresAt;
 
-//    /**
-//     * @ORM\Column(type="string", nullable=true)
-//     */
-//    private $salt;
+    protected $staff;
 
-    // END legacy field names
-
-    public function getId(): ?int
-    {
+    public function getId(): ?int {
         return $this->id;
     }
 
-    public function getEmail(): ?string
-    {
+    public function getEmail(): ?string {
         return $this->email;
     }
 
-    public function setEmail(?string $email): self
-    {
+    public function setEmail(?string $email): self {
         $this->email = $email;
 
         return $this;
     }
 
-    public function getUsername()
-    {
+    public function getUsername() {
         return $this->username;
     }
 
-    public function setUsername($username)
-    {
+    public function setUsername($username) {
         $this->username = $username;
-        
+
         return $this;
     }
 
     /**
      * @see UserInterface
      */
-    public function getRoles(): array
-    {
+    public function getRoles(): array {
         $roles = $this->roles;
         // guarantee every user at least has ROLE_USER
         $roles[] = 'ROLE_USER';
@@ -131,8 +123,7 @@ class User implements UserInterface
         return array_unique($roles);
     }
 
-    public function setRoles(array $roles): self
-    {
+    public function setRoles(array $roles): self {
         $this->roles = $roles;
 
         return $this;
@@ -141,13 +132,11 @@ class User implements UserInterface
     /**
      * @see UserInterface
      */
-    public function getPassword(): string
-    {
+    public function getPassword(): string {
         return (string) $this->password;
     }
 
-    public function setPassword(string $password): self
-    {
+    public function setPassword(string $password): self {
         $this->password = $password;
 
         return $this;
@@ -158,13 +147,11 @@ class User implements UserInterface
      *
      * @return string
      */
-    public function getSname()
-    {
+    public function getSname() {
         return $this->sname;
     }
 
-    public function setSname(?string $sname): self
-    {
+    public function setSname(?string $sname): self {
         $this->sname = $sname;
 
         return $this;
@@ -175,25 +162,21 @@ class User implements UserInterface
      *
      * @return string
      */
-    public function getFname()
-    {
+    public function getFname() {
         return $this->fname;
     }
 
-    public function setFname(?string $fname): self
-    {
+    public function setFname(?string $fname): self {
         $this->fname = $fname;
 
         return $this;
     }
 
-    public function hasRoleAdmin()
-    {
+    public function hasRoleAdmin() {
         return (in_array('ROLE_ADMIN', $this->getRoles())) ? 'Yes' : 'No';
     }
 
-    public function setHasRoleAdmin($isAdmin)
-    {
+    public function setHasRoleAdmin($isAdmin) {
         $roles = $this->getRoles();
         if ('Yes' === $isAdmin && 'No' === $this->hasRoleAdmin()) {
             $roles[] = 'ROLE_ADMIN';
@@ -204,69 +187,64 @@ class User implements UserInterface
         }
         $this->setRoles(array_values($roles));
     }
-    
+
     /**
      *  @ORM\Column(type="boolean")
      */
     private $enabled;
 
-    public function setEnabled($boolean)
-    {
+    public function setEnabled($boolean) {
         $this->enabled = (bool) $boolean;
 
         return $this;
     }
 
-    public function isEnabled()
-    {
+    public function isEnabled() {
         return $this->enabled;
     }
 
-    public function getConfirmationToken()
-    {
+    public function getConfirmationToken() {
         return $this->confirmationToken;
     }
 
-    public function getpasswordExpiresAt()
-    {
+    public function getpasswordExpiresAt() {
         return $this->passwordExpiresAt;
     }
 
-    public function setConfirmationToken($confirmationToken)
-    {
+    public function setConfirmationToken($confirmationToken) {
         $this->confirmationToken = $confirmationToken;
 
         return $this;
     }
 
-    public function setPasswordExpiresAt(\DateTime $date = null)
-    {
+    public function setPasswordExpiresAt(\DateTime $date = null) {
         $this->passwordExpiresAt = $date;
 
         return $this;
     }
-    
+
     /**
      * Used only on successful authentication
      */
     public function setLastLogin($time) {
         //set time to now()
         $this->lastLogin = $time;
-        
+
         return $this;
     }
-    
+
     public function getLastLogin() {
         return $this->lastLogin;
     }
- 
+
     // required by interface, otherwise irrelevant
-    
-    public function eraseCredentials()
-    {
+
+    public function eraseCredentials() {
+        
     }
 
-    public function getSalt()
-    {
+    public function getSalt() {
+        
     }
+
 }

@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -9,6 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
  *
  * @ORM\Table(name="skill")
  * @ORM\Entity
+ * @UniqueEntity("skill", message="Skill has already been used")
  */
 class Skill
 {
@@ -34,6 +36,13 @@ class Skill
      * @ORM\Column(name="enabled", type="boolean", nullable=false)
      */
     private $enabled;
+    
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     *
+     * @ORM\ManyToMany(targetEntity="Opportunity", mappedBy="skills")
+     */
+    protected $opportunities;
 
     public function getId(): ?int
     {

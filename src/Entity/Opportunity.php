@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Entity\Skill;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -93,6 +94,15 @@ class Opportunity
      * @ORM\Column(name="background", type="boolean", nullable=true)
      */
     private $background;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="Skill", inversedBy="opportunities", cascade={"persist"})
+     * @ORM\JoinTable(name="opp_skill",
+     *      joinColumns={@ORM\JoinColumn(name="oppId", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="skillId", referencedColumnName="id")}
+     *      ))
+     */
+    protected $skills;
 
     public function getId(): ?int
     {
@@ -217,6 +227,38 @@ class Opportunity
         $this->background = $background;
 
         return $this;
+    }
+
+    /**
+     * Add skills.
+     *
+     * @return Opportunity
+     */
+    public function addSkill(Skill $skill)
+    {
+        $this->skills[] = $skill;
+
+        return $this;
+    }
+
+    /**
+     * Remove skills.
+     *
+     * @param Skill $skills
+     */
+    public function removeSkill(Skill $skill)
+    {
+        $this->skills->removeElement($skill);
+    }
+
+    /**
+     * Get skills.
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getSkills()
+    {
+        return $this->skills;
     }
 
 
