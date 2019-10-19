@@ -158,6 +158,4 @@ class AdminOutbox
 
         return $this;
     }
-
-
 }

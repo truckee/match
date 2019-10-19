@@ -88,25 +88,30 @@ abstract class User implements UserInterface
 
     protected $staff;
 
-    public function getId(): ?int {
+    public function getId(): ?int
+    {
         return $this->id;
     }
 
-    public function getEmail(): ?string {
+    public function getEmail(): ?string
+    {
         return $this->email;
     }
 
-    public function setEmail(?string $email): self {
+    public function setEmail(?string $email): self
+    {
         $this->email = $email;
 
         return $this;
     }
 
-    public function getUsername() {
+    public function getUsername()
+    {
         return $this->username;
     }
 
-    public function setUsername($username) {
+    public function setUsername($username)
+    {
         $this->username = $username;
 
         return $this;
@@ -115,7 +120,8 @@ abstract class User implements UserInterface
     /**
      * @see UserInterface
      */
-    public function getRoles(): array {
+    public function getRoles(): array
+    {
         $roles = $this->roles;
         // guarantee every user at least has ROLE_USER
         $roles[] = 'ROLE_USER';
@@ -123,7 +129,8 @@ abstract class User implements UserInterface
         return array_unique($roles);
     }
 
-    public function setRoles(array $roles): self {
+    public function setRoles(array $roles): self
+    {
         $this->roles = $roles;
 
         return $this;
@@ -132,11 +139,13 @@ abstract class User implements UserInterface
     /**
      * @see UserInterface
      */
-    public function getPassword(): string {
+    public function getPassword(): string
+    {
         return (string) $this->password;
     }
 
-    public function setPassword(string $password): self {
+    public function setPassword(string $password): self
+    {
         $this->password = $password;
 
         return $this;
@@ -147,11 +156,13 @@ abstract class User implements UserInterface
      *
      * @return string
      */
-    public function getSname() {
+    public function getSname()
+    {
         return $this->sname;
     }
 
-    public function setSname(?string $sname): self {
+    public function setSname(?string $sname): self
+    {
         $this->sname = $sname;
 
         return $this;
@@ -162,21 +173,25 @@ abstract class User implements UserInterface
      *
      * @return string
      */
-    public function getFname() {
+    public function getFname()
+    {
         return $this->fname;
     }
 
-    public function setFname(?string $fname): self {
+    public function setFname(?string $fname): self
+    {
         $this->fname = $fname;
 
         return $this;
     }
 
-    public function hasRoleAdmin() {
+    public function hasRoleAdmin()
+    {
         return (in_array('ROLE_ADMIN', $this->getRoles())) ? 'Yes' : 'No';
     }
 
-    public function setHasRoleAdmin($isAdmin) {
+    public function setHasRoleAdmin($isAdmin)
+    {
         $roles = $this->getRoles();
         if ('Yes' === $isAdmin && 'No' === $this->hasRoleAdmin()) {
             $roles[] = 'ROLE_ADMIN';
@@ -193,31 +208,37 @@ abstract class User implements UserInterface
      */
     private $enabled;
 
-    public function setEnabled($boolean) {
+    public function setEnabled($boolean)
+    {
         $this->enabled = (bool) $boolean;
 
         return $this;
     }
 
-    public function isEnabled() {
+    public function isEnabled()
+    {
         return $this->enabled;
     }
 
-    public function getConfirmationToken() {
+    public function getConfirmationToken()
+    {
         return $this->confirmationToken;
     }
 
-    public function getpasswordExpiresAt() {
+    public function getpasswordExpiresAt()
+    {
         return $this->passwordExpiresAt;
     }
 
-    public function setConfirmationToken($confirmationToken) {
+    public function setConfirmationToken($confirmationToken)
+    {
         $this->confirmationToken = $confirmationToken;
 
         return $this;
     }
 
-    public function setPasswordExpiresAt(\DateTime $date = null) {
+    public function setPasswordExpiresAt(\DateTime $date = null)
+    {
         $this->passwordExpiresAt = $date;
 
         return $this;
@@ -226,25 +247,26 @@ abstract class User implements UserInterface
     /**
      * Used only on successful authentication
      */
-    public function setLastLogin($time) {
+    public function setLastLogin($time)
+    {
         //set time to now()
         $this->lastLogin = $time;
 
         return $this;
     }
 
-    public function getLastLogin() {
+    public function getLastLogin()
+    {
         return $this->lastLogin;
     }
 
     // required by interface, otherwise irrelevant
 
-    public function eraseCredentials() {
-        
+    public function eraseCredentials()
+    {
     }
 
-    public function getSalt() {
-        
+    public function getSalt()
+    {
     }
-
 }

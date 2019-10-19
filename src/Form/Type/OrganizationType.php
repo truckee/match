@@ -19,8 +19,8 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class OrganizationType extends AbstractType
 {
-
-    public function buildForm(FormBuilderInterface $builder, array $options) {
+    public function buildForm(FormBuilderInterface $builder, array $options)
+    {
         $builder
                 ->add('orgname')
                 ->add('ein')
@@ -39,10 +39,10 @@ class OrganizationType extends AbstractType
         ;
     }
 
-    public function configureOptions(OptionsResolver $resolver) {
+    public function configureOptions(OptionsResolver $resolver)
+    {
         $resolver->setDefaults([
             'data_class' => Organization::class,
         ]);
     }
-
 }

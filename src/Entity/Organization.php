@@ -13,8 +13,8 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Organization
 {
-
-    public function __construct() {
+    public function __construct()
+    {
         // organizations must be activated manually
         $this->temp = true;
     }
@@ -123,101 +123,121 @@ class Organization
      */
     protected $focuses;
 
-    public function getId(): ?int {
+    public function getId(): ?int
+    {
         return $this->id;
     }
 
-    public function getOrgname(): ?string {
+    public function getOrgname(): ?string
+    {
         return $this->orgname;
     }
 
-    public function setOrgname(?string $orgname): self {
+    public function setOrgname(?string $orgname): self
+    {
         $this->orgname = $orgname;
 
         return $this;
     }
 
-    public function getAddress(): ?string {
+    public function getAddress(): ?string
+    {
         return $this->address;
     }
 
-    public function setAddress(?string $address): self {
+    public function setAddress(?string $address): self
+    {
         $this->address = $address;
 
         return $this;
     }
 
-    public function getCity(): ?string {
+    public function getCity(): ?string
+    {
         return $this->city;
     }
 
-    public function setCity(?string $city): self {
+    public function setCity(?string $city): self
+    {
         $this->city = $city;
 
         return $this;
     }
 
-    public function getState(): ?string {
+    public function getState(): ?string
+    {
         return $this->state;
     }
 
-    public function setState(?string $state): self {
+    public function setState(?string $state): self
+    {
         $this->state = $state;
 
         return $this;
     }
 
-    public function getZip(): ?string {
+    public function getZip(): ?string
+    {
         return $this->zip;
     }
 
-    public function setZip(?string $zip): self {
+    public function setZip(?string $zip): self
+    {
         $this->zip = $zip;
 
         return $this;
     }
 
-    public function getPhone(): ?string {
+    public function getPhone(): ?string
+    {
         return $this->phone;
     }
 
-    public function setPhone(?string $phone): self {
+    public function setPhone(?string $phone): self
+    {
         $this->phone = $phone;
 
         return $this;
     }
 
-    public function getWebsite(): ?string {
+    public function getWebsite(): ?string
+    {
         return $this->website;
     }
 
-    public function setWebsite(?string $website): self {
+    public function setWebsite(?string $website): self
+    {
         $this->website = $website;
 
         return $this;
     }
 
-    public function getActive(): ?bool {
+    public function getActive(): ?bool
+    {
         return $this->active;
     }
 
-    public function setActive(?bool $active): self {
+    public function setActive(?bool $active): self
+    {
         $this->active = $active;
 
         return $this;
     }
 
-    public function getTemp(): ?bool {
+    public function getTemp(): ?bool
+    {
         return $this->temp;
     }
 
-    public function setTemp(bool $temp): self {
+    public function setTemp(bool $temp): self
+    {
         $this->temp = $temp;
 
         return $this;
     }
 
-    public function getAddDate(): ?\DateTimeInterface {
+    public function getAddDate(): ?\DateTimeInterface
+    {
         return $this->addDate;
     }
 
@@ -255,24 +275,27 @@ class Organization
         return $this->focuses;
     }
 
-    public function getAreacode(): ?int {
+    public function getAreacode(): ?int
+    {
         return $this->areacode;
     }
 
-    public function setAreacode(?int $areacode): self {
+    public function setAreacode(?int $areacode): self
+    {
         $this->areacode = $areacode;
 
         return $this;
     }
 
-    public function getEin(): ?string {
+    public function getEin(): ?string
+    {
         return $this->ein;
     }
 
-    public function setEin(string $ein): self {
+    public function setEin(string $ein): self
+    {
         $this->ein = $ein;
 
         return $this;
     }
-
 }

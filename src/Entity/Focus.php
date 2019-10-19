@@ -70,6 +70,4 @@ class Focus
 
         return $this;
     }
-
-
 }

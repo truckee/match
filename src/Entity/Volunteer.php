@@ -23,8 +23,9 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ORM\Table(name="volunteer")
  */
 class Volunteer extends User
-{   
-    public function __construct() {
+{
+    public function __construct()
+    {
         $this->addRole('ROLE_VOLUNTEER');
     }
     
@@ -148,5 +149,4 @@ class Volunteer extends User
     {
         return $this->skills;
     }
-    
 }

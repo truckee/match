@@ -22,7 +22,8 @@ class NonprofitController extends AbstractController
     /**
      * @Route("/", name="nonprofit_index")
      */
-    public function index() {
+    public function index()
+    {
         return $this->render('Nonprofit/index.html.twig');
     }
 }

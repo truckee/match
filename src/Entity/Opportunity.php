@@ -260,6 +260,4 @@ class Opportunity
     {
         return $this->skills;
     }
-
-
 }

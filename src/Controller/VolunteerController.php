@@ -22,7 +22,8 @@ class VolunteerController extends AbstractController
     /**
      * @Route("/", name="vol_index")
      */
-    public function index() {
+    public function index()
+    {
         return $this->render('Volunteer/index.html.twig');
     }
 }

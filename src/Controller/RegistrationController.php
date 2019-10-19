@@ -25,7 +25,7 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
  */
 class RegistrationController extends AbstractController
 {
-//  Note that User cannot be instantiated as it is now an abstract class!!!
+    //  Note that User cannot be instantiated as it is now an abstract class!!!
 //    /**
 //     * @Route("/invite/{token}", name="complete_registration")
 //     */
@@ -220,9 +220,9 @@ class RegistrationController extends AbstractController
             // 3) Encode the password (you could also do this via Doctrine listener)
             $user->setPassword(
                 $passwordEncoder->encodePassword(
-                        $user,
-                        $form->get('plainPassword')->getData()
-                    )
+                    $user,
+                    $form->get('plainPassword')->getData()
+                )
             );
             $em->persist($user);
             $em->flush();

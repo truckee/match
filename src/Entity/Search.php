@@ -151,6 +151,4 @@ class Search
 
         return $this;
     }
-
-
 }
