@@ -74,7 +74,10 @@ class LoginFormAuthenticator extends AbstractFormLoginAuthenticator
         $user = $this->entityManager->getRepository(User::class)->loadUserByUsername($credentials['username']);
         if (!$user) {
             // fail authentication with a custom error
-            throw new CustomUserMessageAuthenticationException('Email could not be found.');
+            throw new CustomUserMessageAuthenticationException('Credentials could not be found.');
+        }
+        if ($user->hasRole('role_staff') && $user->getOrganization()->getTemp()) {
+            throw new CustomUserMessageAuthenticationException('Organization has not yet been activated');
         }
 
         return $user;
