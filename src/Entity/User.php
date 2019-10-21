@@ -185,6 +185,10 @@ abstract class User implements UserInterface
         return $this;
     }
 
+    public function hasRole($role) {
+        return in_array(strtoupper($role), $this->roles);
+    }
+    
     public function hasRoleAdmin()
     {
         return (in_array('ROLE_ADMIN', $this->getRoles())) ? 'Yes' : 'No';

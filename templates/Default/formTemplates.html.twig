@@ -1,0 +1,21 @@
+{% extends 'base.html.twig' %}
+{% block body %}
+    <div class="bg-aqua text-center text-uppercase" style="font-size: 18px;">
+        <b>{{ headerText }}</b>
+    </div>
+    {{ form_start(form) }}
+
+    <div class="row">
+        {% for template in templates %}
+            <div class="col-4">
+                {% include template %}
+            </div>
+        {% endfor %}
+    </div>
+<div class="row">
+    <div class="col-4">
+        {{ form_row(form._token) }}
+        <div><input class="btn-sm btn-info" type="submit" name="submit" value="Submit"></div>
+    </div>
+</div>        
+{% endblock %}

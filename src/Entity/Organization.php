@@ -245,7 +245,7 @@ class Organization
     /**
      * Add focuses.
      *
-     * @param \Truckee\MatchBundle\Entity\Focus $focuses
+     * @param Focus $focuses
      *
      * @return Organization
      */

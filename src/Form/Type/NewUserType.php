@@ -7,7 +7,7 @@
  * file that was distributed with this source code.
  */
 
-//src/Form/Type/UserType.php
+//src/Form/Type/NewUserType.php
 
 namespace App\Form\Type;
 
@@ -18,11 +18,10 @@ use App\Entity\User;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
-//use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class UserType extends AbstractType
+class NewUserType extends AbstractType
 {
 
     public function buildForm(FormBuilderInterface $builder, array $options) {
@@ -56,21 +55,16 @@ class UserType extends AbstractType
                         'label_attr' => ['class' => 'mr-2']
                     ],
                 ))
-//            ->add('roles')
-//            ->add('lastLogin')
-//            ->add('confirmationToken')
-//            ->add('passwordExpiresAt')
-//            ->add('enabled')
         ;
         if (true === $options['is_volunteer']) {
             $builder
                     ->add('focuses', FocusesType::class)
                     ->add('skills', SkillsType::class)
             ;
-        }
+    }
         if (true === $options['is_staff']) {
             $builder
-                    ->add('organization', OrganizationType::class)
+//                    ->add('organization', OrganizationType::class)
                     ->add('focuses', FocusesType::class)
             ;
         }

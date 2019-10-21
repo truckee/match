@@ -11,10 +11,13 @@
 
 namespace App\Controller;
 
-use App\Entity\User;
-//use App\Form\UserEmailType;
+//use App\Entity\Staff;
+//use App\Entity\User;
+//use App\Entity\Organization;
+use App\Form\Type\OrganizationType;
 //use App\Form\NewUserType;
-use App\Form\Type\UserType;
+use App\Form\Type\NewUserType;
+//use App\Form\Type\StaffType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -109,8 +112,7 @@ class RegistrationController extends AbstractController
      *
      * @Route("/forgot", name="register_forgot")
      */
-    public function forgotPassword(Request $request, \Swift_Mailer $mailer)
-    {
+    public function forgotPassword(Request $request, \Swift_Mailer $mailer) {
         $form = $this->createForm(UserEmailType::class);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
@@ -119,8 +121,8 @@ class RegistrationController extends AbstractController
             $sender = $this->getParameter('swiftmailer.sender_address');
             $user = $em->getRepository('App:User')->findOneBy(['email' => $email]);
             $this->addFlash(
-                'success',
-                'Email sent to address provided'
+                    'success',
+                    'Email sent to address provided'
             );
 
             // if nonUser
@@ -141,13 +143,13 @@ class RegistrationController extends AbstractController
             $user->setPasswordExpiresAt($expiry->add(new \DateInterval('PT3H')));
 
             $forgotView = $this->renderView(
-                'Email/forgotten.html.twig',
-                [
+                    'Email/forgotten.html.twig',
+                    [
                         'fname' => $user->getFname(),
                         'token' => $token,
                         'expiresAt' => $expiry,
                     ]
-            )
+                    )
             ;
 
             $message = (new \Swift_Message('Project MANA forgotten password'))
@@ -174,8 +176,7 @@ class RegistrationController extends AbstractController
     /**
      * @Route("/reset/{token}", name="reset_password")
      */
-    public function resetPassword(Request $request, UserPasswordEncoderInterface $passwordEncoder, $token = null)
-    {
+    public function resetPassword(Request $request, UserPasswordEncoderInterface $passwordEncoder, $token = null) {
         // for when either a logged in user or an unknown person: no token
         $em = $this->getDoctrine()->getManager();
         // make sure we're working with a logged in user
@@ -183,8 +184,8 @@ class RegistrationController extends AbstractController
             $user = $this->getUser();
             if (null === $user) {
                 $this->addFlash(
-                    'danger',
-                    'User not found'
+                        'danger',
+                        'User not found'
                 );
 
                 return $this->redirectToRoute('home');
@@ -194,8 +195,8 @@ class RegistrationController extends AbstractController
             $person = $em->getRepository('App:User')->findOneBy(['confirmationToken' => $token]);
             if (null === $person) {
                 $this->addFlash(
-                    'danger',
-                    'User not found'
+                        'danger',
+                        'User not found'
                 );
 
                 return $this->redirectToRoute('home');
@@ -206,8 +207,8 @@ class RegistrationController extends AbstractController
             // has token expired?
             if ($now > $expiresAt) {
                 $this->addFlash(
-                    'danger',
-                    'Password forgotten link has expired'
+                        'danger',
+                        'Password forgotten link has expired'
                 );
 
                 return $this->redirectToRoute('home');
@@ -219,10 +220,10 @@ class RegistrationController extends AbstractController
 
             // 3) Encode the password (you could also do this via Doctrine listener)
             $user->setPassword(
-                $passwordEncoder->encodePassword(
-                    $user,
-                    $form->get('plainPassword')->getData()
-                )
+                    $passwordEncoder->encodePassword(
+                            $user,
+                            $form->get('plainPassword')->getData()
+                    )
             );
             $em->persist($user);
             $em->flush();
@@ -230,8 +231,8 @@ class RegistrationController extends AbstractController
             // ... do any other work - like sending them an email, etc
             // maybe set a "flash" success message for the user
             $this->addFlash(
-                'success',
-                'Your password has been updated'
+                    'success',
+                    'Your password has been updated'
             );
 
             return $this->redirectToRoute('home');
@@ -246,24 +247,45 @@ class RegistrationController extends AbstractController
     /**
      * @Route("/volunteer", name="register_volunteer")
      */
-    public function registerVolunteer(Request $request)
-    {
-        $form = $this->createForm(UserType::class, null, ['is_volunteer' => true]);
+    public function registerVolunteer(Request $request) {
+        $form = $this->createForm(NewUserType::class, null, ['is_volunteer' => true]);
+        $templates = [
+            'Registration/new_user.html.twig',
+            'Registration/focuses.html.twig',
+            'Registration/skills.html.twig',
+        ];
 
-        return $this->render('User/testRegister.html.twig', [
-                    'form' => $form->createView()
+        return $this->render('Default/formTemplates.html.twig', [
+                    'form' => $form->createView(),
+                    'headerText' => 'Become a volunteer',
+                    'userHeader' => 'Volunteer',
+                    'focusHeader' => "Volunteer's Focus(es)",
+                    'skillHeader' => "Volunteer's Skill(s)",
+                    'templates' => $templates,
         ]);
     }
 
     /**
-     * @Route("/organization", name="register_vol")
+     * @Route("/organization", name="register_org")
      */
-    public function registerOrganiztion(Request $request)
-    {
-        $form = $this->createForm(UserType::class, null, ['is_staff' => true]);
+    public function registerOrganiztion(Request $request) {
+        $form = $this->createForm(NewUserType::class, null, ['is_staff' => true]);
+        $formOrg = $this->createForm(OrganizationType::class);
+        $templates = [
+            'Registration/new_user.html.twig',
+            'Registration/organization.html.twig',
+            'Registration/focuses.html.twig',
+        ];
 
-        return $this->render('User/testRegister.html.twig', [
-                    'form' => $form->createView()
+        return $this->render('Default/formTemplates.html.twig', [
+                    'form' => $form->createView(),
+                    'formOrg' => $formOrg->createView(),
+                    'headerText' => 'Add an organization',
+                    'userHeader' => 'Staff Member',
+                    'orgHeader' => 'Organization',
+                    'focusHeader' => "Organization's Focus",
+                    'templates' => $templates,
         ]);
     }
+
 }

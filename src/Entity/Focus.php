@@ -42,6 +42,11 @@ class Focus
      */
     protected $organizations;
 
+    /**
+     * @ORM\ManyToMany(targetEntity="Volunteer", mappedBy="focuses")
+     */
+    protected $volunteers;
+
     public function getId(): ?int
     {
         return $this->id;

@@ -12,7 +12,8 @@
 namespace App\Form\Type;
 
 use App\Entity\Organization;
-use App\Form\Type\FocusesType;
+//use App\Entity\Staff;
+use App\Form\Type\NewUserType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -22,16 +23,53 @@ class OrganizationType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-                ->add('orgname')
-                ->add('ein')
-                ->add('address')
-                ->add('city')
-                ->add('state')
-                ->add('zip')
-                ->add('areacode')
-                ->add('phone')
-                ->add('website')
-                ->add('focuses', FocusesType::class)
+                ->add('orgname', null, [
+                    'attr' => ['class' => 'mb-2'],
+                    'label' => 'Organization',
+                    'label_attr' => ['class' => 'mr-2']
+                ])
+                ->add('ein', null, [
+                    'attr' => ['class' => 'mb-2'],
+                    'label' => 'EIN',
+                    'label_attr' => ['class' => 'mr-2']
+                ])
+                ->add('address', null, [
+                    'attr' => ['class' => 'mb-2'],
+                    'label' => 'Address',
+                    'label_attr' => ['class' => 'mr-2']
+                ])
+                ->add('city', null, [
+                    'attr' => ['class' => 'mb-2'],
+                    'label' => 'City',
+                    'label_attr' => ['class' => 'mr-2']
+                ])
+                ->add('state', null, [
+                    'attr' => ['class' => 'mb-2'],
+                    'data' => 'NV',
+                    'label' => 'State',
+                    'label_attr' => ['class' => 'mr-2']
+                ])
+                ->add('zip', null, [
+                    'attr' => ['class' => 'mb-2'],
+                    'label' => 'Zip',
+                    'label_attr' => ['class' => 'mr-2']
+                ])
+                ->add('area_code', null, [
+                    'attr' => ['class' => 'mb-2'],
+                    'label' => 'Area code',
+                    'label_attr' => ['class' => 'mr-2']
+                ])
+                ->add('phone', null, [
+                    'attr' => ['class' => 'mb-2'],
+                    'label' => 'Phone',
+                    'label_attr' => ['class' => 'mr-2']
+                ])
+                ->add('website', null, [
+                    'attr' => ['class' => 'mb-2'],
+                    'label' => 'Web site',
+                    'label_attr' => ['class' => 'mr-2']
+                ])
+//                ->add('focuses', FocusesType::class)
 //            ->add('active')
 //            ->add('temp')
 //            ->add('addDate')

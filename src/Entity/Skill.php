@@ -44,6 +44,11 @@ class Skill
      */
     protected $opportunities;
 
+    /**
+     * @ORM\ManyToMany(targetEntity="Volunteer", mappedBy="skills")
+     */
+    protected $volunteers;
+
     public function getId(): ?int
     {
         return $this->id;
