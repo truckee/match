@@ -11,10 +11,11 @@
 
 namespace App\Form\Type;
 
-use App\Form\Type\FocusesType;
-use App\Form\Type\SkillsType;
-use App\Form\Type\OrganizationType;
-use App\Entity\User;
+use App\Form\Type\Field\FocusFieldType;
+use App\Form\Type\Field\SkillFieldType;
+//use App\Form\Type\OrganizationType;
+use App\Entity\Staff;
+use App\Entity\Volunteer;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
@@ -56,23 +57,23 @@ class NewUserType extends AbstractType
                     ],
                 ))
         ;
-        if (true === $options['is_volunteer']) {
+        if (Volunteer::class === $options['data_class']) {
             $builder
-                    ->add('focuses', FocusesType::class)
-                    ->add('skills', SkillsType::class)
+                    ->add('focuses', FocusFieldType::class)
+                    ->add('skills', SkillFieldType::class)
             ;
     }
-        if (true === $options['is_staff']) {
+        if (Staff::class === $options['data_class']) {
             $builder
 //                    ->add('organization', OrganizationType::class)
-                    ->add('focuses', FocusesType::class)
+                    ->add('focuses', FocusFieldType::class)
             ;
         }
     }
 
     public function configureOptions(OptionsResolver $resolver) {
         $resolver->setDefaults([
-            'data_class' => User::class,
+            'data_class' => null,
             'is_volunteer' => false,
             'is_staff' => false,
         ]);

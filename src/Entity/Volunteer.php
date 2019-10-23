@@ -41,7 +41,6 @@ class Volunteer extends User
      *
      * @param string $receiveEmail
      *
-     * @return Person
      */
     public function setReceiveEmail($receiveEmail)
     {

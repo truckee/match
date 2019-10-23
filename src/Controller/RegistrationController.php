@@ -11,8 +11,8 @@
 
 namespace App\Controller;
 
-//use App\Entity\Staff;
-//use App\Entity\User;
+use App\Entity\Staff;
+use App\Entity\Volunteer;
 //use App\Entity\Organization;
 use App\Form\Type\OrganizationType;
 //use App\Form\NewUserType;
@@ -248,13 +248,17 @@ class RegistrationController extends AbstractController
      * @Route("/volunteer", name="register_volunteer")
      */
     public function registerVolunteer(Request $request) {
-        $form = $this->createForm(NewUserType::class, null, ['is_volunteer' => true]);
+//        $user = new Volunteer();
+        $form = $this->createForm(NewUserType::class, null, ['data_class' => Volunteer::class]);
         $templates = [
             'Registration/new_user.html.twig',
             'Registration/focuses.html.twig',
             'Registration/skills.html.twig',
         ];
-
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            dd($form->getData());
+        }
         return $this->render('Default/formTemplates.html.twig', [
                     'form' => $form->createView(),
                     'headerText' => 'Become a volunteer',
@@ -269,7 +273,7 @@ class RegistrationController extends AbstractController
      * @Route("/organization", name="register_org")
      */
     public function registerOrganiztion(Request $request) {
-        $form = $this->createForm(NewUserType::class, null, ['is_staff' => true]);
+        $form = $this->createForm(NewUserType::class, null, ['data_class' => Staff::class]);
         $formOrg = $this->createForm(OrganizationType::class);
         $templates = [
             'Registration/new_user.html.twig',

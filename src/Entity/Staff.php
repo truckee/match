@@ -2,61 +2,39 @@
 
 namespace App\Entity;
 
+use App\Entity\User as User;
+use App\Entity\Organization;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Staff
  *
- * @ORM\Table(name="staff", indexes={@ORM\Index(name="IDX_426EF3923A8AF33E", columns={"orgId"})})
+ * @ORM\Table(name="staff")
  * @ORM\Entity
  */
-class Staff
+class Staff extends User
 {
-    /**
-     * @var \Organization
-     *
-     * @ORM\ManyToOne(targetEntity="Organization")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="orgId", referencedColumnName="id")
-     * })
-     */
-    private $orgid;
-
-    /**
-     * @var \Person
-     *
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="NONE")
-     * @ORM\OneToOne(targetEntity="Person")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="id", referencedColumnName="id")
-     * })
-     */
-    private $id;
-
-    public function getOrgid(): ?Organization
+    public function __construct()
     {
-        return $this->orgid;
+        $this->addRole('ROLE_STAFF');
+    }
+    
+    /**
+     * @ORM\OneToOne(targetEntity="Organization", mappedBy="staff")
+     */
+    protected $organization;
+
+    public function getOrganization()
+    {
+        return $this->organization;
     }
 
-    public function setOrgid(?Organization $orgid): self
+    public function setOrganization(Organization $organization = null)
     {
-        $this->orgid = $orgid;
+        $this->organization = $organization;
 
         return $this;
     }
-
-    public function getId(): ?Person
-    {
-        return $this->id;
-    }
-
-    public function setId(?Person $id): self
-    {
-        $this->id = $id;
-
-        return $this;
-    }
-
-
 }

@@ -9,7 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
  * Skill
  *
  * @ORM\Table(name="skill")
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="App\Repository\SkillRepository")
  * @UniqueEntity("skill", message="Skill has already been used")
  */
 class Skill

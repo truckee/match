@@ -9,7 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
  * Focus
  *
  * @ORM\Table(name="focus")
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="App\Repository\FocusRepository")
  * @UniqueEntity("focus", message="Focus has already been used")
  */
 class Focus
