@@ -11,8 +11,9 @@
 
 namespace App\Form\Type;
 
+use App\Form\Type\Field\FocusFieldType;
 use App\Entity\Organization;
-//use App\Entity\Staff;
+use App\Entity\Staff;
 use App\Form\Type\NewUserType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -24,56 +25,79 @@ class OrganizationType extends AbstractType
     {
         $builder
                 ->add('orgname', null, [
-                    'attr' => ['class' => 'mb-2'],
-                    'label' => 'Organization',
-                    'label_attr' => ['class' => 'mr-2']
+                    'attr' => [
+                        'class' => 'mb-2',
+                        'size' => '15',
+                    ],
+                    'label' => 'Name: ',
+                    'label_attr' => ['class' => 'mr-2'],
                 ])
                 ->add('ein', null, [
-                    'attr' => ['class' => 'mb-2'],
-                    'label' => 'EIN',
-                    'label_attr' => ['class' => 'mr-2']
+                    'attr' => [
+                        'class' => 'mb-2',
+                        'size' => '15',
+                    ],
+                    'label' => 'EIN: ',
+                    'label_attr' => ['class' => 'mr-2'],
                 ])
                 ->add('address', null, [
-                    'attr' => ['class' => 'mb-2'],
-                    'label' => 'Address',
-                    'label_attr' => ['class' => 'mr-2']
+                    'attr' => [
+                        'class' => 'mb-2',
+                        'size' => '15',
+                    ],
+                    'label' => 'Address: ',
+                    'label_attr' => ['class' => 'mr-2'],
                 ])
                 ->add('city', null, [
-                    'attr' => ['class' => 'mb-2'],
-                    'label' => 'City',
-                    'label_attr' => ['class' => 'mr-2']
+                    'attr' => [
+                        'class' => 'mb-2',
+                        'size' => '15',
+                    ],
+                    'label' => 'City: ',
+                    'label_attr' => ['class' => 'mr-2'],
                 ])
                 ->add('state', null, [
-                    'attr' => ['class' => 'mb-2'],
-                    'data' => 'NV',
-                    'label' => 'State',
-                    'label_attr' => ['class' => 'mr-2']
+                    'attr' => [
+                        'class' => 'mb-2',
+                        'size' => '15',
+                    ],
+                    'label' => 'State: ',
+                    'label_attr' => ['class' => 'mr-2'],
                 ])
                 ->add('zip', null, [
-                    'attr' => ['class' => 'mb-2'],
-                    'label' => 'Zip',
-                    'label_attr' => ['class' => 'mr-2']
+                    'attr' => [
+                        'class' => 'mb-2',
+                        'size' => '15',
+                    ],
+                    'label' => 'Zip: ',
+                    'label_attr' => ['class' => 'mr-2'],
                 ])
                 ->add('area_code', null, [
-                    'attr' => ['class' => 'mb-2'],
-                    'label' => 'Area code',
-                    'label_attr' => ['class' => 'mr-2']
+                    'attr' => [
+                        'class' => 'mb-2',
+                        'size' => '15',
+                    ],
+                    'label' => 'Area code: ',
+                    'label_attr' => ['class' => 'mr-2'],
                 ])
                 ->add('phone', null, [
-                    'attr' => ['class' => 'mb-2'],
-                    'label' => 'Phone',
-                    'label_attr' => ['class' => 'mr-2']
+                    'attr' => [
+                        'class' => 'mb-2',
+                        'size' => '15',
+                    ],
+                    'label' => 'Phone: ',
+                    'label_attr' => ['class' => 'mr-2'],
                 ])
                 ->add('website', null, [
-                    'attr' => ['class' => 'mb-2'],
-                    'label' => 'Web site',
-                    'label_attr' => ['class' => 'mr-2']
+                    'attr' => [
+                        'class' => 'mb-2',
+                        'size' => '15',
+                    ],
+                    'label' => 'Web site: ',
+                    'label_attr' => ['class' => 'mr-2'],
                 ])
-//                ->add('focuses', FocusesType::class)
-//            ->add('active')
-//            ->add('temp')
-//            ->add('addDate')
-//            ->add('email')
+                ->add('focuses', FocusFieldType::class)
+                ->add('staff', NewUserType::class)
         ;
     }
 
@@ -81,6 +105,12 @@ class OrganizationType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Organization::class,
+            'required' => false,
         ]);
+    }
+
+    public function getBlockPrefix()
+    {
+        return 'org';
     }
 }

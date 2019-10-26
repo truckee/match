@@ -1,0 +1,24 @@
+{%- block form_row -%}
+    <div class="row">
+        <div class="col">
+            {{ form_label(form) }}
+        </div>
+        <div class="col">
+            {{ form_widget(form) }}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            {{ form_errors(form) }}
+        </div>
+    </div>
+{% endblock form_row %}
+{%- block form_errors -%}
+    {%- if errors|length > 0 -%}
+        {%- for error in errors -%}
+            <div style="color: red">
+                {{ error.message }}
+            </div>
+        {%- endfor -%}
+    {%- endif -%}
+{%- endblock form_errors -%}

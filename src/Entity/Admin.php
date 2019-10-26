@@ -18,7 +18,6 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 /**
  * @ORM\Table(name="admin")
  * @ORM\Entity
- * @UniqueEntity(fields = "username", message="Username already registered")
  * @UniqueEntity(fields = "email", message="Email already registered")
  */
 class Admin extends User

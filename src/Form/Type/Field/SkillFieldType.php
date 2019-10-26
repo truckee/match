@@ -17,7 +17,7 @@ use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-
+use Symfony\Component\Validator\Constraints\Count;
 
 /**
  * 
@@ -48,7 +48,8 @@ class SkillFieldType extends AbstractType
                 'choice_label' => 'skill',
                 'expanded' => true,
                 'multiple' => true,
-                'attr' => array('class' => 'list-inline'),
+//                'attr' => array('class' => 'list-inline'),
+                'constraints' => [new Count(['min' => 1, 'minMessage' => 'At least one skill please'])],
                 'query_builder' => function (EntityRepository $er) {
                 return $er->createQueryBuilder('s')
                         ->orderBy('s.skill', 'ASC')
@@ -65,6 +66,6 @@ class SkillFieldType extends AbstractType
     {
         $populated = $this->repo->findAll();
 
-        return (0 === $populated) ? 'Sign in as Admin; add focus critieria' : 'Focus criteria';
+        return (0 === $populated) ? 'Sign in as Admin; add skill options' : 'Skill options';
     }
 }

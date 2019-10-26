@@ -13,11 +13,9 @@ namespace App\Controller;
 
 use App\Entity\Staff;
 use App\Entity\Volunteer;
-//use App\Entity\Organization;
+use App\Entity\Organization;
 use App\Form\Type\OrganizationType;
-//use App\Form\NewUserType;
 use App\Form\Type\NewUserType;
-//use App\Form\Type\StaffType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -248,8 +246,8 @@ class RegistrationController extends AbstractController
      * @Route("/volunteer", name="register_volunteer")
      */
     public function registerVolunteer(Request $request) {
-//        $user = new Volunteer();
-        $form = $this->createForm(NewUserType::class, null, ['data_class' => Volunteer::class]);
+        $user = new Volunteer();
+        $form = $this->createForm(NewUserType::class, $user, ['data_class' => Volunteer::class]);
         $templates = [
             'Registration/new_user.html.twig',
             'Registration/focuses.html.twig',
@@ -257,8 +255,17 @@ class RegistrationController extends AbstractController
         ];
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            dd($form->getData());
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($user);
+            $em->flush();
+            $this->addFlash(
+                    'success',
+                    'A volunteer registration confirmation has been sent to your email address'
+            );
+            
+            return $this->redirectToRoute('home');
         }
+
         return $this->render('Default/formTemplates.html.twig', [
                     'form' => $form->createView(),
                     'headerText' => 'Become a volunteer',
@@ -272,18 +279,45 @@ class RegistrationController extends AbstractController
     /**
      * @Route("/organization", name="register_org")
      */
-    public function registerOrganiztion(Request $request) {
-        $form = $this->createForm(NewUserType::class, null, ['data_class' => Staff::class]);
-        $formOrg = $this->createForm(OrganizationType::class);
+    public function registerOrganiztion(Request $request, UserPasswordEncoderInterface $encoder, $token = null) {
+        $org = new Organization();
+        $form = $this->createForm(OrganizationType::class, $org);
         $templates = [
-            'Registration/new_user.html.twig',
             'Registration/organization.html.twig',
+            'Registration/new_user.html.twig',
             'Registration/focuses.html.twig',
         ];
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $userData = $request->request->get('org')['staff'];
+            $staff = new Staff();
+            $staff->setFname($userData['fname']);
+            $staff->setSname($userData['sname']);
+            $staff->setEmail($userData['email']);
+            $staff->setEnabled(true);
+            $password = $encoder->encodePassword($staff,$userData['plainPassword']['first']);
+//            dd($password);
+            $staff->setPassword($password);
+//                $encoder->encodePassword(
+//                        $staff,
+//                        $userData['plainPassword']['first']
+//                    )
+//            );
+            $org->setStaff($staff);
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($staff);
+            $em->persist($org);
+            $em->flush();
+                $this->addFlash(
+                    'success',
+                    'Organization ' . $org->getOrgname() . 'is created but inactive'
+                );
+            
+            return $this->redirectToRoute('home');
+        }
 
         return $this->render('Default/formTemplates.html.twig', [
                     'form' => $form->createView(),
-                    'formOrg' => $formOrg->createView(),
                     'headerText' => 'Add an organization',
                     'userHeader' => 'Staff Member',
                     'orgHeader' => 'Organization',

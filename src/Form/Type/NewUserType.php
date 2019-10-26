@@ -13,7 +13,6 @@ namespace App\Form\Type;
 
 use App\Form\Type\Field\FocusFieldType;
 use App\Form\Type\Field\SkillFieldType;
-//use App\Form\Type\OrganizationType;
 use App\Entity\Staff;
 use App\Entity\Volunteer;
 use Symfony\Component\Form\AbstractType;
@@ -21,39 +20,61 @@ use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\NotBlank;
 
 class NewUserType extends AbstractType
 {
-
     public function buildForm(FormBuilderInterface $builder, array $options) {
         $builder
-                ->add('fname', null, [
-                    'attr' => ['class' => 'mb-2'],
-                    'label' => 'First name ',
-                    'label_attr' => ['class' => 'mr-2']
-                ])
                 ->add('sname', null, [
-                    'attr' => ['class' => 'mb-2'],
-                    'label' => 'Last name ',
-                    'label_attr' => ['class' => 'mr-2']
+                    'attr' => [
+                        'class' => 'mb-2',
+                        'size' => '15',
+                    ],
+                    'label' => 'Last name: ',
+                    'label_attr' => ['class' => 'mr-2'],
+                    'constraints' => [new NotBlank(['message' => "Last name is required"])],
+                ])
+                ->add('fname', null, [
+                    'attr' => [
+                        'class' => 'mb-2',
+                        'size' => '15',
+                    ],
+                    'label' => 'First name: ',
+                    'label_attr' => ['class' => 'mr-2'],
+                    'constraints' => [new NotBlank(['message' => "First name is required"])],
                 ])
                 ->add('email', null, [
-                    'attr' => ['class' => 'mb-2'],
-                    'label' => 'Email ',
-                    'label_attr' => ['class' => 'mr-2']
+                    'attr' => [
+                        'class' => 'mb-2',
+                        'size' => '15',
+                    ],
+                    'label' => 'Email: ',
+                    'label_attr' => ['class' => 'mr-2'],
+                    'constraints' => [new NotBlank(['message' => "Email name is required"])],
                 ])
                 ->add('plainPassword', RepeatedType::class, array(
                     'type' => PasswordType::class,
                     'mapped' => false,
+                    'constraints' => [new NotBlank(['message' => "Password may not empty"])],
+                    'invalid_message' => 'Passwords do not match',
                     'first_options' => [
-                        'attr' => ['class' => 'mb-2'],
-                        'label' => 'Password',
-                        'label_attr' => ['class' => 'mr-2']
+                        'attr' => [
+                            'class' => 'mb-2',
+                            'size' => '15',
+                        ],
+                        'label' => 'Password:',
+                        'label_attr' => ['class' => 'mr-2'],
+                        'required' => true,
                     ],
                     'second_options' => [
-                        'attr' => ['class' => 'mb-2'],
-                        'label' => 'Password',
-                        'label_attr' => ['class' => 'mr-2']
+                        'attr' => [
+                            'class' => 'mb-2',
+                            'size' => '15',
+                        ],
+                        'label' => 'Confirm:',
+                        'label_attr' => ['class' => 'mr-2'],
+                        'required' => true,
                     ],
                 ))
         ;
@@ -62,20 +83,14 @@ class NewUserType extends AbstractType
                     ->add('focuses', FocusFieldType::class)
                     ->add('skills', SkillFieldType::class)
             ;
-    }
-        if (Staff::class === $options['data_class']) {
-            $builder
-//                    ->add('organization', OrganizationType::class)
-                    ->add('focuses', FocusFieldType::class)
-            ;
         }
     }
 
     public function configureOptions(OptionsResolver $resolver) {
         $resolver->setDefaults([
-            'data_class' => null,
-            'is_volunteer' => false,
-            'is_staff' => false,
+            'data_class' => Staff::class,
+            'required' => false,
+            'error_bubbling' => true,
         ]);
     }
 

@@ -23,11 +23,11 @@ use Symfony\Component\Security\Core\User\UserInterface;
  * @ORM\InheritanceType("JOINED")
  * @ORM\DiscriminatorColumn(name="type", type="string")
  * @ORM\DiscriminatorMap({"staff" = "Staff", "volunteer" = "Volunteer", "admin"="Admin"})
- * @UniqueEntity(fields = "username", message="Username already registered")
  * @UniqueEntity(fields="email", message="Email already registered")
  */
 abstract class User implements UserInterface
 {
+    
 
     /**
      * @ORM\Id()
@@ -49,27 +49,19 @@ abstract class User implements UserInterface
 
     /**
      * @ORM\Column(type="string", length=180, unique=true)
-     * @Assert\NotBlank(groups={"edit", "registration"}, message="Email address is required")
-     * @Assert\Email(groups={"edit", "registration"}, message="A valid email address is required")
+     * @Assert\Email(message="A valid email address is required")
      */
     private $email;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Assert\NotBlank(groups={"edit", "registration"}, message="First name is required")
      */
     private $fname;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Assert\NotBlank(groups={"edit", "registration"}, message="Last name is required")
      */
     private $sname;
-
-    /**
-     * @ORM\Column(type="string", nullable=false)
-     */
-    private $username;
 
     /**
      * @ORM\Column(type="datetime", nullable=true, name="last_login")
@@ -107,12 +99,12 @@ abstract class User implements UserInterface
 
     public function getUsername()
     {
-        return $this->username;
+        return ;
     }
 
     public function setUsername($username)
     {
-        $this->username = $username;
+        $this->username = substr($this->fname, 0, 1) . $this->sname;
 
         return $this;
     }
@@ -188,9 +180,9 @@ abstract class User implements UserInterface
     public function addRole($role)
     {
         $role = strtoupper($role);
-        if ($role === static::ROLE_DEFAULT) {
-            return $this;
-        }
+//        if ($role === static::ROLE_DEFAULT) {
+//            return $this;
+//        }
         if (!in_array($role, $this->roles, true)) {
             $this->roles[] = $role;
         }

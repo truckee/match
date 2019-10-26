@@ -4,6 +4,8 @@ namespace App\Entity;
 
 use App\Entity\Focus;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Organization
@@ -15,7 +17,11 @@ class Organization
 {
     public function __construct()
     {
+        $this->opportunities = new ArrayCollection();
+        $this->searches = new ArrayCollection();
+        $this->focuses = new ArrayCollection();
         // organizations must be activated manually
+        $this->addDate = new \DateTime();
         $this->temp = true;
     }
 
@@ -31,7 +37,8 @@ class Organization
     /**
      * @var string|null
      *
-     * @ORM\Column(name="orgName", type="string", length=65, nullable=true)
+     * @ORM\Column(name="orgName", type="string", nullable=true)
+     * @Assert\NotBlank(message="Organization name is required")
      */
     private $orgname;
 
@@ -104,13 +111,16 @@ class Organization
     private $areacode;
 
     /**
-     * @ORM\Column(type="string", length=12)
+     * @ORM\Column(type="string")
+     * @Assert\NotBlank(message="EIN is required")
+     * @Assert\Length(min = 9, max = 9, exactMessage = "EIN has 9 digits")
      */
     private $ein;
     
     /**
-     * @ORM\OneToOne(targetEntity="Staff", inversedBy="organization")
+     * @ORM\OneToOne(targetEntity="Staff", inversedBy="organization", cascade={"persist"})
      * @ORM\JoinColumn(name="staff_id", referencedColumnName="id")
+     * @Assert\Valid
      */
     protected $staff;
 
@@ -160,6 +170,18 @@ class Organization
     public function setCity(?string $city): self
     {
         $this->city = $city;
+
+        return $this;
+    }
+
+    public function getStaff()
+    {
+        return $this->staff;
+    }
+
+    public function setStaff($staff): self
+    {
+        $this->staff = $staff;
 
         return $this;
     }

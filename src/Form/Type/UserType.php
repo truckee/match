@@ -62,25 +62,20 @@ class UserType extends AbstractType
 //            ->add('passwordExpiresAt')
 //            ->add('enabled')
         ;
-        if (true === $options['is_volunteer']) {
+        if (Volunteer::class === $options['data_class']) {
             $builder
-                    ->add('focuses', FocusesType::class)
-                    ->add('skills', SkillsType::class)
-            ;
-        }
-        if (true === $options['is_staff']) {
-            $builder
-                    ->add('organization', OrganizationType::class)
-                    ->add('focuses', FocusesType::class)
+                    ->add('focuses', FocusFieldType::class)
+                    ->add('skills', SkillFieldType::class)
             ;
         }
     }
 
     public function configureOptions(OptionsResolver $resolver) {
         $resolver->setDefaults([
-            'data_class' => User::class,
-            'is_volunteer' => false,
-            'is_staff' => false,
+            'data_class' => null,
+//            'is_volunteer' => false,
+//            'is_staff' => false,
+            'required' => false,
         ]);
     }
 

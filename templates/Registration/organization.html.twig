@@ -1,38 +1,12 @@
 <div class="text-center text-bold">
     {{ orgHeader }}
 </div>
-<div class="row">
-    <div class="col-4 form-inline">
-        {{ form_row(formOrg.orgname) }}
-    </div>
-</div>
-<div class="row">
-    <div class="col-4 form-inline">
-        {{ form_row(formOrg.ein) }}
-    </div>
-</div>
-<div class="row">
-    <div class="col-4 form-inline">
-        {{ form_row(formOrg.address) }}
-    </div>
-</div>
-<div class="row form-inline">
-    <div class="col-9 form-inline">
-        {{ form_row(formOrg.city) }} {{ form_row(formOrg.state) }} {{ form_row(formOrg.zip) }}
-    </div>
-</div>
-<div class="row">
-    <div class="col-1 form-inline">
-        {{ form_row(formOrg.area_code) }}
-    </div>
-</div>
-<div class="row">
-    <div class="col-4 form-inline">
-        {{ form_row(formOrg.phone) }}
-    </div>
-</div>
-<div class="row">
-    <div class="col-4 form-inline">
-        {{ form_row(formOrg.website) }}
-    </div>
-</div>
+{{ form_row(form.orgname) }}
+{{ form_row(form.ein) }}
+{{ form_row(form.address) }}
+{{ form_row(form.city) }}
+{{ form_row(form.state) }}
+{{ form_row(form.zip) }}
+{{ form_row(form.area_code) }}
+{{ form_row(form.phone) }}
+{{ form_row(form.website) }}

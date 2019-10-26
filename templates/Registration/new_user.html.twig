@@ -1,23 +1,9 @@
+{% if form.staff is defined %}{% set user = form.staff %}{% else %}{% set user = form %}{% endif %}
 <div class="text-center text-bold">
     {{ userHeader }}
 </div>
-<div class="row">
-    <div class="col-4 form-inline">
-        {{ form_row(form.fname) }} {{ form_row(form.sname) }}
-    </div>
-</div>
-<div class="row">
-    <div class="col-9 form-inline">
-        {{ form_row(form.email) }}
-    </div>
-</div>
-<div class="row">
-    <div class="col-4 form-inline">
-        {{ form_row(form.plainPassword.first) }}
-    </div>
-</div>
-<div class="row form-inline">
-    <div class="col-4 form-inline">
-        {{ form_row(form.plainPassword.second) }}
-    </div>
-</div>
+{{ form_row(user.fname) }}
+{{ form_row(user.sname) }}
+{{ form_row(user.email) }}
+{{ form_row(user.plainPassword.first) }}
+{{ form_row(user.plainPassword.second) }}

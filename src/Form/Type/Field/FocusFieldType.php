@@ -17,6 +17,7 @@ use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\Count;
 
 /**
  * 
@@ -48,6 +49,7 @@ class FocusFieldType extends AbstractType
                 'expanded' => true,
                 'multiple' => true,
                 'attr' => array('class' => 'list-inline'),
+                'constraints' => [new Count(['min' => 1, 'minMessage' => 'At least one focus please'])],
                 'query_builder' => function (EntityRepository $er) {
                 return $er->createQueryBuilder('f')
                         ->orderBy('f.focus', 'ASC')
@@ -64,6 +66,6 @@ class FocusFieldType extends AbstractType
     {
         $populated = $this->repo->findAll();
 
-        return (0 === count($populated)) ? 'Sign in as Admin; add focus critieria' : 'Focus criteria';
+        return (0 === count($populated)) ? 'Sign in as Admin; add focus options' : 'Focus options';
     }
 }
