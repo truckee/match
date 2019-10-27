@@ -250,8 +250,8 @@ class RegistrationController extends AbstractController
      */
     public function registerVolunteer(Request $request, UserPasswordEncoderInterface $encoder, \Swift_Mailer $mailer)
     {
-        $user = new Volunteer();
-        $form = $this->createForm(NewUserType::class, $user, ['data_class' => Volunteer::class]);
+        $volunteer = new Volunteer();
+        $form = $this->createForm(NewUserType::class, $volunteer, ['data_class' => Volunteer::class]);
         $templates = [
             'Registration/new_user.html.twig',
             'Registration/focuses.html.twig',
@@ -259,8 +259,13 @@ class RegistrationController extends AbstractController
         ];
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
+            $userData = $request->request->get('new_user');
+            $password = $encoder->encodePassword($volunteer, $userData['plainPassword']['first']);
+            $volunteer->setPassword($password);
+            $volunteer->setEnabled(true);
+            $volunteer->setConfirmationToken($userData['confirmationToken']);
             $em = $this->getDoctrine()->getManager();
-            $em->persist($user);
+            $em->persist($volunteer);
             $em->flush();
             $this->addFlash(
                 'success',

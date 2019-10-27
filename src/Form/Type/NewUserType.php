@@ -52,7 +52,7 @@ class NewUserType extends AbstractType
                     ],
                     'label' => 'Email: ',
                     'label_attr' => ['class' => 'mr-2'],
-                    'constraints' => [new NotBlank(['message' => "Email name is required"])],
+                    'constraints' => [new NotBlank(['message' => "Email is required"])],
                 ])
                 ->add('plainPassword', RepeatedType::class, array(
                     'type' => PasswordType::class,
