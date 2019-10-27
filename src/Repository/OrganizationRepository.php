@@ -14,37 +14,48 @@ use Doctrine\Common\Persistence\ManagerRegistry;
  */
 class OrganizationRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
-    {
+
+    public function __construct(ManagerRegistry $registry) {
         parent::__construct($registry, Organization::class);
+    }
+
+    // Has organization or staff already submitted form
+    public function hasSubmitted($orgData) {
+        $ein = $orgData['ein'];
+
+        return $this->createQueryBuilder('o')
+                        ->where('o.ein = :ein')
+                        ->setParameter('ein', $ein)
+                        ->getQuery()
+                        ->getOneOrNullResult();
     }
 
     // /**
     //  * @return Organization[] Returns an array of Organization objects
     //  */
     /*
-    public function findByExampleField($value)
-    {
-        return $this->createQueryBuilder('o')
-            ->andWhere('o.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('o.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-    */
+      public function findByExampleField($value)
+      {
+      return $this->createQueryBuilder('o')
+      ->andWhere('o.exampleField = :val')
+      ->setParameter('val', $value)
+      ->orderBy('o.id', 'ASC')
+      ->setMaxResults(10)
+      ->getQuery()
+      ->getResult()
+      ;
+      }
+     */
 
     /*
-    public function findOneBySomeField($value): ?Organization
-    {
-        return $this->createQueryBuilder('o')
-            ->andWhere('o.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
-    }
-    */
+      public function findOneBySomeField($value): ?Organization
+      {
+      return $this->createQueryBuilder('o')
+      ->andWhere('o.exampleField = :val')
+      ->setParameter('val', $value)
+      ->getQuery()
+      ->getOneOrNullResult()
+      ;
+      }
+     */
 }

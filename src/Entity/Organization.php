@@ -6,12 +6,14 @@ use App\Entity\Focus;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * Organization
  *
  * @ORM\Table(name="organization")
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass = "App\Repository\OrganizationRepository")
+ * @UniqueEntity(fields="ein", message="Nonprofit is already registered")
  */
 class Organization
 {

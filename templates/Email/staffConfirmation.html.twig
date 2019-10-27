@@ -1,0 +1,7 @@
+<p>Hi {{ fname }},</p>
+<p>Welcome to Volunteer Connections.</p>
+<p>Click on this <a href="{{ absolute_url(path('register_org', {'token':token})) }}">link</a> to create
+an account for {{ orgname }}. Please note that volunteer oppotunities cannot be 
+created until the Foundation has activated the account.</p> 
+<p>This link will expire in 3 hours [@ {{ expires|date('g:i A, l, F j') }}].</p>
+<p>Thanks.</p>

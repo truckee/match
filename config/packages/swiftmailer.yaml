@@ -1,3 +1,22 @@
 swiftmailer:
-    url: '%env(MAILER_URL)%'
+    sender_address: 'admin@bogus.info'
+ 
+    transport:        smtp
+    username:         admin@bogus.info
+    password:         123Abcd
+    host:             localhost
+   
+#    transport:        gmail
+#    username:         support@projectmana.org
+#    password:         Pm@n@2416
+#    host:             localhost
+#    port:             465
+#    encryption:       ssl
+#    auth-mode:        login
+    
     spool: { type: 'memory' }
+    stream_options:
+        ssl:
+            allow_self_signed: true
+            verify_peer: false
+            verify_peer_name: false

@@ -74,9 +74,9 @@ abstract class User implements UserInterface
     private $confirmationToken;
 
     /**
-     * @ORM\Column(nullable=true, name="password_expires_at", type="datetime")
+     * @ORM\Column(nullable=true, name="token_expires_at", type="datetime")
      */
-    private $passwordExpiresAt;
+    private $tokenExpiresAt;
 
     protected $staff;
 
@@ -233,9 +233,9 @@ abstract class User implements UserInterface
         return $this->confirmationToken;
     }
 
-    public function getpasswordExpiresAt()
+    public function getTokenExpiresAt()
     {
-        return $this->passwordExpiresAt;
+        return $this->tokenExpiresAt;
     }
 
     public function setConfirmationToken($confirmationToken)
@@ -245,9 +245,9 @@ abstract class User implements UserInterface
         return $this;
     }
 
-    public function setPasswordExpiresAt(\DateTime $date = null)
+    public function setTokenExpiresAt(\DateTime $date = null)
     {
-        $this->passwordExpiresAt = $date;
+        $this->tokenExpiresAt = $date;
 
         return $this;
     }

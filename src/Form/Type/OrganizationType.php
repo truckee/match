@@ -97,7 +97,9 @@ class OrganizationType extends AbstractType
                     'label_attr' => ['class' => 'mr-2'],
                 ])
                 ->add('focuses', FocusFieldType::class)
-                ->add('staff', NewUserType::class)
+                ->add('staff', NewUserType::class, [
+                    'label' => false,
+                    ])
         ;
     }
 

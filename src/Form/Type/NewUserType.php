@@ -16,6 +16,7 @@ use App\Form\Type\Field\SkillFieldType;
 use App\Entity\Staff;
 use App\Entity\Volunteer;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -77,6 +78,9 @@ class NewUserType extends AbstractType
                         'required' => true,
                     ],
                 ))
+                ->add('confirmationToken', HiddenType::class, [
+                    'data' => md5(uniqid(rand(), true)),
+                ])
         ;
         if (Volunteer::class === $options['data_class']) {
             $builder
