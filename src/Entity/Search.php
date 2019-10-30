@@ -66,9 +66,9 @@ class Search
     private $skill;
 
     /**
-     * @var \Organization
+     * @var \Nonprofit
      *
-     * @ORM\ManyToOne(targetEntity="Organization")
+     * @ORM\ManyToOne(targetEntity="Nonprofit")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="org_id", referencedColumnName="id")
      * })
@@ -140,12 +140,12 @@ class Search
         return $this;
     }
 
-    public function getOrg(): ?Organization
+    public function getOrg(): ?Nonprofit
     {
         return $this->org;
     }
 
-    public function setOrg(?Organization $org): self
+    public function setOrg(?Nonprofit $org): self
     {
         $this->org = $org;
 

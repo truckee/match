@@ -18,7 +18,7 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
  */
 class PageTest extends WebTestCase
 {
-    public function setup() {
+    public function setup() : void {
         $this->client = static::createClient();
         $this->client->followRedirects();
     }
@@ -27,26 +27,26 @@ class PageTest extends WebTestCase
         $this->client->request('GET', '/');
         
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
-        $this->assertContains('Volunteer Connections', $this->client->getResponse()->getContent());
+        $this->assertStringContainsString('Volunteer Connections', $this->client->getResponse()->getContent());
     }
     
     public function testVolunteerPage() {
         $this->client->request('GET', '/volunteer');
         
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
-        $this->assertContains('Search for an opportunity', $this->client->getResponse()->getContent());
+        $this->assertStringContainsString('Search for an opportunity', $this->client->getResponse()->getContent());
         
         $crawler = $this->client->clickLink('Become a volunteer');
-        $this->assertContains('First name', $this->client->getResponse()->getContent());
+        $this->assertStringContainsString('First name', $this->client->getResponse()->getContent());
     }
     
     public function testNonprofitPage() {
         $this->client->request('GET', '/nonprofit');
         
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
-        $this->assertContains('Nonprofit organizations new to this site', $this->client->getResponse()->getContent());
+        $this->assertStringContainsString('Nonprofit organizations new to this site', $this->client->getResponse()->getContent());
         
         $crawler = $this->client->clickLink('Register a nonprofit');
-        $this->assertContains('First name', $this->client->getResponse()->getContent());
+        $this->assertStringContainsString('First name', $this->client->getResponse()->getContent());
     }
 }

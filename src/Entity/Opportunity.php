@@ -79,9 +79,9 @@ class Opportunity
     private $description;
 
     /**
-     * @var \Organization
+     * @var \Nonprofit
      *
-     * @ORM\ManyToOne(targetEntity="Organization")
+     * @ORM\ManyToOne(targetEntity="Nonprofit")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="orgId", referencedColumnName="id")
      * })
@@ -205,12 +205,12 @@ class Opportunity
         return $this;
     }
 
-    public function getOrgid(): ?Organization
+    public function getOrgid(): ?Nonprofit
     {
         return $this->orgid;
     }
 
-    public function setOrgid(?Organization $orgid): self
+    public function setOrgid(?Nonprofit $orgid): self
     {
         $this->orgid = $orgid;
 

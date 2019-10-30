@@ -7,19 +7,19 @@
  * file that was distributed with this source code.
  */
 
-//src/Form/Type/OrganizationType.php
+//src/Form/Type/NonprofitType.php
 
 namespace App\Form\Type;
 
 use App\Form\Type\Field\FocusFieldType;
-use App\Entity\Organization;
+use App\Entity\Nonprofit;
 use App\Entity\Staff;
 use App\Form\Type\NewUserType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class OrganizationType extends AbstractType
+class NonprofitType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
@@ -106,7 +106,7 @@ class OrganizationType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'data_class' => Organization::class,
+            'data_class' => Nonprofit::class,
             'required' => false,
         ]);
     }

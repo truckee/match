@@ -12,10 +12,9 @@
 namespace App\Controller;
 
 use App\Entity\Staff;
-use App\Entity\User;
 use App\Entity\Volunteer;
-use App\Entity\Organization;
-use App\Form\Type\OrganizationType;
+use App\Entity\Nonprofit;
+use App\Form\Type\NonprofitType;
 use App\Form\Type\NewUserType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -27,6 +26,14 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
  */
 class RegistrationController extends AbstractController
 {
+
+    private $encoder;
+
+    public function __construct(UserPasswordEncoderInterface $encoder)
+    {
+        $this->encoder = $encoder;
+    }
+
     //  Note that User cannot be instantiated as it is now an abstract class!!!
 //    /**
 //     * @Route("/invite/{token}", name="complete_registration")
@@ -121,8 +128,8 @@ class RegistrationController extends AbstractController
             $sender = $this->getParameter('swiftmailer.sender_address');
             $user = $em->getRepository('App:User')->findOneBy(['email' => $email]);
             $this->addFlash(
-                'success',
-                'Email sent to address provided'
+                    'success',
+                    'Email sent to address provided'
             );
 
             // if nonUser
@@ -139,17 +146,17 @@ class RegistrationController extends AbstractController
             }
 
             $token = md5(uniqid(rand(), true));
-            $expiry = new \DateTime();
-            $user->setPasswordExpiresAt($expiry->add(new \DateInterval('PT3H')));
+            $expiresAt = new \DateTime();
+            $user->setPasswordExpiresAt($expiresAt->add(new \DateInterval('PT3H')));
 
             $forgotView = $this->renderView(
-                'Email/forgotten.html.twig',
-                [
+                    'Email/forgotten.html.twig',
+                    [
                         'fname' => $user->getFname(),
                         'token' => $token,
-                        'expiresAt' => $expiry,
+                        'expiresAt' => $expiresAt,
                     ]
-            )
+                    )
             ;
 
             $message = (new \Swift_Message('Project MANA forgotten password'))
@@ -160,7 +167,7 @@ class RegistrationController extends AbstractController
             $mailer->send($message);
 
             $user->setConfirmationToken($token);
-            $user->setPasswordExpiresAt($expiry->add(new \DateInterval('PT3H')));
+            $user->setPasswordExpiresAt($expiresAt->add(new \DateInterval('PT3H')));
             $em->persist($user);
             $em->flush();
 
@@ -185,8 +192,8 @@ class RegistrationController extends AbstractController
             $user = $this->getUser();
             if (null === $user) {
                 $this->addFlash(
-                    'danger',
-                    'User not found'
+                        'danger',
+                        'User not found'
                 );
 
                 return $this->redirectToRoute('home');
@@ -196,8 +203,8 @@ class RegistrationController extends AbstractController
             $person = $em->getRepository('App:User')->findOneBy(['confirmationToken' => $token]);
             if (null === $person) {
                 $this->addFlash(
-                    'danger',
-                    'User not found'
+                        'danger',
+                        'User not found'
                 );
 
                 return $this->redirectToRoute('home');
@@ -208,8 +215,8 @@ class RegistrationController extends AbstractController
             // has token expired?
             if ($now > $expiresAt) {
                 $this->addFlash(
-                    'danger',
-                    'Password forgotten link has expired'
+                        'danger',
+                        'Password forgotten link has expired'
                 );
 
                 return $this->redirectToRoute('home');
@@ -221,9 +228,9 @@ class RegistrationController extends AbstractController
 
             // 3) Encode the password (you could also do this via Doctrine listener)
             $user->setPassword(
-                $passwordEncoder->encodePassword(
-                        $user,
-                        $form->get('plainPassword')->getData()
+                    $passwordEncoder->encodePassword(
+                            $user,
+                            $form->get('plainPassword')->getData()
                     )
             );
             $em->persist($user);
@@ -232,8 +239,8 @@ class RegistrationController extends AbstractController
             // ... do any other work - like sending them an email, etc
             // maybe set a "flash" success message for the user
             $this->addFlash(
-                'success',
-                'Your password has been updated'
+                    'success',
+                    'Your password has been updated'
             );
 
             return $this->redirectToRoute('home');
@@ -248,7 +255,7 @@ class RegistrationController extends AbstractController
     /**
      * @Route("/volunteer", name="register_volunteer")
      */
-    public function registerVolunteer(Request $request, UserPasswordEncoderInterface $encoder, \Swift_Mailer $mailer)
+    public function registerVolunteer(Request $request, \Swift_Mailer $mailer)
     {
         $volunteer = new Volunteer();
         $form = $this->createForm(NewUserType::class, $volunteer, ['data_class' => Volunteer::class]);
@@ -260,16 +267,34 @@ class RegistrationController extends AbstractController
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $userData = $request->request->get('new_user');
-            $password = $encoder->encodePassword($volunteer, $userData['plainPassword']['first']);
-            $volunteer->setPassword($password);
-            $volunteer->setEnabled(true);
-            $volunteer->setConfirmationToken($userData['confirmationToken']);
+            $this->volunteerProperties($volunteer, $userData);
+
+            // send confirmation email
+            $sender = $this->getParameter('swiftmailer.sender_address');
+            $view = $this->renderView(
+                    'Email/volunteerConfirmation.html.twig',
+                    [
+                        'fname' => $volunteer->getFname(),
+                        'token' => $volunteer->getConfirmationToken(),
+                        'expires' => $volunteer->getTokenExpiresAt(),
+                    ]
+            );
+            $message = (new \Swift_Message('Volunteer Connections'))
+                    ->setFrom($sender)
+                    ->setTo($volunteer->getEmail())
+                    ->setBody(
+                    $view,
+                    'text/html'
+                    )
+            ;
+            $mailer->send($message);
+
             $em = $this->getDoctrine()->getManager();
             $em->persist($volunteer);
             $em->flush();
             $this->addFlash(
-                'success',
-                'A volunteer registration confirmation has been sent to your email address'
+                    'success',
+                    'A volunteer registration confirmation has been sent to your email address'
             );
 
             return $this->redirectToRoute('home');
@@ -286,67 +311,32 @@ class RegistrationController extends AbstractController
     }
 
     /**
-     * @Route("/organization", name="register_org")
+     * @Route("/nonprofit", name="register_org")
      */
-    public function registerOrganiztion(Request $request, UserPasswordEncoderInterface $encoder, \Swift_Mailer $mailer)
+    public function registerNonprofit(Request $request, UserPasswordEncoderInterface $encoder, \Swift_Mailer $mailer)
     {
-        $org = new Organization();
-        $form = $this->createForm(OrganizationType::class, $org);
+        $org = new Nonprofit();
+        $form = $this->createForm(NonprofitType::class, $org);
         $templates = [
-            'Registration/organization.html.twig',
+            'Registration/nonprofit.html.twig',
             'Registration/new_user.html.twig',
             'Registration/focuses.html.twig',
         ];
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $orgData = $request->request->get('org');
-
-            // org already submitted?
             $em = $this->getDoctrine()->getManager();
-            $existingOrg = $em->getRepository(Organization::class)->hasSubmitted($orgData);
-            if (null !== $existingOrg) {
-                $this->addFlash(
-                    'warning',
-                    'Nonprofit with EIN ' . $orgData['ein'] . ' has already been registered'
-                );
-
-                return $this->redirectToRoute('home');
-            }
-
-            // is staff already registered (i.e., email on file?)
-            $userData = $orgData['staff'];
-            $email = $userData['email'];
-            $user = $em->getRepository(User::class)->loadUserByUsername($email);
-            if (null !== $user) {
-                $this->addFlash(
-                    'warning',
-                    'That email address has already been registered'
-                );
-
-                return $this->redirectToRoute('home');
-            }
-
-            // create new staff entity
-            $staff = new Staff();
-            $staff->setFname($userData['fname']);
-            $staff->setSname($userData['sname']);
-            $staff->setEmail($userData['email']);
-            $staff->setEnabled(true);
-            $password = $encoder->encodePassword($staff, $userData['plainPassword']['first']);
-            $staff->setPassword($password);
-            $staff->setConfirmationToken($userData['confirmationToken']);
+            $staff = $this->staffProperties($orgData['staff']);
             $org->setStaff($staff);
 
             // send confirmation email
-            $expiry = new \DateTime();
-            $staff->setTokenExpiresAt($expiry->add(new \DateInterval('PT3H')));
             $sender = $this->getParameter('swiftmailer.sender_address');
             $view = $this->renderView(
-                'Email/staffConfirmation.html.twig',
-                [
+                    'Email/staffConfirmation.html.twig',
+                    [
                         'fname' => $staff->getFname(),
                         'token' => $staff->getConfirmationToken(),
-                        'expires' => $expiry,
+                        'expires' => $staff->getTokenExpiresAt(),
                         'orgname' => $org->getOrgname(),
                     ]
             );
@@ -354,8 +344,8 @@ class RegistrationController extends AbstractController
                     ->setFrom($sender)
                     ->setTo($staff->getEmail())
                     ->setBody(
-                        $view,
-                        'text/html'
+                    $view,
+                    'text/html'
                     )
             ;
             $mailer->send($message);
@@ -363,15 +353,15 @@ class RegistrationController extends AbstractController
             // store entities
             $em->persist($staff);
             $em->persist($org);
-//            $em->flush();
+            $em->flush();
 
             $this->addFlash(
-                'success',
-                'Nonprofit ' . $org->getOrgname() . ' is created but not yet activated'
+                    'success',
+                    'Nonprofit ' . $org->getOrgname() . ' is created but not yet activated'
             );
             $this->addFlash(
-                'success',
-                'Look for the confirmation email that has been sent to the address provided'
+                    'success',
+                    'Look for the confirmation email that has been sent to the address provided'
             );
 
 
@@ -380,11 +370,74 @@ class RegistrationController extends AbstractController
 
         return $this->render('Default/formTemplates.html.twig', [
                     'form' => $form->createView(),
-                    'headerText' => 'Add an organization',
+                    'headerText' => 'Add a nonprofit',
                     'userHeader' => 'Staff Member',
-                    'orgHeader' => 'Organization',
-                    'focusHeader' => "Organization's Focus",
+                    'orgHeader' => 'Nonprofit',
+                    'focusHeader' => "Nonprofit's Focus",
                     'templates' => $templates,
         ]);
     }
+
+    /**
+     * @Route("/confirm/{token}")
+     */
+    public function confirm(UserPasswordEncoderInterface $encoder, $token = null)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $user = $em->getRepository('App:User')->findOneBy(['confirmationToken' => $token]);
+
+        // if bogus token data is presented
+        if (null === $user) {
+            $this->addFlash(
+                    'danger',
+                    'Invalid registration data'
+            );
+
+            return $this->redirectToRoute('home');
+        }
+        
+        // expired token?
+        if (\DateTime() > $user->getTokenExpiresAt()) {
+            $this->addFlash(
+                    'danger',
+                    'Confirmation has expired'
+            );
+
+            return $this->redirectToRoute('home');
+        }
+        
+        $this->addFlash(
+                'danger',
+                'Filler text'
+        );
+        return $this->redirectToRoute('home');
+    }
+
+    private function staffProperties($data)
+    {
+        // create new staff entity
+        $staff = new Staff();
+        $staff->setFname($data['fname']);
+        $staff->setSname($data['sname']);
+        $staff->setEmail($data['email']);
+        $staff->setEnabled(true);
+        $password = $this->encoder->encodePassword($staff, $data['plainPassword']['first']);
+        $staff->setPassword($password);
+        $staff->setConfirmationToken(md5(uniqid(rand(), true)));
+        $expiresAt = new \DateTime();
+        $staff->setTokenExpiresAt($expiresAt->add(new \DateInterval('PT3H')));
+
+        return $staff;
+    }
+
+    private function volunteerProperties($volunteer, $data)
+    {
+        $password = $this->encoder->encodePassword($volunteer, $data['plainPassword']['first']);
+        $volunteer->setPassword($password);
+        $volunteer->setEnabled(true);
+        $volunteer->setConfirmationToken(md5(uniqid(rand(), true)));
+        $expiresAt = new \DateTime();
+        $volunteer->setTokenExpiresAt($expiresAt->add(new \DateInterval('PT3H')));
+    }
+
 }

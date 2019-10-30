@@ -1,0 +1,8 @@
+<p>Hi {{ fname }},</p>
+<p>Welcome to Volunteer Connections.</p>
+<p>Click on this <a href="{{ absolute_url(path('register_volunteer', {'token':token})) }}">link</a> to 
+complete your registration. You will then begin receive emails announcing new volunteer
+opportunities that match your focus and skill options. At any time you can stop 
+receiving these emails by logging in to your account and unchecking the Receive emails box.</p> 
+<p>This link will expire in 3 hours [@ {{ expires|date('g:i A, l, F j') }}].</p>
+<p>Thanks again for joining us.</p>

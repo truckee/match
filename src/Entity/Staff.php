@@ -3,7 +3,7 @@
 namespace App\Entity;
 
 use App\Entity\User as User;
-use App\Entity\Organization;
+use App\Entity\Nonprofit;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -22,18 +22,18 @@ class Staff extends User
     }
     
     /**
-     * @ORM\OneToOne(targetEntity="Organization", mappedBy="staff")
+     * @ORM\OneToOne(targetEntity="Nonprofit", mappedBy="staff")
      */
-    protected $organization;
+    protected $nonprofit;
 
-    public function getOrganization()
+    public function getNonprofit()
     {
-        return $this->organization;
+        return $this->nonprofit;
     }
 
-    public function setOrganization(Organization $organization = null)
+    public function setNonprofit(Nonprofit $nonprofit = null)
     {
-        $this->organization = $organization;
+        $this->nonprofit = $nonprofit;
 
         return $this;
     }

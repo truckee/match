@@ -13,7 +13,7 @@ namespace App\Form\Type;
 
 use App\Form\Type\FocusesType;
 use App\Form\Type\SkillsType;
-use App\Form\Type\OrganizationType;
+use App\Form\Type\NonprofitType;
 use App\Entity\User;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;

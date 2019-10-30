@@ -9,20 +9,20 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
- * Organization
+ * Nonprofit
  *
- * @ORM\Table(name="organization")
- * @ORM\Entity(repositoryClass = "App\Repository\OrganizationRepository")
+ * @ORM\Table(name="nonprofit")
+ * @ORM\Entity(repositoryClass = "App\Repository\NonprofitRepository")
  * @UniqueEntity(fields="ein", message="Nonprofit is already registered")
  */
-class Organization
+class Nonprofit
 {
     public function __construct()
     {
         $this->opportunities = new ArrayCollection();
         $this->searches = new ArrayCollection();
         $this->focuses = new ArrayCollection();
-        // organizations must be activated manually
+        // nonprofits must be activated manually
         $this->addDate = new \DateTime();
         $this->temp = true;
     }
@@ -40,7 +40,7 @@ class Organization
      * @var string|null
      *
      * @ORM\Column(name="orgName", type="string", nullable=true)
-     * @Assert\NotBlank(message="Organization name is required")
+     * @Assert\NotBlank(message="Nonprofit name is required")
      */
     private $orgname;
 
@@ -120,14 +120,14 @@ class Organization
     private $ein;
     
     /**
-     * @ORM\OneToOne(targetEntity="Staff", inversedBy="organization", cascade={"persist"})
+     * @ORM\OneToOne(targetEntity="Staff", inversedBy="nonprofit", cascade={"persist"})
      * @ORM\JoinColumn(name="staff_id", referencedColumnName="id")
      * @Assert\Valid
      */
     protected $staff;
 
     /**
-     * @ORM\ManyToMany(targetEntity="Focus", inversedBy="organizations", cascade={"persist"})
+     * @ORM\ManyToMany(targetEntity="Focus", inversedBy="nonprofits", cascade={"persist"})
      * @ORM\JoinTable(name="org_focus",
      *      joinColumns={@ORM\JoinColumn(name="orgId", referencedColumnName="id")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="focusId", referencedColumnName="id")}
@@ -271,7 +271,7 @@ class Organization
      *
      * @param Focus $focuses
      *
-     * @return Organization
+     * @return Nonprofit
      */
     public function addFocus(Focus $focus)
     {

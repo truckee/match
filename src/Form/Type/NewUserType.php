@@ -78,9 +78,6 @@ class NewUserType extends AbstractType
                         'required' => true,
                     ],
                 ))
-                ->add('confirmationToken', HiddenType::class, [
-                    'data' => md5(uniqid(rand(), true)),
-                ])
         ;
         if (Volunteer::class === $options['data_class']) {
             $builder

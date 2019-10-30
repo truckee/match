@@ -38,9 +38,9 @@ class Focus
     private $enabled;
 
     /**
-     * @ORM\ManyToMany(targetEntity="Organization", mappedBy="focuses")
+     * @ORM\ManyToMany(targetEntity="Nonprofit", mappedBy="focuses")
      */
-    protected $organizations;
+    protected $nonprofits;
 
     /**
      * @ORM\ManyToMany(targetEntity="Volunteer", mappedBy="focuses")
