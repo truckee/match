@@ -52,7 +52,7 @@ class LoginFormAuthenticator extends AbstractFormLoginAuthenticator
     public function getCredentials(Request $request)
     {
         $credentials = [
-            'username' => $request->request->get('username'),
+            'username' => $request->request->get('email'),
             'password' => $request->request->get('password'),
             'csrf_token' => $request->request->get('_csrf_token'),
         ];
@@ -78,6 +78,9 @@ class LoginFormAuthenticator extends AbstractFormLoginAuthenticator
         }
         if ($user->hasRole('role_staff') && $user->getNonprofit()->getTemp()) {
             throw new CustomUserMessageAuthenticationException('Nonprofit has not yet been activated');
+        }
+        if (!$user->isEnabled()) {
+            throw new CustomUserMessageAuthenticationException('Account has not been confirmed');
         }
 
         return $user;

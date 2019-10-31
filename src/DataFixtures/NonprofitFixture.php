@@ -27,7 +27,7 @@ class NonprofitFixture extends Fixture
         $staff = new Staff();
         $staff->setConfirmationToken('fedcba');
         $staff->setEmail('unknown@bogus.info');
-        $staff->setEnabled(true);
+        $staff->setEnabled(false);
         $staff->setFname('Unknown');
         $staff->setSname('Bogus');
         $password = $this->encoder->encodePassword($staff, '123Abc');

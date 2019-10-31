@@ -13,9 +13,6 @@ namespace App\Tests\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
-/**
- * 
- */
 class VolunteerRegistrationControllerTest extends WebTestCase
 {
 
@@ -29,7 +26,7 @@ class VolunteerRegistrationControllerTest extends WebTestCase
     {
         $this->client->request('GET', '/register/volunteer');
 
-        $crawler = $this->client->submitForm('Submit');
+        $this->client->submitForm('Submit');
         $this->assertStringContainsString('First name is required', $this->client->getResponse()->getContent());
         $this->assertStringContainsString('Last name is required', $this->client->getResponse()->getContent());
         $this->assertStringContainsString('Email is required', $this->client->getResponse()->getContent());
@@ -56,17 +53,6 @@ class VolunteerRegistrationControllerTest extends WebTestCase
         $this->assertStringContainsString('Email already registered', $dupe);
     }
 
-    public function testEmptyOrNonexistentToken()
-    {
-        $crawler = $this->client->request('GET', '/register/confirm');
-
-        $this->assertStringContainsString('Invalid registration data', $this->client->getResponse()->getContent());
-
-        $crawler = $this->client->request('GET', '/register/confirm/blahblah');
-
-        $this->assertStringContainsString('Invalid registration data', $this->client->getResponse()->getContent());
-    }
-
     public function testVolunteerRegistrationEmail()
     {
         $this->client->enableProfiler();
@@ -88,6 +74,7 @@ class VolunteerRegistrationControllerTest extends WebTestCase
         $this->assertSame(1, $mailCollector->getMessageCount());
     }
 
+    
     private function volunteerRegistration()
     {
         $crawler = $this->client->request('GET', '/register/volunteer');

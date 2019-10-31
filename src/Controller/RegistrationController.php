@@ -16,6 +16,8 @@ use App\Entity\Volunteer;
 use App\Entity\Nonprofit;
 use App\Form\Type\NonprofitType;
 use App\Form\Type\NewUserType;
+use App\Form\Type\NewPasswordType;
+use App\Form\Type\UserEmailType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -134,47 +136,39 @@ class RegistrationController extends AbstractController
 
             // if nonUser
             if (null === $user) {
-                $nonUserView = $this->renderView('Email/nonUser.html.twig');
-                $message = (new \Swift_Message('Project MANA forgotten password'))
-                        ->setFrom($sender)
-                        ->setTo($email)
-                        ->setBody($nonUserView, 'text/html')
+                $forgotView = $this->renderView('Email/nonUserForgottenPassword.html.twig',
+                        [
+                            'supportEmail' => $sender
+                ]);
+            } else {
+                $token = md5(uniqid(rand(), true));
+                $user->setConfirmationToken($token);
+                $expiresAt = new \DateTime();
+                $user->setTokenExpiresAt($expiresAt->add(new \DateInterval('PT3H')));
+
+                $em->persist($user);
+                $em->flush();
+                $forgotView = $this->renderView(
+                        'Email/forgotten.html.twig',
+                        [
+                            'fname' => $user->getFname(),
+                            'token' => $token,
+                            'expiresAt' => $expiresAt,
+                        ]
+                        )
                 ;
-                $mailer->send($message);
-
-                return $this->redirectToRoute('home');
             }
-
-            $token = md5(uniqid(rand(), true));
-            $expiresAt = new \DateTime();
-            $user->setPasswordExpiresAt($expiresAt->add(new \DateInterval('PT3H')));
-
-            $forgotView = $this->renderView(
-                    'Email/forgotten.html.twig',
-                    [
-                        'fname' => $user->getFname(),
-                        'token' => $token,
-                        'expiresAt' => $expiresAt,
-                    ]
-                    )
-            ;
-
-            $message = (new \Swift_Message('Project MANA forgotten password'))
+            $message = (new \Swift_Message('Volunteer Connections forgotten password'))
                     ->setFrom($sender)
                     ->setTo($email)
                     ->setBody($forgotView, 'text/html')
             ;
             $mailer->send($message);
 
-            $user->setConfirmationToken($token);
-            $user->setPasswordExpiresAt($expiresAt->add(new \DateInterval('PT3H')));
-            $em->persist($user);
-            $em->flush();
-
             return $this->redirectToRoute('home');
         }
 
-        return $this->render('Registration/forgot.html.twig', [
+        return $this->render('Email/forgot.html.twig', [
                     'form' => $form->createView(),
                     'headerText' => 'Request forgotten password form'
         ]);
@@ -210,7 +204,7 @@ class RegistrationController extends AbstractController
                 return $this->redirectToRoute('home');
             }
             $user = $em->getRepository('App:User')->findOneBy(['email' => $person->getEmail()]);
-            $expiresAt = $user->getPasswordExpiresAt();
+            $expiresAt = $user->getTokenExpiresAt();
             $now = new \DateTime();
             // has token expired?
             if ($now > $expiresAt) {
@@ -222,7 +216,8 @@ class RegistrationController extends AbstractController
                 return $this->redirectToRoute('home');
             }
         }
-        $form = $this->createForm(NewUserType::class, $user);
+
+        $form = $this->createForm(NewPasswordType::class, $user);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
 
@@ -246,7 +241,7 @@ class RegistrationController extends AbstractController
             return $this->redirectToRoute('home');
         }
 
-        return $this->render('Registration/register.html.twig', [
+        return $this->render('Registration/userPassword.html.twig', [
                     'form' => $form->createView(),
                     'headerText' => 'Set new password',
         ]);
@@ -395,22 +390,35 @@ class RegistrationController extends AbstractController
 
             return $this->redirectToRoute('home');
         }
-        
+
         // expired token?
-        if (\DateTime() > $user->getTokenExpiresAt()) {
+        $now = new \DateTime();
+        if ($now > $user->getTokenExpiresAt()) {
+            $path = 'home';
+            if ($user->hasRole('ROLE_STAFF')) {
+                $path = 'register_org';
+            } elseif ($user->hasRole('ROLE_VOLUNTEER')) {
+                $path = 'register_volunteer';
+            }
             $this->addFlash(
                     'danger',
                     'Confirmation has expired'
             );
 
-            return $this->redirectToRoute('home');
+            return $this->redirectToRoute($path);
         }
-        
+
+        $user->setConfirmationToken(null);
+        $user->setTokenExpiresAt(null);
+        $user->setEnabled(true);
+        $em->persist($user);
+        $em->flush();
+
         $this->addFlash(
                 'danger',
-                'Filler text'
+                'Thank you for confirming your account. You may now login'
         );
-        return $this->redirectToRoute('home');
+        return $this->redirectToRoute('app_login');
     }
 
     private function staffProperties($data)

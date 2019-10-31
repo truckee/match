@@ -1,0 +1,5 @@
+<p>Hi {{ fname }},</p>
+<p>Here's the link to changing your password.</p>
+<p>Click on this <a href="{{ absolute_url(path('reset_password', {'token':token})) }}">link</a></p>
+<p>Please note this link will expire in three hours, at {{ expiresAt|date('g:i A, l, F j') }}
+<p>Thanks.</p>
