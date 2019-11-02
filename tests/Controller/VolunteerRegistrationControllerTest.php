@@ -53,6 +53,7 @@ class VolunteerRegistrationControllerTest extends WebTestCase
         $this->assertStringContainsString('Email already registered', $dupe);
     }
 
+    // Note: this test uses text from templates/Email/volunteer_confirmation.html.twig
     public function testVolunteerRegistrationEmail()
     {
         $this->client->enableProfiler();
@@ -72,6 +73,10 @@ class VolunteerRegistrationControllerTest extends WebTestCase
         $mailCollector = $this->client->getProfile()->getCollector('swiftmailer');
 
         $this->assertSame(1, $mailCollector->getMessageCount());
+        $collectedMessages = $mailCollector->getMessages();
+        $message = $collectedMessages[0];
+        
+        $this->assertStringContainsString('You will then begin receive emails',  $message->getBody());
     }
 
     

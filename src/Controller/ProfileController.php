@@ -11,8 +11,8 @@
 
 namespace App\Controller;
 
-//use App\Entity\User;
-use App\Form\Type\UserType;
+use App\Entity\Volunteer;
+use App\Form\Type\ProfileType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -24,22 +24,31 @@ class ProfileController extends AbstractController
 {
 
     /**
-     * @Route("/volunteer/", name="volunteer_profile")
+     * @Route("/", name="profile")
      */
-    public function volunteerProfile(Request $request)
+    public function index(Request $request)
     {
+//        $em = $this->getDoctrine()->getManager();
+        
 //        $this->denyAccessUnlessGranted('ROLE_VOLUNTEER');
         $user = $this->getUser();
-        if (null === $user || (!$user->hasRole('role_user') && $user->hasRole('role_Admin'))) {
-            dd('not allowed');
+        if (!$user) {
+            return $this->redirectToRoute('home');
         }
-        $form = $this->createForm(UserType::class, $user, ['is_volunteer' => true]);
+        $form = $this->createForm(ProfileType::class, $user);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
         }
+//        dd(Volunteer::class);
+        if (Volunteer::class === get_class($user)) {
+//            $destination = $this->render('Volunteer/profile_form.html.twig', [
+//                'form'=>$form->createView(),
+//            ]);
+            return $this->render('Volunteer/profile_form.html.twig', [
+                'form'=>$form->createView(),
+            ]);
+        }
         
-        return $this->render('User/testRegister.html.twig', [
-                    'form' => $form->createView()
-        ]);
+//        return $destination;
     }
 }

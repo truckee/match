@@ -18,6 +18,7 @@ use App\Form\Type\NonprofitType;
 use App\Form\Type\NewUserType;
 use App\Form\Type\NewPasswordType;
 use App\Form\Type\UserEmailType;
+use App\Services\Emailer;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -250,7 +251,7 @@ class RegistrationController extends AbstractController
     /**
      * @Route("/volunteer", name="register_volunteer")
      */
-    public function registerVolunteer(Request $request, \Swift_Mailer $mailer)
+    public function registerVolunteer(Request $request, Emailer $mailer)
     {
         $volunteer = new Volunteer();
         $form = $this->createForm(NewUserType::class, $volunteer, ['data_class' => Volunteer::class]);
@@ -265,7 +266,6 @@ class RegistrationController extends AbstractController
             $this->volunteerProperties($volunteer, $userData);
 
             // send confirmation email
-            $sender = $this->getParameter('swiftmailer.sender_address');
             $view = $this->renderView(
                     'Email/volunteer_confirmation.html.twig',
                     [
@@ -274,15 +274,14 @@ class RegistrationController extends AbstractController
                         'expires' => $volunteer->getTokenExpiresAt(),
                     ]
             );
-            $message = (new \Swift_Message('Volunteer Connections'))
-                    ->setFrom($sender)
-                    ->setTo($volunteer->getEmail())
-                    ->setBody(
-                    $view,
-                    'text/html'
-                    )
-            ;
-            $mailer->send($message);
+            $recipient = $volunteer->getEmail();
+            $subject = 'Volunteer Connections';
+            $mailParams = [
+                'view' => $view,
+                'recipient' => $recipient,
+                'subject' => $subject,
+            ];
+            $mailer->registrationMailer($mailParams);
 
             $em = $this->getDoctrine()->getManager();
             $em->persist($volunteer);
@@ -308,7 +307,7 @@ class RegistrationController extends AbstractController
     /**
      * @Route("/nonprofit", name="register_org")
      */
-    public function registerNonprofit(Request $request, UserPasswordEncoderInterface $encoder, \Swift_Mailer $mailer)
+    public function registerNonprofit(Request $request, UserPasswordEncoderInterface $encoder, Emailer $mailer)
     {
         $org = new Nonprofit();
         $form = $this->createForm(NonprofitType::class, $org);
@@ -325,7 +324,7 @@ class RegistrationController extends AbstractController
             $org->setStaff($staff);
 
             // send confirmation email
-            $sender = $this->getParameter('swiftmailer.sender_address');
+//            $sender = $this->getParameter('swiftmailer.sender_address');
             $view = $this->renderView(
                     'Email/staff_confirmation.html.twig',
                     [
@@ -335,15 +334,14 @@ class RegistrationController extends AbstractController
                         'orgname' => $org->getOrgname(),
                     ]
             );
-            $message = (new \Swift_Message('Volunteer Connections'))
-                    ->setFrom($sender)
-                    ->setTo($staff->getEmail())
-                    ->setBody(
-                    $view,
-                    'text/html'
-                    )
-            ;
-            $mailer->send($message);
+            $recipient =$staff->getEmail(); 
+            $subject = 'Volunteer Connections';
+            $mailParams = [
+                'view' => $view,
+                'recipient' => $recipient,
+                'subject' => $subject,
+            ];
+            $mailer->registrationMailer($mailParams);
 
             // store entities
             $em->persist($staff);
