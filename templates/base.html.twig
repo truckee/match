@@ -10,14 +10,14 @@
     </head>
     <body>
         {% block navTop %}
-                {% include 'Default/topMenu.html.twig' %}
+                {% include 'Default/top_menu.html.twig' %}
         {% endblock %}
         <div class="container">
             <div>
                 
             </div>
             {% block nav %}
-                {% include 'Default/mainMenu.html.twig' %}
+                {% include 'Default/main_menu.html.twig' %}
             {% endblock nav %}
             {% for label, messages in app.flashes %}
                 {% for message in messages %}

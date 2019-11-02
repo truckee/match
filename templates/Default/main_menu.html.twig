@@ -12,15 +12,6 @@
             <li class="nav-item">
                 <a class="nav-link" href="{{ path('vol_index') }}">Volunteer</a>
             </li>
-{#            <li class="nav-item dropdown">vol
-                <a class="nav-link dropdown-toggle" href="#" id="navbarVolunteer" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    Volunteer
-                </a>
-                <div class="dropdown-menu" aria-labelledby="navbarVolunteer">
-                    <a class="dropdown-item" href="{{ path('home') }}">Search</a>
-                    <a class="dropdown-item" href="{{ path('home') }}">Register</a>
-                </div>
-            </li>#}
             <li class="nav-item">
                 <a class="nav-link" href="{{ path('nonprofit_index') }}">Nonprofits</a>
             </li>
@@ -36,21 +27,22 @@
                     </div>
                 </li>
             {% endif %}
-{#            {% if is_granted('ROLE_USER') %}
+            {% if app.user %}
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarAdmin" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         Account
                     </a>
                     <div class="dropdown-menu" aria-labelledby="navbarAccount">
-                        <a class="dropdown-item" href="{{ path('home') }}">Change password</a>
+                        <a class="dropdown-item" href="{{ path('reset_password') }}">Change password</a>
+                        <a class="dropdown-item" href="{{ path('profile') }}">Edit profile</a>
                         <a class="dropdown-item" href="{{ path('home') }}">Logout</a>
                     </div>
                 </li>
-            {% else %}
+{#            {% else %}
                 <li class="nav-item">
                     <a class="nav-link" href="{{ path('home') }}">Log in</a>
-                </li>
-            {% endif %}#}
+                </li>#}
+            {% endif %}
         </ul>
     </div>
 </nav>

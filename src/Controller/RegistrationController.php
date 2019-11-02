@@ -136,7 +136,7 @@ class RegistrationController extends AbstractController
 
             // if nonUser
             if (null === $user) {
-                $forgotView = $this->renderView('Email/nonUserForgottenPassword.html.twig',
+                $forgotView = $this->renderView('Email/non_user_forgotten_password.html.twig',
                         [
                             'supportEmail' => $sender
                 ]);
@@ -241,7 +241,7 @@ class RegistrationController extends AbstractController
             return $this->redirectToRoute('home');
         }
 
-        return $this->render('Registration/userPassword.html.twig', [
+        return $this->render('Registration/user_password.html.twig', [
                     'form' => $form->createView(),
                     'headerText' => 'Set new password',
         ]);
@@ -267,7 +267,7 @@ class RegistrationController extends AbstractController
             // send confirmation email
             $sender = $this->getParameter('swiftmailer.sender_address');
             $view = $this->renderView(
-                    'Email/volunteerConfirmation.html.twig',
+                    'Email/volunteer_confirmation.html.twig',
                     [
                         'fname' => $volunteer->getFname(),
                         'token' => $volunteer->getConfirmationToken(),
@@ -295,7 +295,7 @@ class RegistrationController extends AbstractController
             return $this->redirectToRoute('home');
         }
 
-        return $this->render('Default/formTemplates.html.twig', [
+        return $this->render('Default/form_templates.html.twig', [
                     'form' => $form->createView(),
                     'headerText' => 'Become a volunteer',
                     'userHeader' => 'Volunteer',
@@ -327,7 +327,7 @@ class RegistrationController extends AbstractController
             // send confirmation email
             $sender = $this->getParameter('swiftmailer.sender_address');
             $view = $this->renderView(
-                    'Email/staffConfirmation.html.twig',
+                    'Email/staff_confirmation.html.twig',
                     [
                         'fname' => $staff->getFname(),
                         'token' => $staff->getConfirmationToken(),
@@ -363,7 +363,7 @@ class RegistrationController extends AbstractController
             return $this->redirectToRoute('home');
         }
 
-        return $this->render('Default/formTemplates.html.twig', [
+        return $this->render('Default/form_templates.html.twig', [
                     'form' => $form->createView(),
                     'headerText' => 'Add a nonprofit',
                     'userHeader' => 'Staff Member',
