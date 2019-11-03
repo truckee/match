@@ -12,7 +12,7 @@
 namespace App\Controller;
 
 use App\Entity\Volunteer;
-use App\Form\Type\ProfileType;
+use App\Form\Type\VolunteerType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -29,26 +29,38 @@ class ProfileController extends AbstractController
     public function index(Request $request)
     {
 //        $em = $this->getDoctrine()->getManager();
-        
 //        $this->denyAccessUnlessGranted('ROLE_VOLUNTEER');
         $user = $this->getUser();
         if (!$user) {
             return $this->redirectToRoute('home');
         }
-        $form = $this->createForm(ProfileType::class, $user);
-        $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {
-        }
-//        dd(Volunteer::class);
         if (Volunteer::class === get_class($user)) {
-//            $destination = $this->render('Volunteer/profile_form.html.twig', [
+            $templates = [
+                'Volunteer/receive_email_form.html.twig',
+                'Default/focuses.html.twig',
+                'Default/skills.html.twig',
+            ];
+            $headerText = $user->getFname() . ' ' . $user->getSname() . ' profile';
+            $form = $this->createForm(VolunteerType::class, $user,);
+            $destination = $this->render('Default/form_templates.html.twig', [
+                'form' => $form->createView(),
+                'templates' => $templates,
+                'headerText' => $headerText,
+                'focusHeader' => "Volunteer's Focus(es)",
+                'skillHeader' => "Volunteer's Skill(s)",
+            ]);
+//            return $this->render('Volunteer/profile_form.html.twig', [
 //                'form'=>$form->createView(),
 //            ]);
-            return $this->render('Volunteer/profile_form.html.twig', [
-                'form'=>$form->createView(),
-            ]);
         }
-        
-//        return $destination;
+//        $form = $this->createForm(ProfileType::class, $user);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            
+        }
+//        dd(Volunteer::class);
+
+        return $destination;
     }
+
 }

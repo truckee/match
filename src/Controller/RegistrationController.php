@@ -16,6 +16,7 @@ use App\Entity\Volunteer;
 use App\Entity\Nonprofit;
 use App\Form\Type\NonprofitType;
 use App\Form\Type\NewUserType;
+use App\Form\Type\VolunteerType;
 use App\Form\Type\NewPasswordType;
 use App\Form\Type\UserEmailType;
 use App\Services\Emailer;
@@ -121,7 +122,7 @@ class RegistrationController extends AbstractController
      *
      * @Route("/forgot", name="register_forgot")
      */
-    public function forgotPassword(Request $request, \Swift_Mailer $mailer)
+    public function forgotPassword(Request $request, Emailer $mailer)
     {
         $form = $this->createForm(UserEmailType::class);
         $form->handleRequest($request);
@@ -159,12 +160,12 @@ class RegistrationController extends AbstractController
                         )
                 ;
             }
-            $message = (new \Swift_Message('Volunteer Connections forgotten password'))
-                    ->setFrom($sender)
-                    ->setTo($email)
-                    ->setBody($forgotView, 'text/html')
-            ;
-            $mailer->send($message);
+            $mailParams = [
+                'view' => $forgotView,
+                'recipient' => $email,
+                'subject' => 'Volunteer Connections forgotten password',
+            ];
+            $mailer->appMailer($mailParams);
 
             return $this->redirectToRoute('home');
         }
@@ -254,11 +255,11 @@ class RegistrationController extends AbstractController
     public function registerVolunteer(Request $request, Emailer $mailer)
     {
         $volunteer = new Volunteer();
-        $form = $this->createForm(NewUserType::class, $volunteer, ['data_class' => Volunteer::class]);
+        $form = $this->createForm(VolunteerType::class, $volunteer, ['register' => true,]);
         $templates = [
             'Registration/new_user.html.twig',
-            'Registration/focuses.html.twig',
-            'Registration/skills.html.twig',
+            'Default/focuses.html.twig',
+            'Default/skills.html.twig',
         ];
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
@@ -281,7 +282,7 @@ class RegistrationController extends AbstractController
                 'recipient' => $recipient,
                 'subject' => $subject,
             ];
-            $mailer->registrationMailer($mailParams);
+            $mailer->appMailer($mailParams);
 
             $em = $this->getDoctrine()->getManager();
             $em->persist($volunteer);
@@ -314,7 +315,7 @@ class RegistrationController extends AbstractController
         $templates = [
             'Registration/nonprofit.html.twig',
             'Registration/new_user.html.twig',
-            'Registration/focuses.html.twig',
+            'Default/focuses.html.twig',
         ];
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
@@ -334,14 +335,14 @@ class RegistrationController extends AbstractController
                         'orgname' => $org->getOrgname(),
                     ]
             );
-            $recipient =$staff->getEmail(); 
+            $recipient = $staff->getEmail();
             $subject = 'Volunteer Connections';
             $mailParams = [
                 'view' => $view,
                 'recipient' => $recipient,
                 'subject' => $subject,
             ];
-            $mailer->registrationMailer($mailParams);
+            $mailer->appMailer($mailParams);
 
             // store entities
             $em->persist($staff);

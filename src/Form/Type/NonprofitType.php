@@ -13,7 +13,6 @@ namespace App\Form\Type;
 
 use App\Form\Type\Field\FocusFieldType;
 use App\Entity\Nonprofit;
-use App\Entity\Staff;
 use App\Form\Type\NewUserType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;

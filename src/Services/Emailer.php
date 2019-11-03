@@ -27,7 +27,7 @@ class Emailer
         $this->sender = $senderAddress;
     }
     
-    public function registrationMailer($mailParams)
+    public function appMailer($mailParams)
     {
             $message = (new \Swift_Message($mailParams['subject']))
                     ->setFrom($this->sender)

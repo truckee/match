@@ -90,7 +90,6 @@ class NewUserType extends AbstractType
         $resolver->setDefaults([
             'data_class' => Staff::class,
             'required' => false,
-            'error_bubbling' => true,
         ]);
     }
 
