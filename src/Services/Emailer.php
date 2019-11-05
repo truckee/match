@@ -33,7 +33,7 @@ class Emailer
     public function appMailer($mailParams)
     {
         if (null === $mailParams['recipient']) {
-            $dotenv = new Dotenv();
+            $dotenv = new Dotenv($usePutenv = false);
             $dotenv->load($this->projectDir.'/.env.local');
             $mailParams['recipient'] = $_ENV['NPO_ACTIVATOR'];
         }

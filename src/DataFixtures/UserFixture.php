@@ -60,7 +60,6 @@ class UserFixture extends Fixture
         $volunteer1->setTokenExpiresAt($expires1->add(new \DateInterval('P10Y')));
         $manager->persist($volunteer1);
         
-        // user enabled = true: for reset password, profile check
         $volunteer2 = new Volunteer();
         $volunteer2->setConfirmationToken('fedcba');
         $volunteer2->setEmail('garbled@bogus.info');
