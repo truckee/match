@@ -14,11 +14,10 @@ namespace App\Tests\Controller;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 /**
- * 
+ *
  */
 class NonprofitRegistrationControllerTest extends WebTestCase
 {
-
     public function setup(): void
     {
         $this->client = static::createClient();
@@ -28,7 +27,7 @@ class NonprofitRegistrationControllerTest extends WebTestCase
     public function testNonprofitRegistration()
     {
         $params = [
-            'ein'=> '987654321', 
+            'ein'=> '987654321',
             'email'=>'quasi@modo.org'
         ];
         $this->nonprofitRegistration($params);
@@ -41,7 +40,7 @@ class NonprofitRegistrationControllerTest extends WebTestCase
     public function testNonprofitRegistrationEmail()
     {
         $params = [
-            'ein'=> '987654321', 
+            'ein'=> '987654321',
             'email'=>'quasi@modo.org'
         ];
         $this->client->enableProfiler();
@@ -65,13 +64,13 @@ class NonprofitRegistrationControllerTest extends WebTestCase
         $collectedMessages = $mailCollector->getMessages();
         $message = $collectedMessages[0];
         
-        $this->assertStringContainsString('until the Foundation has activated the account',  $message->getBody());
+        $this->assertStringContainsString('until the Foundation has activated the account', $message->getBody());
     }
     
     public function testNonprofitAlreadyRegistered()
     {
         $params = [
-            'ein'=> '123456789', 
+            'ein'=> '123456789',
             'email'=>'quasi@modo.org'
         ];
         $content = $this->nonprofitRegistration($params);
@@ -82,7 +81,7 @@ class NonprofitRegistrationControllerTest extends WebTestCase
     public function testNonprofitEINNot9Digits()
     {
         $params = [
-            'ein'=> '1234789', 
+            'ein'=> '1234789',
             'email'=>'quasi@modo.org'
         ];
         $content = $this->nonprofitRegistration($params);
@@ -93,12 +92,27 @@ class NonprofitRegistrationControllerTest extends WebTestCase
     public function testNonprofitStaffAlreadyRegistered()
     {
         $params = [
-            'ein'=> '987654321', 
+            'ein'=> '987654321',
             'email'=>'unknown@bogus.info'
         ];
         $content = $this->nonprofitRegistration($params);
 
         $this->assertStringContainsString('Email already registered', $content);
+    }
+    
+    public function testNewNonprofitActivationEmail()
+    {
+        $this->client->enableProfiler();
+        $this->client->followRedirects(false);
+        $this->client->request('GET', '/register/confirm/tuvxyz');
+        
+        $mailCollector = $this->client->getProfile()->getCollector('swiftmailer');
+
+        $this->assertSame(1, $mailCollector->getMessageCount());
+        $collectedMessages = $mailCollector->getMessages();
+        $message = $collectedMessages[0];
+        
+        $this->assertStringContainsString('new nonprofit has submitted registration', $message->getBody());
     }
     
     private function nonprofitRegistration($params)
@@ -118,5 +132,4 @@ class NonprofitRegistrationControllerTest extends WebTestCase
 
         return $this->client->getResponse()->getContent();
     }
-
 }

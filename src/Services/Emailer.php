@@ -11,32 +11,42 @@
 
 namespace App\Services;
 
-//use \Swift_Mailer;
+use Symfony\Component\Dotenv\Dotenv;
 
 /**
  * 
  */
 class Emailer
 {
+
     private $mailer;
     private $sender;
-    
-    public function __construct(\Swift_Mailer $mailer, $senderAddress)
+    private $projectDir;
+
+    public function __construct(\Swift_Mailer $mailer, $senderAddress, $projectDir)
     {
         $this->mailer = $mailer;
         $this->sender = $senderAddress;
+        $this->projectDir = $projectDir;
     }
-    
+
     public function appMailer($mailParams)
     {
-            $message = (new \Swift_Message($mailParams['subject']))
-                    ->setFrom($this->sender)
-                    ->setTo($mailParams['recipient'])
-                    ->setBody(
-                    $mailParams['view'],
-                    'text/html'
-                    )
-            ;
-            $this->mailer->send($message);
+        if (null === $mailParams['recipient']) {
+            $dotenv = new Dotenv();
+            $dotenv->load($this->projectDir.'/.env.local');
+            $mailParams['recipient'] = $_ENV['NPO_ACTIVATOR'];
+        }
+        
+        $message = (new \Swift_Message($mailParams['subject']))
+                ->setFrom($this->sender)
+                ->setTo($mailParams['recipient'])
+                ->setBody(
+                $mailParams['view'],
+                'text/html'
+                )
+        ;
+        $this->mailer->send($message);
     }
+
 }

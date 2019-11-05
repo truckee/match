@@ -7,24 +7,25 @@
  * file that was distributed with this source code.
  */
 
-//src/Controller/NonprofitController.php
+//src/Controller/Admin.php
 
 namespace App\Controller;
 
-//use App\Entity\Nonprofit;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
- * @Route("/nonprofit")
+ * @Route("/admin")
  */
-class NonprofitController extends AbstractController
+class Admin extends AbstractController
 {
     /**
-     * @Route("/", name="nonprofit_index")
+     * @Route("/activate", name="activate_nonprofit")
+     * 
      */
-    public function index()
+    public function activate()
     {
-        return $this->render('Nonprofit/index.html.twig');
+        return new Response('moving on');
     }
 }

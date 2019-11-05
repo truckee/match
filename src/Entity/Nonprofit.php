@@ -120,14 +120,14 @@ class Nonprofit
     private $ein;
     
     /**
-     * @ORM\OneToOne(targetEntity="Staff", inversedBy="nonprofit", cascade={"persist"})
+     * @ORM\OneToOne(targetEntity="Staff", inversedBy="nonprofit", cascade={"persist", "remove"})
      * @ORM\JoinColumn(name="staff_id", referencedColumnName="id")
      * @Assert\Valid
      */
     protected $staff;
 
     /**
-     * @ORM\ManyToMany(targetEntity="Focus", inversedBy="nonprofits", cascade={"persist"})
+     * @ORM\ManyToMany(targetEntity="Focus", inversedBy="nonprofits", cascade={"persist"}, orphanRemoval=true)
      * @ORM\JoinTable(name="org_focus",
      *      joinColumns={@ORM\JoinColumn(name="orgId", referencedColumnName="id")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="focusId", referencedColumnName="id")}

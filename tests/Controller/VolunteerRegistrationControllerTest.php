@@ -15,7 +15,6 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class VolunteerRegistrationControllerTest extends WebTestCase
 {
-
     public function setup(): void
     {
         $this->client = static::createClient();
@@ -76,7 +75,7 @@ class VolunteerRegistrationControllerTest extends WebTestCase
         $collectedMessages = $mailCollector->getMessages();
         $message = $collectedMessages[0];
         
-        $this->assertStringContainsString('You will then begin receive emails',  $message->getBody());
+        $this->assertStringContainsString('You will then begin receive emails', $message->getBody());
     }
 
     
@@ -96,5 +95,4 @@ class VolunteerRegistrationControllerTest extends WebTestCase
 
         return $this->client->getResponse()->getContent();
     }
-
 }

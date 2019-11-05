@@ -28,3 +28,4 @@ services:
 
     App\Services\Emailer:
         $senderAddress: '%swiftmailer.sender_address%'
+        $projectDir: '%kernel.project_dir%'

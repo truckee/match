@@ -22,10 +22,10 @@ class NonprofitFixture extends Fixture
         $npo = new Nonprofit();
         $npo->setOrgname('Marmot Fund');
         $npo->setEin('123456789');
+        $npo->setTemp(false);
 
-        // staff has expired confirmation token
         $staff = new Staff();
-        $staff->setConfirmationToken('fedcba');
+        $staff->setConfirmationToken('tuvxyz');
         $staff->setEmail('unknown@bogus.info');
         $staff->setEnabled(false);
         $staff->setFname('Unknown');
@@ -34,7 +34,7 @@ class NonprofitFixture extends Fixture
         $staff->setPassword($password);
         $staff->setRoles(['ROLE_STAFF']);
         $expires = new \DateTime();
-        $staff->setTokenExpiresAt($expires->sub(new \DateInterval('PT3H')));
+        $staff->setTokenExpiresAt($expires->add(new \DateInterval('P10Y')));
 
         $npo->setStaff($staff);
         $manager->persist($staff);
@@ -42,5 +42,4 @@ class NonprofitFixture extends Fixture
 
         $manager->flush();
     }
-
 }

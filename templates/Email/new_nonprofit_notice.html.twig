@@ -1,0 +1,8 @@
+<p>A new nonprofit has submitted registration on {{ ''|date("m/d/Y") }}. This organization 
+    will not be able to post any volunteer opportunities until it is verified and activated.</p>
+<p>Nonprofit: {{ orgname }}</p>
+<p>EIN: {{ ein }}</p>
+<p>The <a href="https://apps.irs.gov/app/eos/">IRS Tax Exempt Organization Search </a>
+    can be used to verify {{ orgname }}.</p>
+<p>Activation can be done by clicking <a href="{{ path('activate_nonprofit', {"ein":ein}) }}">here</a>. 
+    Activation requires an admin login at the Volunteer Connections web site</p>

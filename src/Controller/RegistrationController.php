@@ -15,7 +15,6 @@ use App\Entity\Staff;
 use App\Entity\Volunteer;
 use App\Entity\Nonprofit;
 use App\Form\Type\NonprofitType;
-use App\Form\Type\NewUserType;
 use App\Form\Type\VolunteerType;
 use App\Form\Type\NewPasswordType;
 use App\Form\Type\UserEmailType;
@@ -138,10 +137,12 @@ class RegistrationController extends AbstractController
 
             // if nonUser
             if (null === $user) {
-                $forgotView = $this->renderView('Email/non_user_forgotten_password.html.twig',
+                $forgotView = $this->renderView(
+                        'Email/non_user_forgotten_password.html.twig',
                         [
                             'supportEmail' => $sender
-                ]);
+                        ]
+                );
             } else {
                 $token = md5(uniqid(rand(), true));
                 $user->setConfirmationToken($token);
@@ -323,9 +324,9 @@ class RegistrationController extends AbstractController
             $em = $this->getDoctrine()->getManager();
             $staff = $this->staffProperties($orgData['staff']);
             $org->setStaff($staff);
+            $org->setTemp(false);
 
             // send confirmation email
-//            $sender = $this->getParameter('swiftmailer.sender_address');
             $view = $this->renderView(
                     'Email/staff_confirmation.html.twig',
                     [
@@ -375,12 +376,19 @@ class RegistrationController extends AbstractController
     /**
      * @Route("/confirm/{token}")
      */
-    public function confirm(UserPasswordEncoderInterface $encoder, $token = null)
+    public function confirm(UserPasswordEncoderInterface $encoder, Emailer $mailer, $token = null)
     {
         $em = $this->getDoctrine()->getManager();
-        $user = $em->getRepository('App:User')->findOneBy(['confirmationToken' => $token]);
+        if (null === $token) {
+            $this->addFlash(
+                    'danger',
+                    'Confirmation status cannot be determined'
+            );
 
+            return $this->redirectToRoute('home');
+        }
         // if bogus token data is presented
+        $user = $em->getRepository('App:User')->findOneBy(['confirmationToken' => $token]);
         if (null === $user) {
             $this->addFlash(
                     'danger',
@@ -389,22 +397,47 @@ class RegistrationController extends AbstractController
 
             return $this->redirectToRoute('home');
         }
+        $actor = '';
+        if ($user->hasRole('ROLE_STAFF')) {
+            $actor = 'staff';
+        } elseif ($user->hasRole('ROLE_VOLUNTEER')) {
+            $actor = 'volunteer';
+        }
 
-        // expired token?
+        // if token is expired, remove user
         $now = new \DateTime();
         if ($now > $user->getTokenExpiresAt()) {
-            $path = 'home';
-            if ($user->hasRole('ROLE_STAFF')) {
-                $path = 'register_org';
-            } elseif ($user->hasRole('ROLE_VOLUNTEER')) {
-                $path = 'register_volunteer';
-            }
             $this->addFlash(
                     'danger',
-                    'Confirmation has expired'
+                    'Confirmation has expired. Please register again.'
             );
+            if ('staff' === $actor) {
+                $path = 'register_org';
+                $org = $user->getNonprofit();
+                $em->remove($org);
+            } elseif ('volunteer' === $actor) {
+                $path = 'register_volunteer';
+                $em->remove($user);
+            }
 
             return $this->redirectToRoute($path);
+        }
+
+        // send welcome email
+        if ('staff' === $actor) {
+            // notice to admin
+            $org = $user->getNonprofit();
+            $view = $this->renderView('Email/new_nonprofit_notice.html.twig', [
+                'orgname' => $org->getOrgname(),
+                'ein' => $org->getEin(),
+            ]);
+            $mailParams = [
+                'view'=>$view,
+                'recipient'=>null,
+                'subject'=>'New Nonprofit Registration'
+            ];
+            
+            $mailer->appMailer($mailParams);
         }
 
         $user->setConfirmationToken(null);
@@ -427,7 +460,7 @@ class RegistrationController extends AbstractController
         $staff->setFname($data['fname']);
         $staff->setSname($data['sname']);
         $staff->setEmail($data['email']);
-        $staff->setEnabled(true);
+        $staff->setEnabled(false);
         $password = $this->encoder->encodePassword($staff, $data['plainPassword']['first']);
         $staff->setPassword($password);
         $staff->setConfirmationToken(md5(uniqid(rand(), true)));
@@ -441,7 +474,7 @@ class RegistrationController extends AbstractController
     {
         $password = $this->encoder->encodePassword($volunteer, $data['plainPassword']['first']);
         $volunteer->setPassword($password);
-        $volunteer->setEnabled(true);
+        $volunteer->setEnabled(false);
         $volunteer->setConfirmationToken(md5(uniqid(rand(), true)));
         $expiresAt = new \DateTime();
         $volunteer->setTokenExpiresAt($expiresAt->add(new \DateInterval('PT3H')));

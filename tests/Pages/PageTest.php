@@ -14,23 +14,26 @@ namespace App\Tests\Pages;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 /**
- * 
+ *
  */
 class PageTest extends WebTestCase
 {
-    public function setup() : void {
+    public function setup() : void
+    {
         $this->client = static::createClient();
         $this->client->followRedirects();
     }
-    public function testHomePage() {
-        
+    
+    public function testHomePage()
+    {
         $this->client->request('GET', '/');
         
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
         $this->assertStringContainsString('Volunteer Connections', $this->client->getResponse()->getContent());
     }
     
-    public function testVolunteerPage() {
+    public function testVolunteerPage()
+    {
         $this->client->request('GET', '/volunteer');
         
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
@@ -40,7 +43,8 @@ class PageTest extends WebTestCase
         $this->assertStringContainsString('First name', $this->client->getResponse()->getContent());
     }
     
-    public function testNonprofitPage() {
+    public function testNonprofitPage()
+    {
         $this->client->request('GET', '/nonprofit');
         
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());

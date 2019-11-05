@@ -14,11 +14,10 @@ namespace App\Tests\Controller;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 /**
- * 
+ *
  */
 class RegistrationTest extends WebTestCase
 {
-
     public function setup(): void
     {
         $this->client = static::createClient();
@@ -29,7 +28,7 @@ class RegistrationTest extends WebTestCase
     {
         $this->client->request('GET', '/register/confirm');
 
-        $this->assertStringContainsString('Invalid registration data', $this->client->getResponse()->getContent());
+        $this->assertStringContainsString('Confirmation status cannot be determined', $this->client->getResponse()->getContent());
 
         $this->client->request('GET', '/register/confirm/blahblah');
 
@@ -40,8 +39,8 @@ class RegistrationTest extends WebTestCase
     {
         $this->client->request('GET', '/register/confirm/fedcba');
 
-        $this->assertStringContainsString('Confirmation has expired', $this->client->getResponse()->getContent());
-        $this->assertStringContainsString('Add a nonprofit', $this->client->getResponse()->getContent());
+        $this->assertStringContainsString('Please register again', $this->client->getResponse()->getContent());
+        $this->assertStringContainsString('Become a volunteer', $this->client->getResponse()->getContent());
     }
 
     public function testNotYetConfirmedAndConfirmation()
@@ -125,7 +124,7 @@ class RegistrationTest extends WebTestCase
         $collectedMessages = $mailCollector->getMessages();
         $message = $collectedMessages[0];
         
-        $this->assertStringContainsString('email is not recognized',  $message->getBody());
+        $this->assertStringContainsString('email is not recognized', $message->getBody());
     }
     
     public function testFogottenPasswordUser()
@@ -143,7 +142,6 @@ class RegistrationTest extends WebTestCase
         $collectedMessages = $mailCollector->getMessages();
         $message = $collectedMessages[0];
         
-        $this->assertStringContainsString('the link to changing your password',  $message->getBody());
+        $this->assertStringContainsString('the link to changing your password', $message->getBody());
     }
-
 }
