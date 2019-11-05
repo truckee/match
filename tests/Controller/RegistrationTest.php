@@ -111,7 +111,6 @@ class RegistrationTest extends WebTestCase
     
     public function testFogottenPasswordNotAUser()
     {
-        $this->client->enableProfiler();
         $this->client->followRedirects(false);
         $this->client->request('GET', '/register/forgot');
         $this->client->submitForm('Submit request', [
@@ -125,11 +124,11 @@ class RegistrationTest extends WebTestCase
         $message = $collectedMessages[0];
         
         $this->assertStringContainsString('email is not recognized', $message->getBody());
+        $this->client->followRedirects(true);
     }
     
     public function testFogottenPasswordUser()
     {
-        $this->client->enableProfiler();
         $this->client->followRedirects(false);
         $this->client->request('GET', '/register/forgot');
         $this->client->submitForm('Submit request', [
@@ -143,5 +142,22 @@ class RegistrationTest extends WebTestCase
         $message = $collectedMessages[0];
         
         $this->assertStringContainsString('the link to changing your password', $message->getBody());
+        $this->client->followRedirects(true);
     }
+    
+    public function testNewNonprofitActivationEmail()
+    {
+        $this->client->followRedirects(false);
+        $this->client->request('GET', '/register/confirm/tuvxyz');
+        
+        $mailCollector = $this->client->getProfile()->getCollector('swiftmailer');
+
+        $this->assertSame(1, $mailCollector->getMessageCount());
+        $collectedMessages = $mailCollector->getMessages();
+        $message = $collectedMessages[0];
+        
+        $this->assertStringContainsString('new nonprofit has submitted registration', $message->getBody());
+        $this->client->followRedirects(true);
+    }
+    
 }
