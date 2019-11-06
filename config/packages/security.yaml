@@ -27,4 +27,4 @@ security:
 #        - { path: ^/register/*, roles: IS_AUTHENTICATED_ANONYMOUSLY }
 #        - { path: ^/reports/foodbank/*, roles: IS_AUTHENTICATED_ANONYMOUSLY }
 #        - { path: ^/, roles: ROLE_USER }
-#        - { path: ^/user, roles: ROLE_ADMIN }
+        - { path: ^/admin, roles: ROLE_ADMIN }

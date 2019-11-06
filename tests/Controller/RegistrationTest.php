@@ -124,7 +124,6 @@ class RegistrationTest extends WebTestCase
         $message = $collectedMessages[0];
         
         $this->assertStringContainsString('email is not recognized', $message->getBody());
-        $this->client->followRedirects(true);
     }
     
     public function testFogottenPasswordUser()
@@ -142,7 +141,6 @@ class RegistrationTest extends WebTestCase
         $message = $collectedMessages[0];
         
         $this->assertStringContainsString('the link to changing your password', $message->getBody());
-        $this->client->followRedirects(true);
     }
     
     public function testNewNonprofitActivationEmail()
@@ -157,7 +155,6 @@ class RegistrationTest extends WebTestCase
         $message = $collectedMessages[0];
         
         $this->assertStringContainsString('new nonprofit has submitted registration', $message->getBody());
-        $this->client->followRedirects(true);
     }
     
 }

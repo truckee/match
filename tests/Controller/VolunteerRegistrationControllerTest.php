@@ -55,7 +55,6 @@ class VolunteerRegistrationControllerTest extends WebTestCase
     // Note: this test uses text from templates/Email/volunteer_confirmation.html.twig
     public function testVolunteerRegistrationEmail()
     {
-        $this->client->enableProfiler();
         $this->client->followRedirects(false);
         $crawler = $this->client->request('GET', '/register/volunteer');
         $buttonCrawlerNode = $crawler->selectButton('submit');

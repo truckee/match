@@ -309,7 +309,7 @@ class RegistrationController extends AbstractController
     /**
      * @Route("/nonprofit", name="register_org")
      */
-    public function registerNonprofit(Request $request, UserPasswordEncoderInterface $encoder, Emailer $mailer)
+    public function registerNonprofit(Request $request, Emailer $mailer)
     {
         $org = new Nonprofit();
         $form = $this->createForm(NonprofitType::class, $org);
@@ -376,7 +376,7 @@ class RegistrationController extends AbstractController
     /**
      * @Route("/confirm/{token}")
      */
-    public function confirm(UserPasswordEncoderInterface $encoder, Emailer $mailer, $token = null)
+    public function confirm(Emailer $mailer, $token = null)
     {
         $em = $this->getDoctrine()->getManager();
         if (null === $token) {
@@ -423,7 +423,7 @@ class RegistrationController extends AbstractController
             return $this->redirectToRoute($path);
         }
 
-        // send welcome email
+        // send notice email
         if ('staff' === $actor) {
             // notice to admin
             $org = $user->getNonprofit();

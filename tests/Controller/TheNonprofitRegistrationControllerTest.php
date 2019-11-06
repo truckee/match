@@ -43,6 +43,7 @@ class NonprofitRegistrationControllerTest extends WebTestCase
             'ein'=> '987654321',
             'email'=>'quasi@modo.org'
         ];
+        $this->client->enableProfiler();
         $this->client->followRedirects(false);
         $crawler = $this->client->request('GET', '/register/nonprofit');
         $buttonCrawlerNode = $crawler->selectButton('submit');
@@ -97,6 +98,21 @@ class NonprofitRegistrationControllerTest extends WebTestCase
         $content = $this->nonprofitRegistration($params);
 
         $this->assertStringContainsString('Email already registered', $content);
+    }
+    
+    public function testNewNonprofitActivationEmail()
+    {
+        $this->client->enableProfiler();
+        $this->client->followRedirects(false);
+        $this->client->request('GET', '/register/confirm/tuvxyz');
+        
+        $mailCollector = $this->client->getProfile()->getCollector('swiftmailer');
+
+        $this->assertSame(1, $mailCollector->getMessageCount());
+        $collectedMessages = $mailCollector->getMessages();
+        $message = $collectedMessages[0];
+        
+        $this->assertStringContainsString('new nonprofit has submitted registration', $message->getBody());
     }
     
     private function nonprofitRegistration($params)

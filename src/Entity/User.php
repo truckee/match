@@ -99,7 +99,7 @@ abstract class User implements UserInterface
 
     public function getUsername()
     {
-        return ;
+        return $this->email;
     }
 
     public function setUsername($username)
