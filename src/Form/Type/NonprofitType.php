@@ -96,10 +96,12 @@ class NonprofitType extends AbstractType
                     'label_attr' => ['class' => 'mr-2'],
                 ])
                 ->add('focuses', FocusFieldType::class)
-                ->add('staff', NewUserType::class, [
-                    'label' => false,
-                    ])
         ;
+        if (true === $options['register']) {
+            $builder->add('staff', NewUserType::class, [
+                'label' => false,
+            ]);
+        }
     }
 
     public function configureOptions(OptionsResolver $resolver)
@@ -107,6 +109,7 @@ class NonprofitType extends AbstractType
         $resolver->setDefaults([
             'data_class' => Nonprofit::class,
             'required' => false,
+            'register' => false,
         ]);
     }
 

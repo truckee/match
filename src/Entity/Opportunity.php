@@ -9,7 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
  * Opportunity
  *
  * @ORM\Table(name="opportunity", indexes={@ORM\Index(name="IDX_8389C3D73A8AF33E", columns={"orgId"})})
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass = "App\Repository\OpportunityRepository")
  */
 class Opportunity
 {
@@ -78,15 +78,14 @@ class Opportunity
      */
     private $description;
 
+
     /**
-     * @var \Nonprofit
-     *
-     * @ORM\ManyToOne(targetEntity="Nonprofit")
+     * @ORM\ManyToOne(targetEntity="Nonprofit", inversedBy="opportunities")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="orgId", referencedColumnName="id")
      * })
      */
-    private $orgid;
+    private $nonprofit;
 
     /**
      * @var bool|null
@@ -205,14 +204,13 @@ class Opportunity
         return $this;
     }
 
-    public function getOrgid(): ?Nonprofit
-    {
-        return $this->orgid;
+    public function getNonprofit() {
+        return $this->nonprofit;
     }
 
-    public function setOrgid(?Nonprofit $orgid): self
+    public function setNonprofit($nonprofit)
     {
-        $this->orgid = $orgid;
+        $this->nonprofit = $nonprofit;
 
         return $this;
     }

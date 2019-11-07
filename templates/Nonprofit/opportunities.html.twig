@@ -1,0 +1,11 @@
+{{ opportunitiesHeader }}
+{% for opp in opportunities %}
+    <div class="d-flex  flex-row mb3">
+        <div class="p-2">
+            <a class="btn btn-sm btn-info" href="#">Edit</a>
+        </div>
+        <div class="p-2">
+            {{ opp.oppname }}; Exp: {% if opp.expiredate  is not null %}{{ opp.expiredate|date('m/d/Y') }}{% endif %}
+        </div>
+    </div>
+{% endfor %}

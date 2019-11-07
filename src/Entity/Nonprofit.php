@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Entity\Focus;
+use App\Entity\Opportunity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -17,6 +18,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  */
 class Nonprofit
 {
+
     public function __construct()
     {
         $this->opportunities = new ArrayCollection();
@@ -24,7 +26,7 @@ class Nonprofit
         $this->focuses = new ArrayCollection();
         // nonprofits must be activated manually
         $this->addDate = new \DateTime();
-        $this->temp = true;
+        $this->active = false;
     }
 
     /**
@@ -94,13 +96,6 @@ class Nonprofit
     private $active;
 
     /**
-     * @var bool
-     *
-     * @ORM\Column(name="temp", type="boolean", nullable=false)
-     */
-    private $temp;
-
-    /**
      * @ORM\Column(name="add_date", type="datetime")
      */
     private $addDate;
@@ -118,7 +113,12 @@ class Nonprofit
      * @Assert\Length(min = 9, max = 9, exactMessage = "EIN has 9 digits")
      */
     private $ein;
-    
+
+    /**
+     * @ORM\OneToMany(targetEntity="Opportunity", mappedBy="nonprofit", cascade={"persist","remove"}, fetch="EAGER")
+     */
+    protected $opportunities;
+
     /**
      * @ORM\OneToOne(targetEntity="Staff", inversedBy="nonprofit", cascade={"persist", "remove"})
      * @ORM\JoinColumn(name="staff_id", referencedColumnName="id")
@@ -236,7 +236,7 @@ class Nonprofit
         return $this;
     }
 
-    public function getActive(): ?bool
+    public function isActive(): ?bool
     {
         return $this->active;
     }
@@ -248,23 +248,10 @@ class Nonprofit
         return $this;
     }
 
-    public function getTemp(): ?bool
-    {
-        return $this->temp;
-    }
-
-    public function setTemp(bool $temp): self
-    {
-        $this->temp = $temp;
-
-        return $this;
-    }
-
     public function getAddDate(): ?\DateTimeInterface
     {
         return $this->addDate;
     }
-
 
     /**
      * Add focuses.
@@ -287,6 +274,23 @@ class Nonprofit
     public function removeFocus(Focus $focus)
     {
         $this->focuses->removeElement($focus);
+    }
+    
+    public function getOpportunities()
+    {
+        return $this->opportunities;
+    }
+
+    public function addOpportunity(Opportunity $opportunity)
+    {
+        $this->opportunities[] = $opportunity;
+
+        return $this;
+    }
+
+    public function removeOpportunity(Opportunity $opportunity)
+    {
+        $this->opportunities->removeElement($opportunity);
     }
 
     /**
@@ -322,4 +326,5 @@ class Nonprofit
 
         return $this;
     }
+
 }

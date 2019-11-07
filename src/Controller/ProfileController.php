@@ -11,7 +11,10 @@
 
 namespace App\Controller;
 
+use App\Entity\Staff;
+use App\Entity\Opportunity;
 use App\Entity\Volunteer;
+use App\Form\Type\NonprofitType;
 use App\Form\Type\VolunteerType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -28,13 +31,13 @@ class ProfileController extends AbstractController
      */
     public function index(Request $request)
     {
-//        $em = $this->getDoctrine()->getManager();
-//        $this->denyAccessUnlessGranted('ROLE_VOLUNTEER');
         $user = $this->getUser();
         if (!$user) {
             return $this->redirectToRoute('home');
         }
+        $em = $this->getDoctrine()->getManager();
         if (Volunteer::class === get_class($user)) {
+            $entity = $user;
             $templates = [
                 'Volunteer/receive_email_form.html.twig',
                 'Default/focuses.html.twig',
@@ -49,16 +52,39 @@ class ProfileController extends AbstractController
                 'focusHeader' => "Volunteer's Focus(es)",
                 'skillHeader' => "Volunteer's Skill(s)",
             ]);
-//            return $this->render('Volunteer/profile_form.html.twig', [
-//                'form'=>$form->createView(),
-//            ]);
         }
-//        $form = $this->createForm(ProfileType::class, $user);
+
+        if (Staff::class === get_class($user)) {
+            $entity = $npo = $user->getNonprofit();
+            $opps = $em->getRepository(Opportunity::class)->findBy(['nonprofit'=>$npo], ['oppname'=>'ASC']);
+            $templates = [
+                'Registration/nonprofit.html.twig',
+                'Default/focuses.html.twig',
+                'Nonprofit/opportunities.html.twig',
+            ];
+            $headerText = $npo->getOrgname() . ' profile';
+            $form = $this->createForm(NonprofitType::class, $npo);
+            $destination = $this->render('Default/form_templates.html.twig', [
+                'form' => $form->createView(),
+                'templates' => $templates,
+                'headerText' => $headerText,
+                'orgHeader'=> $npo->getOrgname(),
+                'focusHeader' => $npo->getOrgname() . "'s Focus(es)",
+                'opportunitiesHeader'=>$npo->getOrgname() . ' Opportunities',
+                'opportunities'=>$opps,
+            ]);
+        }
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
+            $em->persist($entity);
+            $em->flush();
+            $this->addFlash(
+                    'success',
+                    'Profile updated'
+            );
             
+            return $this->redirectToRoute('home');
         }
-//        dd(Volunteer::class);
 
         return $destination;
     }

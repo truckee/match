@@ -50,7 +50,7 @@ class AdminController extends AbstractController
             return $this->redirectToRoute('admin');
         }
 
-        $npo->setTemp(false);
+        $npo->setActive(true);
         $em->persist($npo);
         $em->flush();
 

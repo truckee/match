@@ -312,7 +312,7 @@ class RegistrationController extends AbstractController
     public function registerNonprofit(Request $request, Emailer $mailer)
     {
         $org = new Nonprofit();
-        $form = $this->createForm(NonprofitType::class, $org);
+        $form = $this->createForm(NonprofitType::class, $org, ['register' => true,]);
         $templates = [
             'Registration/nonprofit.html.twig',
             'Registration/new_user.html.twig',
@@ -324,7 +324,7 @@ class RegistrationController extends AbstractController
             $em = $this->getDoctrine()->getManager();
             $staff = $this->staffProperties($orgData['staff']);
             $org->setStaff($staff);
-            $org->setTemp(false);
+            $org->setActive(true);
 
             // send confirmation email
             $view = $this->renderView(

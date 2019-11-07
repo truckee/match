@@ -28,7 +28,7 @@ class UserFixture extends Fixture
 
     public function load(ObjectManager $manager)
     {
-        // user with a 10 year confirmation token for testing
+        // user random@bogus.info with a 10 year confirmation token for testing
         // unexpired confirmation token; enabled = false
         $volunteer = new Volunteer();
         $volunteer->setConfirmationToken('abcdef');
@@ -45,7 +45,7 @@ class UserFixture extends Fixture
         $volunteer->setTokenExpiresAt($expires->add(new \DateInterval('P10Y')));
         $manager->persist($volunteer);
         
-        // user enabled = true: for reset password, profile check
+        // user pseudo@bogus.info enabled = true: for reset password, profile check
         $volunteer1 = new Volunteer();
         $volunteer1->setConfirmationToken('ghijkl');
         $volunteer1->setEmail('pseudo@bogus.info');
@@ -60,6 +60,7 @@ class UserFixture extends Fixture
         $volunteer1->setTokenExpiresAt($expires1->add(new \DateInterval('P10Y')));
         $manager->persist($volunteer1);
         
+        // user garbled@bogus.info with expired confirmation token
         $volunteer2 = new Volunteer();
         $volunteer2->setConfirmationToken('fedcba');
         $volunteer2->setEmail('garbled@bogus.info');
