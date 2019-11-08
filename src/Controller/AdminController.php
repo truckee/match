@@ -64,7 +64,6 @@ class AdminController extends AbstractController
         ];
         $mailer->appMailer($mailParams);
 
-
         $this->addFlash(
                 'success',
                 'It worked?!'
@@ -72,5 +71,25 @@ class AdminController extends AbstractController
 
         return $this->redirectToRoute('admin');
     }
+
+//    /**
+//     * Use only for testing spooling of email
+//     * 
+//     * @Route("/spool", name = "spool_test")
+//     */
+//    public function spool(Emailer $mailer)
+////    {
+//        $mailParams = [
+//            'view' => $this->renderView('Email/nonprofit_activated.html.twig', [
+//                'orgname' => 'Vader Enterprises',
+//            ]),
+//            'recipient' => 'developer@bogus.info',
+//            'subject' => 'Spool test',
+//            'spool' => true,
+//        ];
+//        $mailer->appMailer($mailParams);
+//
+//        return $this->redirectToRoute('admin');
+//    }
 
 }

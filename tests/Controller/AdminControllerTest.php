@@ -59,4 +59,15 @@ class AdminControllerTest extends WebTestCase
         
         $this->assertStringContainsString('You will now be able post opportunites', $message->getBody());        
     }
+    
+// this test creates spooled messages regardless of the disable_delivery setting
+// use it sparingly    
+//    public function testSpoolEmail()
+//    {
+//        $this->client->followRedirects(false);
+//        $this->client->request('GET', '/admin/spool');
+//        $mailCollector = $this->client->getProfile()->getCollector('swiftmailer');
+//
+//        $this->assertSame(1, $mailCollector->getMessageCount());      
+//    }
 }
