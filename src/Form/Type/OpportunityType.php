@@ -13,6 +13,7 @@ namespace App\Form\Type;
 
 use App\Entity\Opportunity;
 use App\Form\Type\Field\SkillFieldType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
@@ -27,19 +28,35 @@ class OpportunityType extends AbstractType
     {
         $builder
                 ->add('oppname', null, [
-                    'label' => 'Name '
+                    'label' => 'Name ',
+                    'attr' => [
+                        'class' => 'mb-2',
+                    ],
                 ])
-                ->add('description', TextareaType::class)
+                ->add('description', TextareaType::class, [
+                    'attr' => [
+                        'class' => 'mb-2',
+                    ],
+                ])
                 ->add('expiredate', DateType::class, [
                     'label' => 'Expiration ',
                     'widget' => 'single_text',
-                    'format'=>'m/d/Y',
+                    'format' => 'M/d/y',
                     'html5' => false,
-                    'attr' => ['class' => 'js-datepicker'],
+                    'attr' => [
+                        'class' => 'js-datepicker mb-2'],
                         ]
                 )
-                ->add('minage', TextType::class, [
-                    'label' => 'Minimum age '
+                ->add('minage', ChoiceType::class, [
+                    'choices' => [
+                        '' => '',
+                        '5' => '5',
+                        '12' => '12',
+                        '18' => '18',
+                        '21' => '21',
+                        '55' => '55',
+                    ],
+                    'label' => 'Minimum age ',
                 ])
 //            ->add('active')
                 ->add('groupOk', null, [

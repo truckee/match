@@ -21,7 +21,7 @@ $(document).ready(function() {
     $('[data-toggle="popover"]').popover();
 
     $('.js-datepicker').datepicker({
-//        format: 'yyyy-MM-dd'
+        format: 'yyyy-mm-dd'
     });
 });
 //console.log('Hello Webpack Encore! Edit me in assets/js/app.js');
