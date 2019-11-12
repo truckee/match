@@ -15,6 +15,12 @@ use App\Validator\Constraints as CustomAssert;
  */
 class Opportunity
 {
+    public function __construct()
+    {
+        $now = new \DateTime();
+        $this->expiredate = $now->add(new \DateInterval('P90D'));
+    }
+    
     /**
      * @var int
      *
@@ -50,12 +56,6 @@ class Opportunity
      * @var string|null
      *
      * @ORM\Column(name="minAge", type="text", length=0, nullable=true)
-     * @Assert\Range(
-     *  min = 0,
-     *  max = 120,
-     *  minMessage = "An age less than {{ limit }} makes no sense!",
-     *  maxMessage = "An age more than {{ limit }} makes no sense!"
-     * )
      */
     private $minage;
 
