@@ -1,0 +1,18 @@
+<div class="text-center text-bold">
+    {{ oppHeader }}
+</div>
+{{ form_row(form.oppname) }}
+{{ form_row(form.description) }}
+{{ form_row(form.expiredate) }}
+{{ form_row(form.minage) }}
+{{ form_row(form.groupOk) }}
+{{ form_row(form.background) }}
+
+<script>
+    $(document).ready(function() {
+        // you may need to change this code if you are not using Bootstrap Datepicker
+        $('.js-datepicker').datepicker({
+            format: 'yyyy-mm-dd'
+        });
+    });
+</script>

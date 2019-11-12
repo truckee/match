@@ -4,6 +4,8 @@ namespace App\Entity;
 
 use App\Entity\Skill;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+use App\Validator\Constraints as CustomAssert;
 
 /**
  * Opportunity
@@ -26,6 +28,7 @@ class Opportunity
      * @var string|null
      *
      * @ORM\Column(name="oppName", type="string", length=66, nullable=true)
+     * @Assert\NotBlank(message = "Name is required")
      */
     private $oppname;
 
@@ -47,6 +50,12 @@ class Opportunity
      * @var string|null
      *
      * @ORM\Column(name="minAge", type="text", length=0, nullable=true)
+     * @Assert\Range(
+     *  min = 0,
+     *  max = 120,
+     *  minMessage = "An age less than {{ limit }} makes no sense!",
+     *  maxMessage = "An age more than {{ limit }} makes no sense!"
+     * )
      */
     private $minage;
 
@@ -68,6 +77,7 @@ class Opportunity
      * @var \DateTime|null
      *
      * @ORM\Column(name="expireDate", type="date", nullable=true)
+     * @CustomAssert\NotPastDate
      */
     private $expiredate;
 
@@ -75,6 +85,7 @@ class Opportunity
      * @var string|null
      *
      * @ORM\Column(name="description", type="text", length=0, nullable=true)
+     * @Assert\NotBlank(message = "Description is required")
      */
     private $description;
 

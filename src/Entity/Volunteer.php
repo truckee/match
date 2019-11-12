@@ -15,7 +15,6 @@ use App\Entity\Focus;
 use App\Entity\Skill;
 use App\Entity\User;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**

@@ -19,5 +19,9 @@ import '../css/app.scss';
 
 $(document).ready(function() {
     $('[data-toggle="popover"]').popover();
+
+    $('.js-datepicker').datepicker({
+//        format: 'yyyy-MM-dd'
+    });
 });
 //console.log('Hello Webpack Encore! Edit me in assets/js/app.js');

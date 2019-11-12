@@ -128,7 +128,7 @@ class RegistrationController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $email = $request->request->get('user_email')['email'];
             $em = $this->getDoctrine()->getManager();
-            $sender = $this->getParameter('swiftmailer.sender_address');
+            $sender = $this->getParameter('swiftmailer.mailer.memory.sender_address');
             $user = $em->getRepository('App:User')->findOneBy(['email' => $email]);
             $this->addFlash(
                     'success',
@@ -314,7 +314,7 @@ class RegistrationController extends AbstractController
         $org = new Nonprofit();
         $form = $this->createForm(NonprofitType::class, $org, ['register' => true,]);
         $templates = [
-            'Registration/nonprofit.html.twig',
+            'Nonprofit/nonprofit.html.twig',
             'Registration/new_user.html.twig',
             'Default/focuses.html.twig',
         ];
@@ -423,6 +423,7 @@ class RegistrationController extends AbstractController
             return $this->redirectToRoute($path);
         }
 
+        $flashMessage = 'Account is confirmed';
         // send notice email
         if ('staff' === $actor) {
             // notice to admin
@@ -438,6 +439,8 @@ class RegistrationController extends AbstractController
             ];
             
             $mailer->appMailer($mailParams);
+            
+            $flashMessage .= '; please wait for nonprofit activation to login';
         }
 
         $user->setConfirmationToken(null);
@@ -447,8 +450,8 @@ class RegistrationController extends AbstractController
         $em->flush();
 
         $this->addFlash(
-                'danger',
-                'Thank you for confirming your account. You may now login'
+                'success',
+                $flashMessage
         );
         return $this->redirectToRoute('app_login');
     }

@@ -55,7 +55,7 @@ class RegistrationTest extends WebTestCase
 
         $this->client->request('GET', '/register/confirm/abcdef');
 
-        $this->assertStringContainsString('You may now login', $this->client->getResponse()->getContent());
+        $this->assertStringContainsString('Account is confirmed', $this->client->getResponse()->getContent());
         $this->assertStringContainsString('Sign in', $this->client->getResponse()->getContent());
 
         $this->client->submitForm('Sign in', [

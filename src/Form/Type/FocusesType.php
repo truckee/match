@@ -1,15 +1,13 @@
 <?php
 
 /*
- * This file is part of the Truckee\Match package.
- *
- * (c) George W. Brooks
+ * (c) GWB truckeesolutions@gmail.com
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
 
-//src\Truckee\MatchBundle\Form\FocusesType.php
+//src/Form/Type/FocusesType.php
 
 namespace App\Form\Type;
 
