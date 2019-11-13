@@ -5,6 +5,7 @@ namespace App\DataFixtures;
 use App\Entity\Nonprofit;
 use App\Entity\Staff;
 use Doctrine\Bundle\FixturesBundle\Fixture;
+use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
@@ -59,5 +60,10 @@ class NonprofitFixture extends Fixture
         $manager->persist($npo1);
 
         $manager->flush();
+    }
+
+    public function getOrder()
+    {
+        return 4; // the order in which fixtures will be loaded
     }
 }
