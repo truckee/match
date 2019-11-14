@@ -127,7 +127,7 @@ class Nonprofit
     protected $staff;
 
     /**
-     * @ORM\ManyToMany(targetEntity="Focus", inversedBy="nonprofits", cascade={"persist"}, orphanRemoval=true, fetch="EAGER")
+     * @ORM\ManyToMany(targetEntity="Focus", inversedBy="nonprofits", cascade={"persist"}, orphanRemoval=true)
      * @ORM\JoinTable(name="org_focus",
      *      joinColumns={@ORM\JoinColumn(name="orgId", referencedColumnName="id")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="focusId", referencedColumnName="id")}

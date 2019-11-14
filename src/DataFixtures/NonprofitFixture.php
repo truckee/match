@@ -9,9 +9,8 @@ use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
-class NonprofitFixture extends Fixture implements OrderedFixtureInterface
+class NonprofitFixture extends Fixture
 {
-
     private $encoder;
 
     public function __construct(UserPasswordEncoderInterface $encoder)
@@ -67,5 +66,4 @@ class NonprofitFixture extends Fixture implements OrderedFixtureInterface
     {
         return 4; // the order in which fixtures will be loaded
     }
-
 }
