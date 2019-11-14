@@ -68,10 +68,9 @@ class ProfileController extends AbstractController
                 'form' => $form->createView(),
                 'templates' => $templates,
                 'headerText' => $headerText,
-                'npo'=>$npo,
-//                'orgHeader'=> $npo->getOrgname(),
+                'orgHeader'=> $npo->getOrgname(),
                 'focusHeader' => $npo->getOrgname() . "'s Focus(es)",
-//                'opportunitiesHeader'=>$npo->getOrgname() . ' Opportunities',
+                'opportunitiesHeader'=>$npo->getOrgname() . ' Opportunities',
                 'opportunities'=>$opps,
             ]);
         }

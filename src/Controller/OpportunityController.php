@@ -23,19 +23,10 @@ use Symfony\Component\Routing\Annotation\Route;
 class OpportunityController extends AbstractController
 {
 
-    public function __construct()
-    {
-        $this->templates = [
-            'Opportunity/suggestions.html.twig',
-            'Opportunity/opportunity.html.twig',
-            'Default/skills.html.twig'
-        ];
-    }
-
     /**
      * @Route("/add", name = "opp_add")
      */
-    public function addOpp(Request $request)
+    public function add(Request $request)
     {
         $user = $this->getUser();
         if (null === $user || !$user->hasRole('ROLE_STAFF')) {
@@ -44,63 +35,22 @@ class OpportunityController extends AbstractController
         $nonprofit = $user->getNonprofit();
         $opportunity = new Opportunity();
         $form = $this->createForm(OpportunityType::class, $opportunity);
-        $templates = $this->templates;
+        $templates = [
+            'Opportunity/suggestions.html.twig',
+            'Opportunity/opportunity.html.twig',
+            'Default/skills.html.twig'
+        ];
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $opportunity->setNonprofit($nonprofit);
-            $em->persist($opportunity);
-            $em->flush();
-            $this->addFlash(
-                    'success',
-                    'Opportunity added'
-            );
-
-            return $this->redirectToRoute('profile');
+            
         }
 
         return $this->render('Default/form_templates.html.twig', [
                     'form' => $form->createView(),
                     'templates' => $templates,
-                    'headerText' => 'Add ' . $nonprofit->getOrgname() . ' opportunity',
+                    'headerText' => 'Add opportunity',
                     'skillHeader' => 'Opportunity skill requirements',
-                    'oppHeader' => 'Opportunity'
-        ]);
-    }
-
-    /**
-     * @Route("/edit/{id}", name = "opp_edit")
-     */
-    public function editOpp(Request $request, $id = null)
-    {
-        $user = $this->getUser();
-        if (null === $user || !$user->hasRole('ROLE_STAFF') || null === $id) {
-            return $this->redirectToRoute('home');
-        }
-
-        $em = $this->getDoctrine()->getManager();
-        $opportunity = $em->getRepository(Opportunity::class)->find($id);
-        $nonprofit = $opportunity->getNonprofit();
-        $form = $this->createForm(OpportunityType::class, $opportunity);
-        $templates = $this->templates;
-        $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {
-            $em->persist($opportunity);
-            $em->flush();
-            $this->addFlash(
-                    'success',
-                    'Opportunity updated'
-            );
-
-            return $this->redirectToRoute('profile');
-        }
-
-        return $this->render('Default/form_templates.html.twig', [
-                    'form' => $form->createView(),
-                    'templates' => $templates,
-                    'headerText' => 'Edit ' . $nonprofit->getOrgname() . ' opportunity',
-                    'skillHeader' => 'Opportunity skill requirements',
-                    'oppHeader' => 'Opportunity'
+                    'oppHeader' => 'New ' . $nonprofit->getOrgname() . ' opportunity'
         ]);
     }
 

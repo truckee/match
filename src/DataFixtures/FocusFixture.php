@@ -4,7 +4,6 @@ namespace App\DataFixtures;
 
 use App\Entity\Focus;
 use Doctrine\Bundle\FixturesBundle\Fixture;
-use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 
 class FocusFixture extends Fixture
@@ -17,10 +16,5 @@ class FocusFixture extends Fixture
         $manager->persist($focus);
 
         $manager->flush();
-    }
-
-    public function getOrder()
-    {
-        return 1; // the order in which fixtures will be loaded
     }
 }

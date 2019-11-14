@@ -22,13 +22,4 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  */
 class Admin extends User
 {
-    public function __construct()
-    {
-        // allow admin to modify volunteers & staff & nonprofits
-        $this->roles = [
-            'ROLE_VOLUNTEER',
-            'ROLE_STAFF',
-            'ROLE_ADMIN',
-        ];
-    }
 }
