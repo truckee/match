@@ -5,6 +5,7 @@ namespace App\DataFixtures;
 use App\Entity\Admin;
 use App\Entity\Volunteer;
 use Doctrine\Bundle\FixturesBundle\Fixture;
+use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
@@ -87,5 +88,10 @@ class UserFixture extends Fixture
         $manager->persist($admin);
                 
         $manager->flush();
+    }
+
+    public function getOrder()
+    {
+        return 3; // the order in which fixtures will be loaded
     }
 }
