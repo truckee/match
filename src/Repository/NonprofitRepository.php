@@ -19,6 +19,17 @@ class NonprofitRepository extends ServiceEntityRepository
         parent::__construct($registry, Nonprofit::class);
     }
 
+    public function getFocusIds($npo)
+    {
+        $foci = $npo->getFocuses();
+        $ids = [];
+        foreach ($foci as $focus) {
+           $ids[] = $focus->getId();
+        }
+
+        return $ids;
+    }
+    
     // /**
     //  * @return Nonprofit[] Returns an array of Nonprofit objects
     //  */

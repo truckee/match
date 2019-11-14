@@ -24,8 +24,13 @@ class OpportunityRepository extends ServiceEntityRepository
         parent::__construct($registry, Opportunity::class);
     }
     
-    public function functionName($param)
+    public function getSkillIds($opp)
     {
-        
-    }
+        $skills = $opp->getSkills();
+        $ids = [];
+        foreach ($skills as $skill) {
+           $ids[] = $skill->getId();
+        }
+
+        return $ids;    }
 }

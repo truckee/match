@@ -18,8 +18,9 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
  * pseudo@bogus.info: same. but enabled true
  *
  */
-class UserFixture extends Fixture
+class UserFixture extends Fixture implements OrderedFixtureInterface
 {
+
     private $encoder;
 
     public function __construct(UserPasswordEncoderInterface $encoder)
@@ -45,7 +46,7 @@ class UserFixture extends Fixture
         $expires = new \DateTime();
         $volunteer->setTokenExpiresAt($expires->add(new \DateInterval('P10Y')));
         $manager->persist($volunteer);
-        
+
         // user pseudo@bogus.info enabled = true: for reset password, profile check
         $volunteer1 = new Volunteer();
         $volunteer1->setConfirmationToken('ghijkl');
@@ -60,7 +61,7 @@ class UserFixture extends Fixture
         $expires1 = new \DateTime();
         $volunteer1->setTokenExpiresAt($expires1->add(new \DateInterval('P10Y')));
         $manager->persist($volunteer1);
-        
+
         // user garbled@bogus.info with expired confirmation token
         $volunteer2 = new Volunteer();
         $volunteer2->setConfirmationToken('fedcba');
@@ -75,7 +76,7 @@ class UserFixture extends Fixture
         $expires2 = new \DateTime();
         $volunteer2->setTokenExpiresAt($expires2->sub(new \DateInterval('PT3H')));
         $manager->persist($volunteer2);
-        
+
         // admin user; also for testing null tokens
         $admin = new Admin();
         $admin->setEmail('admin@bogus.info');
@@ -86,7 +87,7 @@ class UserFixture extends Fixture
         $password3 = $this->encoder->encodePassword($admin, '123Abc');
         $admin->setPassword($password3);
         $manager->persist($admin);
-                
+
         $manager->flush();
     }
 
@@ -94,4 +95,5 @@ class UserFixture extends Fixture
     {
         return 3; // the order in which fixtures will be loaded
     }
+
 }
