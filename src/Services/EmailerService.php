@@ -16,7 +16,7 @@ use Symfony\Component\Dotenv\Dotenv;
 /**
  * 
  */
-class Emailer
+class EmailerService
 {
 
     private $defaultMailer;

@@ -27,7 +27,7 @@ services:
     # please note that last definitions always *replace* previous ones
     
     ## service to send immediate (memory) and spooled email
-    App\Services\Emailer:
+    App\Services\EmailerService:
         $spoolMailer:   '@swiftmailer.mailer.spooler'
         $defaultMailer: '@swiftmailer.mailer'
         $senderAddress: '%swiftmailer.mailer.memory.sender_address%'

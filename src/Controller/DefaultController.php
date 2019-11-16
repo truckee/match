@@ -13,8 +13,7 @@ namespace App\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\HttpFoundation\Response;
-use App\Services\Emailer;
+
 
 /**
  * @Route("/")
@@ -26,16 +25,6 @@ class DefaultController extends AbstractController
      */
     public function index()
     {
-//        return $this->render('Default/index.html');
         return $this->render('Default/home.html.twig');
-    }
-    
-    /**
-     * @Route("/test", name="tester")
-     */
-    public function test(Emailer $wtf)
-    {
-        dd($wtf);
-        return new Response('wtf');
     }
 }

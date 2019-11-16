@@ -12,6 +12,7 @@
 namespace App\Controller;
 
 use App\Entity\Opportunity;
+use App\Entity\Volunteer;
 use App\Form\Type\OpportunityType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -51,6 +52,7 @@ class OpportunityController extends AbstractController
             $opportunity->setNonprofit($nonprofit);
             $em->persist($opportunity);
             $em->flush();
+            $vols = $em->getRepository(Volunteer::class)->opportunityEmails($opportunity);
             $this->addFlash(
                     'success',
                     'Opportunity added'

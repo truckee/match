@@ -18,7 +18,7 @@ use App\Form\Type\NonprofitType;
 use App\Form\Type\VolunteerType;
 use App\Form\Type\NewPasswordType;
 use App\Form\Type\UserEmailType;
-use App\Services\Emailer;
+use App\Services\EmailerService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -42,7 +42,7 @@ class RegistrationController extends AbstractController
      *
      * @Route("/forgot", name="register_forgot")
      */
-    public function forgotPassword(Request $request, Emailer $mailer)
+    public function forgotPassword(Request $request, EmailerService $mailer)
     {
         $form = $this->createForm(UserEmailType::class);
         $form->handleRequest($request);
@@ -174,7 +174,7 @@ class RegistrationController extends AbstractController
     /**
      * @Route("/volunteer", name="register_volunteer")
      */
-    public function registerVolunteer(Request $request, Emailer $mailer)
+    public function registerVolunteer(Request $request, EmailerService $mailer)
     {
         $volunteer = new Volunteer();
         $form = $this->createForm(VolunteerType::class, $volunteer, ['register' => true,]);
@@ -230,7 +230,7 @@ class RegistrationController extends AbstractController
     /**
      * @Route("/nonprofit", name="register_org")
      */
-    public function registerNonprofit(Request $request, Emailer $mailer)
+    public function registerNonprofit(Request $request, EmailerService $mailer)
     {
         $org = new Nonprofit();
         $form = $this->createForm(NonprofitType::class, $org, ['register' => true,]);
@@ -297,7 +297,7 @@ class RegistrationController extends AbstractController
     /**
      * @Route("/confirm/{token}")
      */
-    public function confirm(Emailer $mailer, $token = null)
+    public function confirm(EmailerService $mailer, $token = null)
     {
         $em = $this->getDoctrine()->getManager();
         if (null === $token) {
