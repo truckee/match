@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * (c) GWB truckeesolutions@gmail.com
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+//src/Entity/Nonprofit.php
+
 namespace App\Entity;
 
 use App\Entity\Focus;
@@ -127,7 +136,7 @@ class Nonprofit
     protected $staff;
 
     /**
-     * @ORM\ManyToMany(targetEntity="Focus", inversedBy="nonprofits", cascade={"persist"}, orphanRemoval=true)
+     * @ORM\ManyToMany(targetEntity="Focus", inversedBy="nonprofits", cascade={"persist"}, orphanRemoval=true, fetch="EAGER")
      * @ORM\JoinTable(name="org_focus",
      *      joinColumns={@ORM\JoinColumn(name="orgId", referencedColumnName="id")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="focusId", referencedColumnName="id")}
