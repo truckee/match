@@ -31,25 +31,34 @@ class VolunteerRepository extends ServiceEntityRepository
 
         $conn = $this->getEntityManager()->getConnection();
 
-        $sqlFocus = "SELECT DISTINCT(u.id), $oppId AS opp FROM usertable u
+        $sqlFocus = "SELECT DISTINCT(u.id) FROM usertable u
             JOIN vol_focus vf ON vf.volId = u.id
             JOIN org_focus of ON of.focusId = vf.focusId
-            WHERE of.orgId = :id AND u.enabled = true AND u.receiveMail = true"
+            WHERE of.orgId = :id AND u.enabled = true AND u.receiveMail = true
+            AND u.type = 'volunteer'"
         ;
         $stmtFocus = $conn->prepare($sqlFocus);
         $stmtFocus->execute(['id' => $npoId]);
         $usersByFocus = $stmtFocus->fetchAll();
 
-        $sqlSkill = "SELECT DISTINCT(u.id), $oppId AS opp FROM usertable u
+        $sqlSkill = "SELECT DISTINCT(u.id) FROM usertable u
             JOIN vol_skill vs ON vs.volId = u.id
             JOIN opp_skill os ON os.skillId = vs.skillId
-            WHERE os.oppId = :id AND u.enabled = true AND u.receiveMail = true"
+            WHERE os.oppId = :id AND u.enabled = true AND u.receiveMail = true
+            AND u.type = 'volunteer'"
         ;
         $stmtSkill = $conn->prepare($sqlSkill);
         $stmtSkill->execute(['id' => $oppId]);
         $usersBySkill = $stmtSkill->fetchAll();
-        
-        return [$usersByFocus, $usersBySkill];
+
+        foreach ($usersBySkill as $value) {
+            if (!in_array($value, $usersByFocus)) {
+                array_push($usersByFocus, $value);
+            }
+        }
+        $volunteers = $usersByFocus;
+
+        return $volunteers;
     }
 
 }

@@ -14,6 +14,7 @@ namespace App\Controller;
 use App\Entity\Opportunity;
 use App\Entity\Volunteer;
 use App\Form\Type\OpportunityType;
+use App\Services\NewOppEmailService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -36,7 +37,7 @@ class OpportunityController extends AbstractController
     /**
      * @Route("/add", name = "opp_add")
      */
-    public function addOpp(Request $request)
+    public function addOpp(Request $request, NewOppEmailService $oppMail)
     {
         $user = $this->getUser();
         if (null === $user || !$user->hasRole('ROLE_STAFF')) {
@@ -52,10 +53,13 @@ class OpportunityController extends AbstractController
             $opportunity->setNonprofit($nonprofit);
             $em->persist($opportunity);
             $em->flush();
-            $vols = $em->getRepository(Volunteer::class)->opportunityEmails($opportunity);
+            
+            $volunteers = $em->getRepository(Volunteer::class)->opportunityEmails($opportunity);
+            $oppMail->addToList($volunteers, $opportunity);
+            
             $this->addFlash(
                     'success',
-                    'Opportunity added'
+                    'Opportunity added; '. count($vols) . ' volunteer(s) will be notified'
             );
 
             return $this->redirectToRoute('profile');

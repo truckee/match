@@ -49,6 +49,12 @@ class NewOppEmail
      * @ORM\Column(type="integer", nullable=true)
      */
     private $nOpportunities;
+    
+    public function __construct()
+    {
+        $this->dateAdded = new \DateTime();
+        $this->sent = false;
+    }
 
     public function getId(): ?int
     {
