@@ -24,6 +24,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  * @ORM\Table(name="nonprofit")
  * @ORM\Entity(repositoryClass = "App\Repository\NonprofitRepository")
  * @UniqueEntity(fields="ein", message="Nonprofit is already registered")
+ * @ORM\HasLifecycleCallbacks()
  */
 class Nonprofit
 {
@@ -136,13 +137,18 @@ class Nonprofit
     protected $staff;
 
     /**
-     * @ORM\ManyToMany(targetEntity="Focus", inversedBy="nonprofits", cascade={"persist"}, orphanRemoval=true, fetch="EAGER")
+     * @ORM\ManyToMany(targetEntity="Focus", inversedBy="nonprofits", cascade={"persist"}, fetch="EAGER")
      * @ORM\JoinTable(name="org_focus",
      *      joinColumns={@ORM\JoinColumn(name="orgId", referencedColumnName="id")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="focusId", referencedColumnName="id")}
      *      ))
      */
     protected $focuses;
+
+    /**
+     * @ORM\Column(type="json_array")
+     */
+    private $jsonFocus = [];
 
     public function getId(): ?int
     {
@@ -272,6 +278,7 @@ class Nonprofit
     public function addFocus(Focus $focus)
     {
         $this->focuses[] = $focus;
+        array_push($this->jsonFocus, $focus->getId());
 
         return $this;
     }
@@ -336,4 +343,28 @@ class Nonprofit
         return $this;
     }
 
+    public function getJsonFocus(): ?array
+    {
+        return $this->jsonFocus;
+    }
+
+    public function setJsonFocus(array $jsonFocus): self
+    {
+        $this->jsonFocus = $jsonFocus;
+
+        return $this;
+    }
+    
+    /**
+     * @ORM\PreUpdate()
+     */
+    public function updateJsonFocus()
+    {
+        $focuses = $this->focuses;
+        $this->jsonFocus = [];
+        foreach ($focuses as $item) {
+            array_push($this->jsonFocus, $item->getId());
+        }
+    }
+    
 }

@@ -26,37 +26,26 @@ class VolunteerRepository extends ServiceEntityRepository
     public function opportunityEmails($opportunity)
     {
         $nonprofit = $opportunity->getNonprofit();
-        $npoId = $nonprofit->getId();
-        $oppId = $opportunity->getId();
-
-        $conn = $this->getEntityManager()->getConnection();
-
-        $sqlFocus = "SELECT DISTINCT(u.id) FROM usertable u
-            JOIN vol_focus vf ON vf.volId = u.id
-            JOIN org_focus of ON of.focusId = vf.focusId
-            WHERE of.orgId = :id AND u.enabled = true AND u.receiveMail = true
-            AND u.type = 'volunteer'"
-        ;
-        $stmtFocus = $conn->prepare($sqlFocus);
-        $stmtFocus->execute(['id' => $npoId]);
-        $usersByFocus = $stmtFocus->fetchAll();
-
-        $sqlSkill = "SELECT DISTINCT(u.id) FROM usertable u
-            JOIN vol_skill vs ON vs.volId = u.id
-            JOIN opp_skill os ON os.skillId = vs.skillId
-            WHERE os.oppId = :id AND u.enabled = true AND u.receiveMail = true
-            AND u.type = 'volunteer'"
-        ;
-        $stmtSkill = $conn->prepare($sqlSkill);
-        $stmtSkill->execute(['id' => $oppId]);
-        $usersBySkill = $stmtSkill->fetchAll();
-
-        foreach ($usersBySkill as $value) {
-            if (!in_array($value, $usersByFocus)) {
-                array_push($usersByFocus, $value);
+        $orgFocuses = $nonprofit->getJsonFocus();
+        $oppSkills = $opportunity->getJsonSkill();
+        
+        // get elibible volunteers
+        $qb = $this->createQueryBuilder('v')
+                ->select('v')
+                ->where('v.receiveEmail = true')
+                ->andWhere('v.enabled = true')
+                ->getQuery()->getResult();
+        $volunteers = [];
+        foreach ($qb as $entity) {
+            $id = $entity->getId();
+            if (!empty(array_intersect($orgFocuses, $entity->getJsonFocus()))) {
+                array_push($volunteers, $id);
+            }
+            if (!empty(array_intersect($oppSkills, $entity->getJsonSkill())) &&
+                    !in_array($id, $volunteers)) {
+                array_push($volunteers, $id);
             }
         }
-        $volunteers = $usersByFocus;
 
         return $volunteers;
     }

@@ -20,14 +20,16 @@ use Symfony\Component\Validator\Constraints as Assert;
 /**
  * @ORM\Entity(repositoryClass = "App\Repository\VolunteerRepository")
  * @ORM\Table(name="volunteer")
+ * @ORM\HasLifecycleCallbacks()
  */
 class Volunteer extends User
 {
+
     public function __construct()
     {
         $this->addRole('ROLE_VOLUNTEER');
     }
-    
+
     /**
      * @var int
      *
@@ -57,7 +59,7 @@ class Volunteer extends User
     {
         return $this->receiveEmail;
     }
-    
+
     /**
      * @var \Doctrine\Common\Collections\Collection
      *
@@ -72,21 +74,22 @@ class Volunteer extends User
     /**
      * Add focuses.
      *
-     * @param Focus $focuses
+     * @param Focus $focus
      *
      * @return Opportunity
      */
     public function addFocus(Focus $focus)
     {
         $this->focuses[] = $focus;
-
+        array_push($this->jsonFocus, $focus->getId());
+ 
         return $this;
     }
 
     /**
      * Remove focuses.
      *
-     * @param Focus $focuses
+     * @param Focus $focus
      */
     public function removeFocus(Focus $focus)
     {
@@ -102,6 +105,7 @@ class Volunteer extends User
     {
         return $this->focuses;
     }
+
     /**
      * @var \Doctrine\Common\Collections\Collection
      *
@@ -115,15 +119,26 @@ class Volunteer extends User
     protected $skills;
 
     /**
+     * @ORM\Column(type="json_array")
+     */
+    private $jsonFocus = [];
+
+    /**
+     * @ORM\Column(type="json_array")
+     */
+    private $jsonSkill = [];
+
+    /**
      * Add skills.
      *
-     * @param Skill $skills
+     * @param Skill $skill
      *
      * @return Opportunity
      */
     public function addSkill(Skill $skill)
     {
         $this->skills[] = $skill;
+        array_push($this->jsonSkill, $skill->getId());
 
         return $this;
     }
@@ -131,7 +146,7 @@ class Volunteer extends User
     /**
      * Remove skills.
      *
-     * @param Skill $skills
+     * @param Skill $skill
      */
     public function removeSkill(Skill $skill)
     {
@@ -147,4 +162,53 @@ class Volunteer extends User
     {
         return $this->skills;
     }
+
+    public function getJsonFocus(): ?array
+    {
+        return $this->jsonFocus;
+    }
+
+    public function setJsonFocus(array $jsonFocus): self
+    {
+        $this->jsonFocus = $jsonFocus;
+
+        return $this;
+    }
+
+    public function getJsonSkill(): ?array
+    {
+        return $this->jsonSkill;
+    }
+
+    public function setJsonSkill(array $jsonSkill): self
+    {
+        $this->jsonSkill = $jsonSkill;
+
+        return $this;
+    }
+    
+    /**
+     * @ORM\PreUpdate()
+     */
+    public function updateJsonFocus()
+    {
+        $focuses = $this->getFocuses();
+        $this->jsonFocus = [];
+        foreach ($focuses as $item) {
+            array_push($this->jsonFocus, $item->getId());
+        }
+    }
+    
+    /**
+     * @ORM\PreUpdate()
+     */
+    public function updateJsonSkills()
+    {
+        $skills = $this->skills;
+        $this->jsonSkill = [];
+        foreach ($skills as $item) {
+            array_push($this->jsonSkill, $item->getId());
+        }
+    }
+
 }

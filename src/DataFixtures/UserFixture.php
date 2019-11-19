@@ -124,8 +124,8 @@ class UserFixture extends Fixture implements OrderedFixtureInterface
             $admin->setFname('Benny');
             $admin->setSname('Borko');
             $admin->setRoles(['ROLE_ADMIN']);
-            $password3 = $this->encoder->encodePassword($admin, '123Abc');
-            $admin->setPassword($password3);
+            $password4 = $this->encoder->encodePassword($admin, '123Abc');
+            $admin->setPassword($password4);
             $manager->persist($admin);
         }
 

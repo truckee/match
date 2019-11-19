@@ -246,7 +246,6 @@ class RegistrationController extends AbstractController
             $staff = $this->staffProperties($orgData['staff']);
             $org->setStaff($staff);
             $org->setActive(true);
-
             // send confirmation email
             $view = $this->renderView(
                     'Email/staff_confirmation.html.twig',
@@ -354,13 +353,13 @@ class RegistrationController extends AbstractController
                 'ein' => $org->getEin(),
             ]);
             $mailParams = [
-                'view'=>$view,
-                'recipient'=>null,
-                'subject'=>'New Nonprofit Registration'
+                'view' => $view,
+                'recipient' => null,
+                'subject' => 'New Nonprofit Registration'
             ];
-            
+
             $mailer->appMailer($mailParams);
-            
+
             $flashMessage .= '; please wait for nonprofit activation to login';
         }
 
@@ -402,7 +401,7 @@ class RegistrationController extends AbstractController
         $volunteer->setConfirmationToken(md5(uniqid(rand(), true)));
         $expiresAt = new \DateTime();
         $volunteer->setTokenExpiresAt($expiresAt->add(new \DateInterval('PT3H')));
-    }
+        }
 
     //  Note that User cannot be instantiated as it is now an abstract class!!!
 //    /**
@@ -482,5 +481,4 @@ class RegistrationController extends AbstractController
 //                        )
 //        );
 //    }
-
 }

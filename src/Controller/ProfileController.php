@@ -56,7 +56,7 @@ class ProfileController extends AbstractController
 
         if (Staff::class === get_class($user)) {
             $entity = $npo = $user->getNonprofit();
-            $opps = $em->getRepository(Opportunity::class)->findBy(['nonprofit'=>$npo], ['oppname'=>'ASC']);
+            $opps = $em->getRepository(Opportunity::class)->findBy(['nonprofit' => $npo], ['oppname' => 'ASC']);
             $templates = [
                 'Nonprofit/nonprofit.html.twig',
                 'Default/focuses.html.twig',
@@ -68,11 +68,9 @@ class ProfileController extends AbstractController
                 'form' => $form->createView(),
                 'templates' => $templates,
                 'headerText' => $headerText,
-                'npo'=>$npo,
-//                'orgHeader'=> $npo->getOrgname(),
+                'npo' => $npo,
                 'focusHeader' => $npo->getOrgname() . "'s Focus(es)",
-//                'opportunitiesHeader'=>$npo->getOrgname() . ' Opportunities',
-                'opportunities'=>$opps,
+                'opportunities' => $opps,
             ]);
         }
         $form->handleRequest($request);
@@ -83,7 +81,7 @@ class ProfileController extends AbstractController
                     'success',
                     'Profile updated'
             );
-            
+
             return $this->redirectToRoute('home');
         }
 
