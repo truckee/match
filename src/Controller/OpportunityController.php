@@ -55,11 +55,11 @@ class OpportunityController extends AbstractController
             $em->flush();
             
             $volunteers = $em->getRepository(Volunteer::class)->opportunityEmails($opportunity);
-            $oppMail->addToList($volunteers, $opportunity);
+            $oppMail->addToList($volunteers, $opportunity->getId());
             
             $this->addFlash(
                     'success',
-                    'Opportunity added; '. count($vols) . ' volunteer(s) will be notified'
+                    'Opportunity added; '. count($volunteers) . ' volunteer(s) will be notified'
             );
 
             return $this->redirectToRoute('profile');

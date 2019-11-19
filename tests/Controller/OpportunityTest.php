@@ -41,6 +41,6 @@ class OpportunityTest extends WebTestCase
         $form['opportunity[skills]'][0]->tick();
         $this->client->submit($form);
 
-        $this->assertStringContainsString('Opportunity added', $this->client->getResponse()->getContent());
+        $this->assertStringContainsString('Opportunity added; 1', $this->client->getResponse()->getContent());
     }
 }

@@ -12,7 +12,11 @@
 namespace App\Services;
 
 use App\Entity\NewOppEmail;
+use App\Entity\Opportunity;
+use App\Entity\Volunteer;
+use App\Services\EmailerService;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Templating\EngineInterface;
 
 /**
  * 
@@ -21,29 +25,65 @@ class NewOppEmailService
 {
 
     private $em;
+    private $templating;
 
-    public function __construct(EntityManagerInterface $em)
+    public function __construct(EntityManagerInterface $em, EngineInterface $templating)
     {
         $this->em = $em;
+        $this->templating = $templating;
     }
 
     /**
-     * $volunteers: array of volunteer ids
+     * $volunteers: array of volunteer ids [id1, id2, ...]
      * $opportunity: id of new opportunity
      */
-    public function addToList($volunteers, $opportunity)
+    public function addToList($volunteers, $oppid)
     {
         $list = $this->em->getRepository(NewOppEmail::class)->findOneBy(['sent' => null]) ?? new NewOppEmail();
-        $email = json_decode($list->getVolunteerEmail(), true);
+        $volOpps = $list->getVolunteerEmail();
+        // $volOpps = [ volunteer1_id1 =>[ opp1_id, ...], volunteer_id2  = [opp_id, ...] ...]
+        $keys = array_keys($volOpps);
+        foreach ($volunteers as $id) {
+            if (!in_array($id, $keys)) {
+                $volOpps[$id] = [];
+            }
+            array_push($volOpps[$id], $oppid);
+        }
 
-        $email[$opportunity] = $focus;
-
-        $list->setNVolunteers(count($focus) + $list->getNVolunteers());
+        $list->setNVolunteers(count($volOpps) + $list->getNVolunteers());
         $list->setNOpportunities($list->getNOpportunities() + 1);
-        $list->setVolunteerEmail(json_encode($email));
+        $list->setVolunteerEmail($volOpps);
         $this->em->persist($list);
 
         $this->em->flush();
+
+        return $volOpps;
+    }
+
+    public function sendList(EmailerService $mailer)
+    {
+        $list = $this->em->getRepository(NewOppEmail::class)->findOneBy(['sent' => false]) ?? new NewOppEmail();
+        $volOpps = $list->getVolunteerEmail();
+        $keys = array_keys($volOpps);
+        foreach ($keys as $volId) {
+            $volunteer = $this->em->getRepository(Volunteer::class)->find($volId);
+            $fname = $volunteer->getFname();
+            $email = $volunteer->getEmail();
+            foreach ($volOpps[$volId] as $oppId) {
+                $opportunities[] = $this->em->getRepository(Opportunity::class)->find($oppId);
+            }
+            $view = $this->templating->render('Email/volunteer_opportunities.html.twig', [
+                'fname' => $fname,
+                'opportunities' => $opportunities,
+            ]);
+            $mailParams = [
+                'view' => $view,
+                'recipient' => $email,
+                'subject' => 'Latest volunteer opportunities',
+                'spool' => true,
+            ];
+            $mailer->appMailer($mailParams);
+        }
     }
 
 }
