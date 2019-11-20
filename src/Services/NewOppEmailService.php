@@ -16,7 +16,7 @@ use App\Entity\Opportunity;
 use App\Entity\Volunteer;
 use App\Services\EmailerService;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\Templating\EngineInterface;
+use Twig\Environment;
 
 /**
  * 
@@ -25,12 +25,10 @@ class NewOppEmailService
 {
 
     private $em;
-    private $templating;
 
-    public function __construct(EntityManagerInterface $em, EngineInterface $templating)
+    public function __construct(EntityManagerInterface $em)
     {
         $this->em = $em;
-        $this->templating = $templating;
     }
 
     /**
@@ -60,11 +58,15 @@ class NewOppEmailService
         return $volOpps;
     }
 
-    public function sendList(EmailerService $mailer)
+    public function sendList(EmailerService $mailer, Environment $templating)
     {
-        $list = $this->em->getRepository(NewOppEmail::class)->findOneBy(['sent' => false]) ?? new NewOppEmail();
+        $list = $this->em->getRepository(NewOppEmail::class)->findOneBy(['sent' => false]);
+        if (null === $list) {
+            return;
+        }
         $volOpps = $list->getVolunteerEmail();
         $keys = array_keys($volOpps);
+//        $templating = new EngineInterface();
         foreach ($keys as $volId) {
             $volunteer = $this->em->getRepository(Volunteer::class)->find($volId);
             $fname = $volunteer->getFname();
@@ -72,7 +74,7 @@ class NewOppEmailService
             foreach ($volOpps[$volId] as $oppId) {
                 $opportunities[] = $this->em->getRepository(Opportunity::class)->find($oppId);
             }
-            $view = $this->templating->render('Email/volunteer_opportunities.html.twig', [
+            $view = $templating->render('Email/volunteer_opportunities.html.twig', [
                 'fname' => $fname,
                 'opportunities' => $opportunities,
             ]);
@@ -84,6 +86,11 @@ class NewOppEmailService
             ];
             $mailer->appMailer($mailParams);
         }
+        
+        $list->setSent(true);
+        $this->em->persist($list);
+        
+        $this->em->flush();
     }
 
 }

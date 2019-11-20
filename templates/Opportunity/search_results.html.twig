@@ -1,0 +1,28 @@
+{% extends 'base.html.twig' %}
+{% block body %}
+    <p>We found the following opportunites that might be of interest</p>
+    {% set npo = '' %}
+    <table class="table">
+        <thead>
+            <tr class="d-flex">
+                <th class="col-3">Nonprofit</th>
+                <th class="col-3">Opportunity</th>
+                <th class="col-5">Description</th>
+                <th class="col-2">Expires</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for opp in opportunities %}
+            <tr class="d-flex">
+                {% if npo != opp.nonprofit.orgname %}
+                    {% set npo = opp.nonprofit.orgname %}
+                    <td class="col-3"><a class="text-decoration-none" href="{{ path('npo_view', {'id': opp.nonprofit.id}) }}">{{ npo }}</a></td>
+                {% else %}<td class="col-3"></td>
+                {% endif %}
+                <td class="col-3">{{ opp.oppname }}</td>
+                <td class="col-5">{{ opp.description }}</td>
+                <td class="col-2">{{ opp.expiredate|date('m/d/Y') }}</td>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

@@ -14,6 +14,7 @@ namespace App\Controller;
 use App\Entity\Opportunity;
 use App\Entity\Volunteer;
 use App\Form\Type\OpportunityType;
+use App\Form\Type\OpportunitySearchType;
 use App\Services\NewOppEmailService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -53,13 +54,13 @@ class OpportunityController extends AbstractController
             $opportunity->setNonprofit($nonprofit);
             $em->persist($opportunity);
             $em->flush();
-            
+
             $volunteers = $em->getRepository(Volunteer::class)->opportunityEmails($opportunity);
             $oppMail->addToList($volunteers, $opportunity->getId());
-            
+
             $this->addFlash(
                     'success',
-                    'Opportunity added; '. count($volunteers) . ' volunteer(s) will be notified'
+                    'Opportunity added; ' . count($volunteers) . ' volunteer(s) will be notified'
             );
 
             return $this->redirectToRoute('profile');
@@ -107,6 +108,41 @@ class OpportunityController extends AbstractController
                     'headerText' => 'Edit ' . $nonprofit->getOrgname() . ' opportunity',
                     'skillHeader' => 'Opportunity skill requirements',
                     'oppHeader' => 'Opportunity'
+        ]);
+    }
+
+    /**
+     * @Route("/search", name = "opp_search")
+     */
+    public function search(Request $request)
+    {
+        $templates = [
+            'Opportunity/searchInstructions.html.twig',
+            'Default/focuses.html.twig',
+            'Default/skills.html.twig',
+        ];
+        $form = $this->createForm(OpportunitySearchType::class);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $search = $request->request->get('search');
+            $em = $this->getDoctrine()->getManager();
+            if (!array_key_exists('focuses', $search) && !array_key_exists('focuses', $search)) {
+                $opps = $em->getRepository(Opportunity::class)->getAllOpenOpps();
+            } else {
+                $focuses = $search['focuses'] ?? [];
+                $skills = $search['skills'] ?? [];
+                $opps = $em->getRepository(Opportunity::class)->getOppsByFocusOrSkill($focuses, $skills);
+            }
+            return $this->render('/Opportunity/search_results.html.twig', [
+                        'opportunities' => $opps
+            ]);
+        }
+        return $this->render('Default/form_templates.html.twig', [
+                    'form' => $form->createView(),
+                    'templates' => $templates,
+                    'headerText' => 'Opportunity search',
+                    'focusHeader' => '',
+                    'skillHeader' => '',
         ]);
     }
 

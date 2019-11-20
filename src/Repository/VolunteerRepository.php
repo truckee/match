@@ -46,7 +46,10 @@ class VolunteerRepository extends ServiceEntityRepository
                 array_push($volunteers, $id);
             }
         }
-
+//        foreach ($volunteers as $id) {
+//            $result[] = ['id'=>$id];
+//        }
+//dd($result);
         return $volunteers;
     }
 

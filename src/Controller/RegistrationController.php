@@ -235,7 +235,7 @@ class RegistrationController extends AbstractController
         $org = new Nonprofit();
         $form = $this->createForm(NonprofitType::class, $org, ['register' => true,]);
         $templates = [
-            'Nonprofit/nonprofit.html.twig',
+            'Nonprofit/nonprofit_form.html.twig',
             'Registration/new_user.html.twig',
             'Default/focuses.html.twig',
         ];
@@ -245,7 +245,7 @@ class RegistrationController extends AbstractController
             $em = $this->getDoctrine()->getManager();
             $staff = $this->staffProperties($orgData['staff']);
             $org->setStaff($staff);
-            $org->setActive(true);
+            $org->setActive(false);
             // send confirmation email
             $view = $this->renderView(
                     'Email/staff_confirmation.html.twig',
@@ -346,8 +346,10 @@ class RegistrationController extends AbstractController
         $flashMessage = 'Account is confirmed';
         // send notice email
         if ('staff' === $actor) {
-            // notice to admin
             $org = $user->getNonprofit();
+            $org->setActive(true);
+            $em->persist($org);
+            // notice to admin
             $view = $this->renderView('Email/new_nonprofit_notice.html.twig', [
                 'orgname' => $org->getOrgname(),
                 'ein' => $org->getEin(),
@@ -367,6 +369,7 @@ class RegistrationController extends AbstractController
         $user->setTokenExpiresAt(null);
         $user->setEnabled(true);
         $em->persist($user);
+        
         $em->flush();
 
         $this->addFlash(

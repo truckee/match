@@ -13,7 +13,6 @@ namespace App\Form\Type;
 
 use App\Form\Type\Field\FocusFieldType;
 use App\Form\Type\Field\SkillFieldType;
-use App\Entity\Staff;
 use App\Entity\Volunteer;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;

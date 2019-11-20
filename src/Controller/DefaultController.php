@@ -13,7 +13,9 @@ namespace App\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
-
+use App\Services\NewOppEmailService;
+use App\Services\EmailerService;
+use Twig\Environment;
 
 /**
  * @Route("/")
@@ -26,5 +28,15 @@ class DefaultController extends AbstractController
     public function index()
     {
         return $this->render('Default/home.html.twig');
+    }
+    
+    /**
+     * @Route("/sender", name = "opp_sender")
+     */
+    public function sendStuff(NewOppEmailService $sender, Environment $templating, EmailerService $mailer)
+    {
+        $sender->sendList($mailer, $templating);
+        
+        return $this->redirectToRoute('home');
     }
 }

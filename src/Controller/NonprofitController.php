@@ -11,7 +11,7 @@
 
 namespace App\Controller;
 
-//use App\Entity\Nonprofit;
+use App\Entity\Nonprofit;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -20,6 +20,7 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class NonprofitController extends AbstractController
 {
+
     /**
      * @Route("/", name="nonprofit_index")
      */
@@ -27,4 +28,21 @@ class NonprofitController extends AbstractController
     {
         return $this->render('Nonprofit/index.html.twig');
     }
+
+    /**
+     * @Route("/view/{id}", name = "npo_view")
+     */
+    public function view($id)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $npo = $em->getRepository(Nonprofit::class)->find($id);
+        if (null === $npo) {
+            $this->addFlash('warning', 'Nonprofit not found');
+
+            return $this->redirectToRoute('home');
+        }
+        
+        return $this->render('Nonprofit/nonprofit_view.html.twig', ['npo'=>$npo]);
+    }
+
 }

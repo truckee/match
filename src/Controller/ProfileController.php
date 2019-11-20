@@ -58,7 +58,7 @@ class ProfileController extends AbstractController
             $entity = $npo = $user->getNonprofit();
             $opps = $em->getRepository(Opportunity::class)->findBy(['nonprofit' => $npo], ['oppname' => 'ASC']);
             $templates = [
-                'Nonprofit/nonprofit.html.twig',
+                'Nonprofit/nonprofit_form.html.twig',
                 'Default/focuses.html.twig',
                 'Nonprofit/opportunities.html.twig',
             ];
