@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * (c) GWB truckeesolutions@gmail.com
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+//src/Repository/NonprofitRepository.php
+
 namespace App\Repository;
 
 use App\Entity\Nonprofit;
@@ -19,6 +28,18 @@ class NonprofitRepository extends ServiceEntityRepository
         parent::__construct($registry, Nonprofit::class);
     }
 
+    public function getActiveOpps()
+    {
+        $now = new \DateTime();
+        
+        return $this->createQueryBuilder('n')
+                ->select('n.opportunites', 'o')
+                ->where('o.expiredate > :now')
+                ->orderBy('o.expiredate')
+                ->setParameter('now', $now)
+                ->getQuery()->getResult();
+    }
+    
     // /**
     //  * @return Nonprofit[] Returns an array of Nonprofit objects
     //  */

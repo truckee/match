@@ -12,7 +12,7 @@
 namespace App\Controller;
 
 use App\Entity\Nonprofit;
-use App\Services\Emailer;
+use App\Services\EmailerService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -37,7 +37,7 @@ class AdminController extends AbstractController
      * @Route("/activate/{ein}", name="activate_nonprofit")
      * 
      */
-    public function activate(Emailer $mailer, $ein = null)
+    public function activate(EmailerService $mailer, $ein = null)
     {
         $em = $this->getDoctrine()->getManager();
         $npo = $em->getRepository(Nonprofit::class)->findOneBy(['ein' => $ein]);
@@ -77,7 +77,7 @@ class AdminController extends AbstractController
 //     * 
 //     * @Route("/spool", name = "spool_test")
 //     */
-//    public function spool(Emailer $mailer)
+//    public function spool(EmailerService $mailer)
 ////    {
 //        $mailParams = [
 //            'view' => $this->renderView('Email/nonprofit_activated.html.twig', [

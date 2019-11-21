@@ -1,0 +1,28 @@
+Hi {{ fname }},
+
+<p>The following opportunities were found to match the focus(es) and skill(s) you 
+    entered. We'd appreciate your feedback on your experience with any opportunity.</p>
+    {% for opp in opportunities %}
+    <table>
+        <tr>
+            <td>Nonprofit</td>
+            <td>{{ opp.nonprofit.orgname }}</td>
+        </tr>
+        <tr>
+            <td>Name</td>
+            <td>{{ opp.oppname }}</td>
+        </tr>
+        <tr>
+            <td>Description</td>
+            <td>{{ opp.description }}</td>
+        </tr>
+        {% if opp.nonprofit.website is defined %}
+            <tr>
+                <td>Web site</td>
+                <td><a href="{{ opp.nonprofit.website }}">{{ opp.nonprofit.website }}</a></td>
+            </tr>
+        {% endif %}
+    </table>
+{%  endfor %}
+<p>And thanks for registering as a volunteer!</p>
+<p>The Connections team</p>

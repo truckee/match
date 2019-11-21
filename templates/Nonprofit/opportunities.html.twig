@@ -1,8 +1,12 @@
-{{ opportunitiesHeader }}
+{{ npo.orgname }} opportunities
+<div class="d-flex ml-2">
+<a class="btn btn-sm btn-info" href="{{ path('opp_add') }}">Add</a>
+</div>
+
 {% for opp in opportunities %}
     <div class="d-flex  flex-row mb3">
         <div class="p-2">
-            <a class="btn btn-sm btn-info" href="#">Edit</a>
+            <a class="btn btn-sm btn-info" href="{{ path('opp_edit', {'id':opp.id}) }}">Edit</a>
         </div>
         <div class="p-2">
             {{ opp.oppname }}; Exp: {% if opp.expiredate  is not null %}{{ opp.expiredate|date('m/d/Y') }}{% endif %}

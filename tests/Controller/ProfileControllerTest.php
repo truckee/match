@@ -38,7 +38,7 @@ class ProfileControllerTest extends WebTestCase
     {
         $this->client->request('GET', '/login');
         $this->client->submitForm('Sign in', [
-            'email' => 'backwards@bogus.info',
+            'email' => 'staff@bogus.info',
             'password' => '123Abc',
         ]);
         $this->client->request('GET', '/profile');

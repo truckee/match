@@ -1,0 +1,14 @@
+{% if npo is defined %}
+    <div class="text-center mb-2">
+        Staff: {{ npo.staff.fname }} {{ npo.staff.sname }};  {{ npo.staff.email }}
+    </div>
+{% endif %}
+{{ form_row(form.orgname) }}
+{{ form_row(form.ein) }}
+{{ form_row(form.address) }}
+{{ form_row(form.city) }}
+{{ form_row(form.state) }}
+{{ form_row(form.zip) }}
+{{ form_row(form.area_code) }}
+{{ form_row(form.phone) }}
+{{ form_row(form.website) }}

@@ -20,12 +20,50 @@ use Doctrine\Common\Persistence\ManagerRegistry;
  */
 class OpportunityRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry) {
+    public function __construct(ManagerRegistry $registry)
+    {
         parent::__construct($registry, Opportunity::class);
     }
-    
-    public function functionName($param)
+
+    public function getAllOpenOpps()
     {
-        
+        $now = new \DateTime();
+        return $this->createQueryBuilder('o')
+                        ->select('o')
+                        ->join('o.nonprofit', 'n')
+                        ->where('o.expiredate > :now')
+                        ->andWhere('o.active = true')
+                        ->andWhere('n.active = true')
+                        ->orderBy('n.orgname', 'ASC')
+                        ->addOrderBy('o.oppname', 'ASC')
+                        ->setParameter('now', $now)
+                        ->getQuery()->getResult()
+        ;
     }
+
+    public function getOppsByFocusOrSkill($focuses, $skills)
+    {
+        $now = new \DateTime();
+        $opps = $this->createQueryBuilder('o')
+                        ->select('o, n.jsonFocus, o.jsonSkill')
+                        ->join('o.nonprofit', 'n')
+                        ->where('o.expiredate > :now')
+                        ->andWhere('o.active = true')
+                        ->andWhere('n.active = true')
+                        ->orderBy('n.orgname', 'ASC')
+                        ->addOrderBy('o.oppname', 'ASC')
+                        ->setParameter('now', $now)
+                        ->getQuery()->getResult()
+        ;
+        $matches = [];
+        foreach ($opps as $item) {
+            if (!empty(array_intersect($item['jsonFocus'], $focuses)) ||
+                    !empty(array_intersect($item['jsonSkill'], $skill))) {
+                array_push($matches, $item[0]);
+            }
+        }
+        
+        return $matches;
+    }
+
 }

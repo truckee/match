@@ -1,12 +1,19 @@
 <?php
 
+/*
+ * (c) GWB truckeesolutions@gmail.com
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+//src/Entity/Staff.php
+
 namespace App\Entity;
 
 use App\Entity\User as User;
 use App\Entity\Nonprofit;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
-use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Staff

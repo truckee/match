@@ -20,7 +20,7 @@ security:
                     - App\Security\LoginFormAuthenticator
             logout:
                 path:   app_logout
-                target: home
+                target: /
 
     access_control:
         - { path: ^/login$, roles: IS_AUTHENTICATED_ANONYMOUSLY }

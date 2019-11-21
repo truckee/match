@@ -14,7 +14,7 @@ namespace App\Form\Type;
 use App\Entity\Opportunity;
 use App\Form\Type\Field\SkillFieldType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\AbstractType;
@@ -58,14 +58,15 @@ class OpportunityType extends AbstractType
                     ],
                     'label' => 'Minimum age ',
                 ])
-//            ->add('active')
+                ->add('active', CheckboxType::class, [
+                    'label' => 'Active?'
+                ])
                 ->add('groupOk', null, [
                     'label' => 'Group OK?'
                 ])
                 ->add('background', null, [
                     'label' => 'Background check req\'d?'
                 ])
-//            ->add('orgid')
                 ->add('skills', SkillFieldType::class, [
                     'label' => false,
                 ])

@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * (c) GWB truckeesolutions@gmail.com
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+//src/Entity/Opportunity.php
+
 namespace App\Entity;
 
 use App\Entity\Skill;
@@ -12,6 +21,7 @@ use App\Validator\Constraints as CustomAssert;
  *
  * @ORM\Table(name="opportunity", indexes={@ORM\Index(name="IDX_8389C3D73A8AF33E", columns={"orgId"})})
  * @ORM\Entity(repositoryClass = "App\Repository\OpportunityRepository")
+ * @ORM\HasLifecycleCallbacks()
  */
 class Opportunity
 {
@@ -19,6 +29,7 @@ class Opportunity
     {
         $now = new \DateTime();
         $this->expiredate = $now->add(new \DateInterval('P90D'));
+        $this->active = true;
     }
     
     /**
@@ -113,6 +124,11 @@ class Opportunity
      *      ))
      */
     protected $skills;
+
+    /**
+     * @ORM\Column(type="json_array")
+     */
+    private $jsonSkill = [];
 
     public function getId(): ?int
     {
@@ -246,6 +262,7 @@ class Opportunity
     public function addSkill(Skill $skill)
     {
         $this->skills[] = $skill;
+        array_push($this->jsonSkill, $skill->getId());
 
         return $this;
     }
@@ -253,7 +270,7 @@ class Opportunity
     /**
      * Remove skills.
      *
-     * @param Skill $skills
+     * @param Skill $skill
      */
     public function removeSkill(Skill $skill)
     {
@@ -268,5 +285,29 @@ class Opportunity
     public function getSkills()
     {
         return $this->skills;
+    }
+
+    public function getJsonSkill(): ?array
+    {
+        return $this->jsonSkill;
+    }
+
+    public function setJsonSkill(array $jsonSkill): self
+    {
+        $this->jsonSkill = $jsonSkill;
+
+        return $this;
+    }
+    
+    /**
+     * @ORM\PreUpdate()
+     */
+    public function updateJsonSkills()
+    {
+        $skills = $this->skills;
+        $this->jsonSkill = [];
+        foreach ($skills as $item) {
+            array_push($this->jsonSkill, $item->getId());
+        }
     }
 }

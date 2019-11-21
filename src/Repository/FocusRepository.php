@@ -25,12 +25,4 @@ class FocusRepository extends ServiceEntityRepository
         parent::__construct($registry, Focus::class);
     }
 
-    public function countFocuses()
-    {
-        $em = $this->getEntityManager();
-
-        return $em->createQuery('select count(f) from App:Focus f '
-                    . "WHERE f.enabled = true")
-                ->getSingleScalarResult();
-    }
 }
