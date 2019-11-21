@@ -16,7 +16,7 @@ Hi {{ fname }},
             <td>Description</td>
             <td>{{ opp.description }}</td>
         </tr>
-        {% if opp.nonprofit.website is defined %}
+        {% if opp.nonprofit.website is null %}
             <tr>
                 <td>Web site</td>
                 <td><a href="{{ opp.nonprofit.website }}">{{ opp.nonprofit.website }}</a></td>

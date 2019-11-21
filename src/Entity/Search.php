@@ -16,7 +16,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Search
  *
- * @ORM\Table(name="search", indexes={@ORM\Index(name="IDX_B4F0DBA751804B42", columns={"focus_id"}), @ORM\Index(name="IDX_B4F0DBA7438D405D", columns={"opp_id"}), @ORM\Index(name="IDX_B4F0DBA7F4837C1B", columns={"org_id"}), @ORM\Index(name="IDX_B4F0DBA75585C142", columns={"skill_id"})})
+ * @ORM\Table(name="search")
  * @ORM\Entity
  */
 class Search
