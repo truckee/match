@@ -29,6 +29,7 @@ class Opportunity
     {
         $now = new \DateTime();
         $this->expiredate = $now->add(new \DateInterval('P90D'));
+        $this->active = true;
     }
     
     /**

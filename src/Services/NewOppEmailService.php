@@ -66,7 +66,6 @@ class NewOppEmailService
         }
         $volOpps = $list->getVolunteerEmail();
         $keys = array_keys($volOpps);
-//        $templating = new EngineInterface();
         foreach ($keys as $volId) {
             $volunteer = $this->em->getRepository(Volunteer::class)->find($volId);
             $fname = $volunteer->getFname();

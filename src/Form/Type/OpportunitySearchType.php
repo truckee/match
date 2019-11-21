@@ -7,7 +7,7 @@
  * file that was distributed with this source code.
  */
 
-//src/insert_path_here/OpportunitySearchType.php
+//src/Form/Type/OpportunitySearchType.php
 
 namespace App\Form\Type;
 
