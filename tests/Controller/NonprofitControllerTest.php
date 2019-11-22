@@ -35,7 +35,13 @@ class NonprofitControllerTest extends WebTestCase
         $this->client->clickLink('Turkey Fund');
         
         $this->assertStringContainsString('Address', $this->client->getResponse()->getContent());
-
+    }
+    
+    public function testNonprofitNotFound()
+    {
+        $this->client->request('GET', '/nonprofit/view/6');
+        
+        $this->assertStringContainsString('Nonprofit not found', $this->client->getResponse()->getContent());        
     }
 
 }

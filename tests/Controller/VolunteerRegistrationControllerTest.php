@@ -25,7 +25,7 @@ class VolunteerRegistrationControllerTest extends WebTestCase
     {
         $this->client->request('GET', '/register/volunteer');
 
-        $this->client->submitForm('Submit');
+        $this->client->submitForm('Save');
         $this->assertStringContainsString('First name is required', $this->client->getResponse()->getContent());
         $this->assertStringContainsString('Last name is required', $this->client->getResponse()->getContent());
         $this->assertStringContainsString('Email is required', $this->client->getResponse()->getContent());

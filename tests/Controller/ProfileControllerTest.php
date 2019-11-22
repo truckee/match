@@ -45,6 +45,7 @@ class ProfileControllerTest extends WebTestCase
         
         $this->assertStringContainsString('Turkey Fund profile', $this->client->getResponse()->getContent());
         
+//        $this->client->submitForm()
     }
     
 }
