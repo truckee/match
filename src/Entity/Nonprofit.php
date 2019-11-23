@@ -32,7 +32,6 @@ class Nonprofit
     public function __construct()
     {
         $this->opportunities = new ArrayCollection();
-        $this->searches = new ArrayCollection();
         $this->focuses = new ArrayCollection();
         // nonprofits must be activated manually
         $this->addDate = new \DateTime();
@@ -346,13 +345,6 @@ class Nonprofit
     public function getJsonFocus(): ?array
     {
         return $this->jsonFocus;
-    }
-
-    public function setJsonFocus(array $jsonFocus): self
-    {
-        $this->jsonFocus = $jsonFocus;
-
-        return $this;
     }
     
     /**

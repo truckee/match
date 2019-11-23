@@ -143,6 +143,7 @@ class OpportunityController extends AbstractController
                     'headerText' => 'Opportunity search',
                     'focusHeader' => '',
                     'skillHeader' => '',
+                    'submitValue' => 'Search',
         ]);
     }
 

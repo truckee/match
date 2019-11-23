@@ -28,8 +28,9 @@ class Opportunity
     public function __construct()
     {
         $now = new \DateTime();
-        $this->expiredate = $now->add(new \DateInterval('P91D'));
+        $this->addDate = $now;
         $this->active = true;
+        $this->expiredate = $now->add(new \DateInterval('P91D'));
     }
     
     /**
@@ -159,18 +160,6 @@ class Opportunity
         return $this;
     }
 
-    public function getLastupdate(): ?\DateTimeInterface
-    {
-        return $this->lastupdate;
-    }
-
-    public function setLastupdate(?\DateTimeInterface $lastupdate): self
-    {
-        $this->lastupdate = $lastupdate;
-
-        return $this;
-    }
-
     public function getMinage(): ?string
     {
         return $this->minage;
@@ -290,13 +279,6 @@ class Opportunity
     public function getJsonSkill(): ?array
     {
         return $this->jsonSkill;
-    }
-
-    public function setJsonSkill(array $jsonSkill): self
-    {
-        $this->jsonSkill = $jsonSkill;
-
-        return $this;
     }
     
     /**

@@ -168,23 +168,9 @@ class Volunteer extends User
         return $this->jsonFocus;
     }
 
-    public function setJsonFocus(array $jsonFocus): self
-    {
-        $this->jsonFocus = $jsonFocus;
-
-        return $this;
-    }
-
     public function getJsonSkill(): ?array
     {
         return $this->jsonSkill;
-    }
-
-    public function setJsonSkill(array $jsonSkill): self
-    {
-        $this->jsonSkill = $jsonSkill;
-
-        return $this;
     }
     
     /**

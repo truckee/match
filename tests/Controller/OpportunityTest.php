@@ -44,7 +44,7 @@ class OpportunityTest extends WebTestCase
         $this->assertStringContainsString('Opportunity added; 1', $this->client->getResponse()->getContent());
     }
 
-    public function testEitButton()
+    public function testEditButton()
     {
         $crawler = $this->client->request('GET', '/opportunity/edit/1');
         $node = $crawler->selectButton('submit');
