@@ -15,11 +15,11 @@ use App\Entity\Nonprofit;
 use App\Services\EmailerService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
-
+//use EasyCorp\Bundle\EasyAdminBundle\Controller\EasyAdminController;
 //use Symfony\Component\HttpFoundation\Response;
 
 /**
- * @Route("/admin")
+ * @Route("/")
  */
 class AdminController extends AbstractController
 {

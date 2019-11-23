@@ -28,7 +28,7 @@ class Opportunity
     public function __construct()
     {
         $now = new \DateTime();
-        $this->expiredate = $now->add(new \DateInterval('P90D'));
+        $this->expiredate = $now->add(new \DateInterval('P91D'));
         $this->active = true;
     }
     

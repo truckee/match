@@ -267,6 +267,11 @@ abstract class User implements UserInterface
     {
         return $this->lastLogin;
     }
+    
+    public function getFullName()
+    {
+        return $this->fname . ' ' . $this->sname;
+    }
 
     // required by interface, otherwise irrelevant
 

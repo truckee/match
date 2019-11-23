@@ -1,0 +1,54 @@
+easy_admin:
+    site_name: 'Volunteer Connections'
+    user:
+        name_property_path: 'fullName'
+        display_avatar: false
+    design:
+        menu:
+#            - Nonprofit
+#            - Volunteer
+            - Focus
+            - Skill
+            - { label: 'Home', route: 'home' }
+    edit:
+        actions: ['-show', '-delete']
+        title: 'Edit %%entity_name%%'
+    list:
+        actions: ['edit', 'search', '-delete']
+    entities:
+        Focus:
+            class: App\Entity\Focus
+            list:
+                fields: ['focus', 'enabled']
+                sort: ['focus', 'ASC']
+            edit:
+                fields: ['focus', 'enabled']
+                sort: ['focus', 'ASC']
+            new:
+                fields: [ 'focus', 'enabled' ]
+        Skill:
+            class: App\Entity\Skill
+            list:
+                fields: ['skill', 'enabled']
+                sort: ['skill', 'ASC']
+            edit:
+                fields: ['skill', 'enabled']
+                sort: ['skill', 'ASC']
+            new:
+                fields: ['skill', 'enabled']
+#        Volunteer:
+#            class: App\Entity\Volunteer
+#            list:
+#                fields: 
+#                    - { property: 'sname', label: 'Last name'}
+#                    - { property: 'fname', label: 'First name'}
+#                    - 'receiveEmail'
+#                    - 'enabled'
+#            edit:
+#                fields: [{ property: 'sname', label: 'Last name'}, { property: 'fname', label: 'First name'}, 'receiveEmail', 'enabled']
+#        Nonprofit:
+#            class: App\Entity\Nonprofit
+#            list:
+#                fields: ['active', 'orgname', 'address', 'city', 'state', 'zip', 'website', 'phone']
+#            edit:
+#                fields: ['active', 'orgname', 'ein', 'address', 'city', 'state', 'zip', 'website', 'areacode', 'phone']
