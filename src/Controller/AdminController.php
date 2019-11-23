@@ -19,7 +19,7 @@ use Symfony\Component\Routing\Annotation\Route;
 //use Symfony\Component\HttpFoundation\Response;
 
 /**
- * @Route("/")
+ * @Route("/admin")
  */
 class AdminController extends AbstractController
 {

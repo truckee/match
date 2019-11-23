@@ -30,7 +30,7 @@ class AdminControllerTest extends WebTestCase
     {
         $this->client->request('GET', '/admin');
         
-        $this->assertStringContainsString('Admin functions will appear here', $this->client->getResponse()->getContent());
+        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
     }
     
     public function testActivateNonprofit()
@@ -43,8 +43,6 @@ class AdminControllerTest extends WebTestCase
         $this->client->request('GET', '/admin/activate/123456789');
         
         $this->assertStringContainsString('It worked?!', $this->client->getResponse()->getContent());
-        
-        
     }
     
     public function testActivationEmail()
