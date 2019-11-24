@@ -13,10 +13,10 @@ namespace App\Controller;
 
 use App\Entity\Nonprofit;
 use App\Services\EmailerService;
+use App\Services\ChartService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
-//use EasyCorp\Bundle\EasyAdminBundle\Controller\EasyAdminController;
-//use Symfony\Component\HttpFoundation\Response;
+
 
 /**
  * @Route("/admin")
@@ -28,9 +28,13 @@ class AdminController extends AbstractController
      * @Route("/", name="admin")
      * 
      */
-    public function index()
+    public function index(ChartService $charter)
     {
-        return $this->render('Admin/index.html.twig');
+        $chart = $charter->volunteerChart();
+        
+        return $this->render('Admin/index.html.twig', [
+            'chart'=>$chart,
+        ]);
     }
 
     /**
