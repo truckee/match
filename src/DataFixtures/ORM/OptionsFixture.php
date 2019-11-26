@@ -16,11 +16,12 @@ use App\Entity\Skill;
 use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\Bundle\FixturesBundle\ORMFixtureInterface;
 
 /**
  * Loads focus & skill data.
  */
-class OptionsFixture extends AbstractFixture implements OrderedFixtureInterface
+class OptionsFixture extends AbstractFixture implements OrderedFixtureInterface, ORMFixtureInterface
 {
     /**
      * Load fixtures.

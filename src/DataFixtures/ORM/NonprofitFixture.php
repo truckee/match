@@ -13,13 +13,13 @@ namespace App\DataFixtures\ORM;
 
 use App\Entity\Nonprofit;
 use App\Entity\Staff;
-use App\DataFixtures\ORM\OptionsFixture;
 use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Doctrine\Bundle\FixturesBundle\ORMFixtureInterface;
 
-class NonprofitFixture extends AbstractFixture implements OrderedFixtureInterface
+class NonprofitFixture extends AbstractFixture implements OrderedFixtureInterface, ORMFixtureInterface
 {
     public const NONPROFIT_TURKEY_REFERENCE = "npo1-turkey";
 
@@ -41,7 +41,7 @@ class NonprofitFixture extends AbstractFixture implements OrderedFixtureInterfac
         $npo1->setOrgname('Turkey Fund');
         $npo1->setEin('321654978');
         $npo1->setActive(true);
-        $npo1->addFocus($this->fixtures->getReference('focus_health'));
+        $npo1->addFocus($this->getReference('focus_health'));
         $this->setReference('nonprofit', $npo1);
 
         $staff = new Staff();

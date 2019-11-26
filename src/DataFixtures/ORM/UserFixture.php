@@ -13,11 +13,11 @@ namespace App\DataFixtures\ORM;
 
 use App\Entity\Admin;
 use App\Entity\Volunteer;
-use App\DataFixtures\ORM\OptionsFixture;
 use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Doctrine\Bundle\FixturesBundle\ORMFixtureInterface;
 
 /**
  * These users are for testing volunteer registration as well as all user
@@ -28,7 +28,7 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
  * pseudo@bogus.info: same. but enabled true
  *
  */
-class UserFixture extends AbstractFixture implements OrderedFixtureInterface
+class UserFixture extends AbstractFixture implements OrderedFixtureInterface, ORMFixtureInterface
 {
 
     public const VOLUNTEER_REFERENCE = 'volunteer';
@@ -111,10 +111,10 @@ class UserFixture extends AbstractFixture implements OrderedFixtureInterface
             $password3 = $this->encoder->encodePassword($volunteer3, '123Abc');
             $volunteer3->setPassword($password3);
             $volunteer3->setRoles(['ROLE_VOLUNTEER']);
-            $volunteer3->addFocus($this->fixtures->getReference('focus_seniors'));
-            $volunteer3->addFocus($this->fixtures->getReference('focus_health'));
-            $volunteer3->addSkill($this->fixtures->getReference('skill_admin'));
-            $volunteer3->addSkill($this->fixtures->getReference('skill_board'));
+            $volunteer3->addFocus($this->getReference('focus_seniors'));
+            $volunteer3->addFocus($this->getReference('focus_health'));
+            $volunteer3->addSkill($this->getReference('skill_admin'));
+            $volunteer3->addSkill($this->getReference('skill_board'));
             $this->setReference('volunteer', $volunteer3);
             $manager->persist($volunteer3);
         }
