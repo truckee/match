@@ -32,6 +32,6 @@ class SecurityTest extends WebTestCase
             'password' => '123Abc',
         ]);
         
-        $this->assertStringContainsString('Volunteer Connections', $this->client->getResponse()->getContent());
+        $this->assertStringContainsString('Admin dashboard', $this->client->getResponse()->getContent());
     }
 }

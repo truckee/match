@@ -31,6 +31,8 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 class UserFixture extends Fixture implements OrderedFixtureInterface
 {
 
+    public const VOLUNTEER_REFERENCE = 'volunteer';
+
     private $encoder;
 
     public function __construct(UserPasswordEncoderInterface $encoder)
@@ -113,6 +115,7 @@ class UserFixture extends Fixture implements OrderedFixtureInterface
             $volunteer3->addFocus($this->getReference(OptionsFixture::HEALTH_FOCUS_REFERENCE));
             $volunteer3->addSkill($this->getReference(OptionsFixture::ADMIN_SKILL_REFERENCE));
             $volunteer3->addSkill($this->getReference(OptionsFixture::BOARD_SKILL_REFERENCE));
+            $this->addReference(self::VOLUNTEER_REFERENCE, $volunteer3);
             $manager->persist($volunteer3);
         }
 
