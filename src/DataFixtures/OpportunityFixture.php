@@ -21,6 +21,8 @@ use Doctrine\Common\Persistence\ObjectManager;
  */
 class OpportunityFixture extends Fixture implements OrderedFixtureInterface
 {
+    public const OPPORTUNITY_REFERENCE = 'opportunity';
+    
     public function load(ObjectManager $manager)
     {
         $opp = new Opportunity();
@@ -29,6 +31,7 @@ class OpportunityFixture extends Fixture implements OrderedFixtureInterface
         $opp->setOppname('Feeder');
         $opp->setDescription('Get them to eat');
         $opp->addSkill($this->getReference(OptionsFixture::ADMIN_SKILL_REFERENCE));
+        $this->addReference(self::OPPORTUNITY_REFERENCE, $opp);
         $manager->persist($opp);
         
         $manager->flush();
