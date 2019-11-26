@@ -17,7 +17,6 @@ use App\Services\ChartService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 
-
 /**
  * @Route("/admin")
  */
@@ -30,10 +29,12 @@ class AdminController extends AbstractController
      */
     public function index(ChartService $charter)
     {
-        $chart = $charter->volunteerChart();
-        
+        $volChart = $charter->volunteerChart();
+        $searchGauge = $charter->searchGauge();
+
         return $this->render('Admin/index.html.twig', [
-            'chart'=>$chart,
+                    'vol_chart' => $volChart,
+                    'search_gauge' => $searchGauge,
         ]);
     }
 
@@ -70,7 +71,7 @@ class AdminController extends AbstractController
 
         $this->addFlash(
                 'success',
-                'It worked?!'
+                'Nonprofit activated!'
         );
 
         return $this->redirectToRoute('admin');
@@ -95,5 +96,4 @@ class AdminController extends AbstractController
 //
 //        return $this->redirectToRoute('admin');
 //    }
-
 }

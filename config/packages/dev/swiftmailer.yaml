@@ -2,7 +2,7 @@
 swiftmailer:
     # send all emails to a specific address
 #    delivery_addresses: ['admin@bogus.info']
-    default_mailer: spooler
+    default_mailer: memory
     mailers:
         memory:
             sender_address: 'admin@bogus.info'

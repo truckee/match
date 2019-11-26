@@ -39,6 +39,52 @@ class SearchTest extends WebTestCase
         $this->assertStringContainsString('Turkey Fund', $this->client->getResponse()->getContent());
     }
     
+    public function testFocusSearch()
+    {
+        $crawler = $this->client->request('GET', '/opportunity/search');
+        $node = $crawler->selectButton('submit');
+        $form = $node->form();
+        $form['search[focuses]'][1]->tick();
+        $form['search[focuses]'][0]->tick();
+        $this->client->submit($form);
+
+        $this->assertStringContainsString('Turkey Fund', $this->client->getResponse()->getContent());
+    }
+    
+    public function testFailedFocusSearch()
+    {
+        $crawler = $this->client->request('GET', '/opportunity/search');
+        $node = $crawler->selectButton('submit');
+        $form = $node->form();
+        $form['search[focuses]'][0]->tick();
+        $this->client->submit($form);
+
+        $this->assertStringContainsString('No matching opportunities found', $this->client->getResponse()->getContent());
+    }
+    
+    public function testSkillSearch()
+    {
+        $crawler = $this->client->request('GET', '/opportunity/search');
+        $node = $crawler->selectButton('submit');
+        $form = $node->form();
+        $form['search[skills]'][0]->tick();
+        $form['search[skills]'][1]->tick();
+        $this->client->submit($form);
+
+        $this->assertStringContainsString('Turkey Fund', $this->client->getResponse()->getContent());
+    }
+    
+    public function testFailedSkillSearch()
+    {
+        $crawler = $this->client->request('GET', '/opportunity/search');
+        $node = $crawler->selectButton('submit');
+        $form = $node->form();
+        $form['search[skills]'][1]->tick();
+        $this->client->submit($form);
+
+        $this->assertStringContainsString('No matching opportunities found', $this->client->getResponse()->getContent());
+    }
+    
     public function testSearch()
     {
         $this->client->request('GET', '/opportunity/search');

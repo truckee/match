@@ -1,11 +1,22 @@
 {% extends 'base.html.twig' %}
 {% block body %}
-    <p>Admin dashboard graphics will appear here - when there is meaningful data! Here's a made-up example</p>
-    <div id="div_chart"></div>
+    <p>Admin dashboard graphics will appear here - when there is meaningful data! Here are examples of possibilities</p>
+    <div class="row">
+        <div class="col-4" id="div_vol">
+        </div>
+        <div class="col-4">
+            <p>Last 7 days searches</p>
+            <div id="div_search"></div>
+        </div>
+
+    </div>
+
+    <div ></div>
 {% endblock %}
 {% block javascripts %}
+    {{ parent() }}
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     <script type="text/javascript">
-        {{ gc_draw(chart, 'div_chart') }}
+        {{ gc_draw([vol_chart, search_gauge], ['div_vol', 'div_search']) }}
     </script>
 {% endblock %}

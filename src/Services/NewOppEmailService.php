@@ -19,11 +19,10 @@ use Doctrine\ORM\EntityManagerInterface;
 use Twig\Environment;
 
 /**
- * 
+ *
  */
 class NewOppEmailService
 {
-
     private $em;
 
     public function __construct(EntityManagerInterface $em)
@@ -91,5 +90,4 @@ class NewOppEmailService
         
         $this->em->flush();
     }
-
 }

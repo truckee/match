@@ -24,13 +24,4 @@ class SkillRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Skill::class);
     }
-
-    public function countSkills()
-    {
-        $em = $this->getEntityManager();
-
-        return $em->createQuery('select count(s) from App:Focus s '
-                    . "WHERE s.enabled = true")
-                ->getSingleScalarResult();
-    }
 }

@@ -14,11 +14,10 @@ namespace App\Services;
 //use CMEN\GoogleChartsBundle\GoogleCharts\Charts\ColumnChart;
 
 /**
- * 
+ *
  */
 class ChartService
 {
-
     public function volunteerChart()
     {
         $m = date_format(new \DateTime(), 'm');
@@ -51,10 +50,29 @@ class ChartService
                 ->getLegend()->setPosition('none');
         $chart->getOptions()
                 ->setBars('vertical')
-                ->setHeight(300)
-                ->setWidth(450);
+                ->setHeight(220)
+                ->setWidth(330);
 
         return $chart;
     }
 
+    public function searchGauge()
+    {
+        $gauge = new \CMEN\GoogleChartsBundle\GoogleCharts\Charts\GaugeChart;
+        $gauge->getData()->setArrayToDataTable([
+            ['Label', 'Value'],
+            ['Search', 40],
+        ]);
+        $gauge->getOptions()->setWidth(400);
+        $gauge->getOptions()->setHeight(120);
+        $gauge->getOptions()->setRedFrom(0);
+        $gauge->getOptions()->setRedTo(10);
+        $gauge->getOptions()->setYellowFrom(10);
+        $gauge->getOptions()->setYellowTo(20);
+        $gauge->getOptions()->setGreenFrom(20);
+        $gauge->getOptions()->setGreenTo(100);
+        $gauge->getOptions()->setMinorTicks(5);
+        
+        return $gauge;
+    }
 }

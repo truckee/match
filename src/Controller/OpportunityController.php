@@ -126,12 +126,17 @@ class OpportunityController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $search = $request->request->get('search');
             $em = $this->getDoctrine()->getManager();
-            if (!array_key_exists('focuses', $search) && !array_key_exists('focuses', $search)) {
+            if (!array_key_exists('focuses', $search) && !array_key_exists('skills', $search)) {
                 $opps = $em->getRepository(Opportunity::class)->getAllOpenOpps();
             } else {
                 $focuses = $search['focuses'] ?? [];
                 $skills = $search['skills'] ?? [];
                 $opps = $em->getRepository(Opportunity::class)->getOppsByFocusOrSkill($focuses, $skills);
+            }
+            if (empty($opps)) {
+                $this->addFlash('warning', 'No matching opportunities found');
+                
+                return $this->redirectToRoute('opp_search');
             }
             return $this->render('/Opportunity/search_results.html.twig', [
                         'opportunities' => $opps

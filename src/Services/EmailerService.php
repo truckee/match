@@ -14,11 +14,10 @@ namespace App\Services;
 use Symfony\Component\Dotenv\Dotenv;
 
 /**
- * 
+ *
  */
 class EmailerService
 {
-
     private $defaultMailer;
     private $spoolMailer;
     private $sender;
@@ -44,18 +43,17 @@ class EmailerService
                 ->setFrom($this->sender)
                 ->setTo($mailParams['recipient'])
                 ->setBody(
-                $mailParams['view'],
-                'text/html'
+                    $mailParams['view'],
+                    'text/html'
                 )
         ;
 
         if (!array_key_exists('spool', $mailParams)) {
-            $this->defaultMailer->send($message);
+           $this->defaultMailer->send($message);
         } else {
             $this->spoolMailer->send($message);
         }
     }
-
 }
 
 //// custom function to send an email
@@ -76,4 +74,3 @@ class EmailerService
 //        ));
 //    }
 //}
- 

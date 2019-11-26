@@ -42,7 +42,7 @@ class AdminControllerTest extends WebTestCase
 
         $this->client->request('GET', '/admin/activate/123456789');
         
-        $this->assertStringContainsString('It worked?!', $this->client->getResponse()->getContent());
+        $this->assertStringContainsString('Nonprofit activated!', $this->client->getResponse()->getContent());
     }
     
     public function testActivationEmail()
