@@ -299,6 +299,7 @@ class Nonprofit
     public function addOpportunity(Opportunity $opportunity)
     {
         $this->opportunities[] = $opportunity;
+        $opportunity->setNonprofit($this);
 
         return $this;
     }

@@ -23,7 +23,7 @@ class SecurityTest extends WebTestCase
 
     public function setup() : void
     {
-        $this->loadFixtures();
+//        $this->loadFixtures();
         $this->client = static::createClient();
         $this->client->followRedirects();
     }

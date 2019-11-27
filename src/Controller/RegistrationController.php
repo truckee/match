@@ -294,9 +294,9 @@ class RegistrationController extends AbstractController
     }
 
     /**
-     * @Route("/confirm/{token}")
+     * @Route("/confirm/{token}", name = "confirm")
      */
-    public function confirm(EmailerService $mailer, $token = null)
+    public function confirm(Request $request, EmailerService $mailer, $token = null)
     {
         $em = $this->getDoctrine()->getManager();
         if (null === $token) {

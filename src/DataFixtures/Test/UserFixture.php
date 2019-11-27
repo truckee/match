@@ -9,7 +9,7 @@
 
 //src/DataFixtures/UserFixture.php
 
-namespace App\DataFixtures\ORM;
+namespace App\DataFixtures\Test;
 
 use App\Entity\Admin;
 use App\Entity\Volunteer;

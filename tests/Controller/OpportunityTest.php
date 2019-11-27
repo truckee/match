@@ -23,7 +23,10 @@ class OpportunityTest extends WebTestCase
 
     public function setup(): void
     {
-        $this->loadFixtures(['App\DataFixtures\ORM\OpportunityFixture'])
+        $this->fixtures = $this->loadFixtures([
+            'App\DataFixtures\Test\OptionsFixture',
+            'App\DataFixtures\Test\NonprofitFixture',
+            ])
                 ->getReferenceRepository();
         $this->client = static::createClient();
         $this->client->followRedirects();
@@ -32,11 +35,11 @@ class OpportunityTest extends WebTestCase
             'email' => 'staff@bogus.info',
             'password' => '123Abc',
         ]);
-        $this->client->request('GET', '/profile');
     }
 
     public function testAddButton()
     {
+        $this->client->request('GET', '/profile');
         $crawler = $this->client->clickLink('Add');
         $node = $crawler->selectButton('submit');
         $form = $node->form();
@@ -50,7 +53,8 @@ class OpportunityTest extends WebTestCase
 
     public function testEditButton()
     {
-        $oppId = $this->fixtures->getReference('opportunity');
+        $this->client->request('GET', '/profile');
+        $oppId = $this->fixtures->getReference('opp')->getId();
         $crawler = $this->client->request('GET', '/opportunity/edit/' . $oppId);
         $node = $crawler->selectButton('submit');
         $form = $node->form();

@@ -23,7 +23,11 @@ class NonprofitControllerTest extends WebTestCase
 
     public function setup(): void
     {
-        $this->loadFixtures();
+        $this->fixtures = $this->loadFixtures([
+                    'App\DataFixtures\Test\OptionsFixture',
+                    'App\DataFixtures\Test\NonprofitFixture',
+                ])
+                ->getReferenceRepository();
         $this->client = static::createClient();
         $this->client->followRedirects();
     }
@@ -32,19 +36,19 @@ class NonprofitControllerTest extends WebTestCase
     {
         $this->client->request('GET', '/opportunity/search');
         $this->client->submitForm('submit');
-        
+
         $this->assertStringContainsString('Turkey Fund', $this->client->getResponse()->getContent());
-        
+
         $this->client->clickLink('Turkey Fund');
-        
+
         $this->assertStringContainsString('Address', $this->client->getResponse()->getContent());
     }
-    
+
     public function testNonprofitNotFound()
     {
-        $this->client->request('GET', '/nonprofit/view/6');
-        
-        $this->assertStringContainsString('Nonprofit not found', $this->client->getResponse()->getContent());        
+        $this->client->request('GET', '/nonprofit/view/0');
+
+        $this->assertStringContainsString('Nonprofit not found', $this->client->getResponse()->getContent());
     }
 
 }

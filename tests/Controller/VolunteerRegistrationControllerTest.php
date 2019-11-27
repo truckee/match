@@ -20,7 +20,7 @@ class VolunteerRegistrationControllerTest extends WebTestCase
 
     public function setup(): void
     {
-        $this->loadFixtures();
+//        $this->loadFixtures();
         $this->client = static::createClient();
         $this->client->followRedirects();
     }
@@ -78,7 +78,7 @@ class VolunteerRegistrationControllerTest extends WebTestCase
         $collectedMessages = $mailCollector->getMessages();
         $message = $collectedMessages[0];
 
-        $this->assertStringContainsString('You will then begin receive emails', $message->getBody());
+        $this->assertStringContainsString('you will begin to receive emails', $message->getBody());
     }
 
     private function volunteerRegistration()

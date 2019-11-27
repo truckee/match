@@ -9,9 +9,10 @@
 
 //src/DataFixtures/NonprofitFixture.php
 
-namespace App\DataFixtures\ORM;
+namespace App\DataFixtures\Test;
 
 use App\Entity\Nonprofit;
+use App\Entity\Opportunity;
 use App\Entity\Staff;
 use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
@@ -21,8 +22,6 @@ use Doctrine\Bundle\FixturesBundle\ORMFixtureInterface;
 
 class NonprofitFixture extends AbstractFixture implements OrderedFixtureInterface, ORMFixtureInterface
 {
-    public const NONPROFIT_TURKEY_REFERENCE = "npo1-turkey";
-
     private $encoder;
 
     public function __construct(UserPasswordEncoderInterface $encoder)
@@ -69,10 +68,21 @@ class NonprofitFixture extends AbstractFixture implements OrderedFixtureInterfac
         $manager->persist($staff);
         $manager->persist($npo);
 
+        $opp = new Opportunity();
+        $opp->setNonprofit($npo1);
+        $opp->setActive(true);
+        $opp->setOppname('Feeder');
+        $opp->setDescription('Get them to eat');
+        $opp->addSkill($this->getReference('skill_admin'));
+        $this->setReference('opp', $opp);
+        
+        $npo1->addOpportunity($opp);
+        
+        $manager->persist($opp);
         $npo1->setStaff($staff1);
         $manager->persist($staff1);
         $manager->persist($npo1);
-
+        
         $manager->flush();
     }
 

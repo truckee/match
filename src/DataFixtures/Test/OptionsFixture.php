@@ -9,7 +9,7 @@
 
 //src/DataFixtures/LoadFocusSkillData.php
 
-namespace App\DataFixtures\ORM;
+namespace App\DataFixtures\Test;
 
 use App\Entity\Focus;
 use App\Entity\Skill;
