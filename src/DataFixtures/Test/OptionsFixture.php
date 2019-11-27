@@ -9,26 +9,20 @@
 
 //src/DataFixtures/LoadFocusSkillData.php
 
-namespace App\DataFixtures;
+namespace App\DataFixtures\Test;
 
 use App\Entity\Focus;
 use App\Entity\Skill;
-use Doctrine\Bundle\FixturesBundle\Fixture;
+use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\Bundle\FixturesBundle\ORMFixtureInterface;
 
 /**
  * Loads focus & skill data.
  */
-class OptionsFixture extends Fixture implements OrderedFixtureInterface
+class OptionsFixture extends AbstractFixture implements OrderedFixtureInterface, ORMFixtureInterface
 {
-    public const SENIORS_FOCUS_REFERENCE = 'seniors-focus';
-    public const EDUCATION_FOCUS_REFERENCE = 'education-focus';
-    public const HEALTH_FOCUS_REFERENCE = 'health-focus';
-    public const ADMIN_SKILL_REFERENCE = 'admin-skill';
-    public const BOARD_SKILL_REFERENCE = 'board-skill';
-    public const COMPUTERS_SKILL_REFERENCE = 'computers-skill';
-    
     /**
      * Load fixtures.
      *
@@ -43,37 +37,37 @@ class OptionsFixture extends Fixture implements OrderedFixtureInterface
         $focusSeniors->setFocus('Seniors');
         $focusSeniors->setEnabled(true);
         $manager->persist($focusSeniors);
-        $this->addReference(self::SENIORS_FOCUS_REFERENCE, $focusSeniors);
+        $this->setReference('focus_seniors', $focusSeniors);
 
         $focusEducation = new Focus();
         $focusEducation->setFocus('Education');
         $focusEducation->setEnabled(true);
         $manager->persist($focusEducation);
-        $this->addReference(self::EDUCATION_FOCUS_REFERENCE, $focusEducation);
+        $this->setReference('focus_ed', $focusEducation);
 
         $focusHealth = new Focus();
         $focusHealth->setFocus('Health');
         $focusHealth->setEnabled(true);
         $manager->persist($focusHealth);
-        $this->addReference(self::HEALTH_FOCUS_REFERENCE, $focusHealth);
+        $this->setReference('focus_health', $focusHealth);
 
         $skillAdministrative = new Skill();
         $skillAdministrative->setSkill('Administrative Support');
         $skillAdministrative->setEnabled(true);
         $manager->persist($skillAdministrative);
-        $this->addReference(self::ADMIN_SKILL_REFERENCE, $skillAdministrative);
+        $this->setReference('skill_admin', $skillAdministrative);
 
         $skillBoard = new Skill();
         $skillBoard->setSkill('Board Member');
         $skillBoard->setEnabled(true);
         $manager->persist($skillBoard);
-        $this->addReference(self::BOARD_SKILL_REFERENCE, $skillBoard);
+        $this->setReference('skill_board', $skillBoard);
 
         $skillComputers = new Skill();
         $skillComputers->setSkill('Computers & IT');
         $skillComputers->setEnabled(true);
         $manager->persist($skillComputers);
-        $this->addReference(self::COMPUTERS_SKILL_REFERENCE, $skillComputers);
+        $this->setReference('skill_computers', $skillComputers);
 
         $manager->flush();
     }

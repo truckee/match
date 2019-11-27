@@ -11,12 +11,16 @@
 
 namespace App\Tests\Controller;
 
+use Liip\TestFixturesBundle\Test\FixturesTrait;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class VolunteerRegistrationControllerTest extends WebTestCase
 {
+    use FixturesTrait;
+
     public function setup(): void
     {
+//        $this->loadFixtures();
         $this->client = static::createClient();
         $this->client->followRedirects();
     }
@@ -73,11 +77,10 @@ class VolunteerRegistrationControllerTest extends WebTestCase
         $this->assertSame(1, $mailCollector->getMessageCount());
         $collectedMessages = $mailCollector->getMessages();
         $message = $collectedMessages[0];
-        
-        $this->assertStringContainsString('You will then begin receive emails', $message->getBody());
+
+        $this->assertStringContainsString('you will begin to receive emails', $message->getBody());
     }
 
-    
     private function volunteerRegistration()
     {
         $crawler = $this->client->request('GET', '/register/volunteer');
@@ -94,4 +97,5 @@ class VolunteerRegistrationControllerTest extends WebTestCase
 
         return $this->client->getResponse()->getContent();
     }
+
 }

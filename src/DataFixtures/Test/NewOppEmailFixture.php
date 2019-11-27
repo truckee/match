@@ -9,27 +9,28 @@
 
 //src/DataFixtures/NewOppEmailFixture.php
 
-namespace App\DataFixtures;
+namespace App\DataFixtures\Test;
 
 use App\Entity\NewOppEmail;
-use App\DataFixtures\OpportunityFixture;
-use App\DataFixtures\UserFixture;
-use Doctrine\Bundle\FixturesBundle\Fixture;
+use App\DataFixtures\TEST\OpportunityFixture;
+use App\DataFixtures\TEST\UserFixture;
+use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\Bundle\FixturesBundle\ORMFixtureInterface;
 
 /**
  * 
  */
-class NewOppEmailFixture extends Fixture implements OrderedFixtureInterface
+class NewOppEmailFixture extends AbstractFixture implements OrderedFixtureInterface, ORMFixtureInterface
 {
     
     public function load(ObjectManager $manager)
     {
         $new = new NewOppEmail();
-        $volunteer = $this->getReference(UserFixture::VOLUNTEER_REFERENCE);
+        $volunteer = $this->getReference('volunteer');
         $vId = $volunteer->getId();
-        $opportunity = $this->getReference(OpportunityFixture::OPPORTUNITY_REFERENCE);
+        $opportunity = $this->getReference('opp');
         $oppId = $opportunity->getId();
         $new->setDateAdded(new \DateTime());
         $new->setVolunteerEmail([$vId=>[$oppId]]);

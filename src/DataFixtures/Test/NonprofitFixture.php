@@ -9,20 +9,19 @@
 
 //src/DataFixtures/NonprofitFixture.php
 
-namespace App\DataFixtures;
+namespace App\DataFixtures\Test;
 
 use App\Entity\Nonprofit;
+use App\Entity\Opportunity;
 use App\Entity\Staff;
-use App\DataFixtures\OptionsFixture;
-use Doctrine\Bundle\FixturesBundle\Fixture;
+use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Doctrine\Bundle\FixturesBundle\ORMFixtureInterface;
 
-class NonprofitFixture extends Fixture implements OrderedFixtureInterface
+class NonprofitFixture extends AbstractFixture implements OrderedFixtureInterface, ORMFixtureInterface
 {
-    public const NONPROFIT_TURKEY_REFERENCE = "npo1-turkey";
-
     private $encoder;
 
     public function __construct(UserPasswordEncoderInterface $encoder)
@@ -41,8 +40,8 @@ class NonprofitFixture extends Fixture implements OrderedFixtureInterface
         $npo1->setOrgname('Turkey Fund');
         $npo1->setEin('321654978');
         $npo1->setActive(true);
-        $npo1->addFocus($this->getReference(OptionsFixture::HEALTH_FOCUS_REFERENCE));
-        $this->addReference(self::NONPROFIT_TURKEY_REFERENCE, $npo1);
+        $npo1->addFocus($this->getReference('focus_health'));
+        $this->setReference('nonprofit', $npo1);
 
         $staff = new Staff();
         $staff->setConfirmationToken('tuvxyz');
@@ -69,10 +68,21 @@ class NonprofitFixture extends Fixture implements OrderedFixtureInterface
         $manager->persist($staff);
         $manager->persist($npo);
 
+        $opp = new Opportunity();
+        $opp->setNonprofit($npo1);
+        $opp->setActive(true);
+        $opp->setOppname('Feeder');
+        $opp->setDescription('Get them to eat');
+        $opp->addSkill($this->getReference('skill_admin'));
+        $this->setReference('opp', $opp);
+        
+        $npo1->addOpportunity($opp);
+        
+        $manager->persist($opp);
         $npo1->setStaff($staff1);
         $manager->persist($staff1);
         $manager->persist($npo1);
-
+        
         $manager->flush();
     }
 

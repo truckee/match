@@ -11,12 +11,15 @@
 
 namespace App\Tests\Controller;
 
+use Liip\TestFixturesBundle\Test\FixturesTrait;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class AdminControllerTest extends WebTestCase
 {
+
     public function setup(): void
     {
+//        $this->loadFixtures();
         $this->client = static::createClient();
         $this->client->followRedirects();
         $this->client->request('GET', '/login');
