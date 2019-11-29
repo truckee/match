@@ -31,8 +31,6 @@ use Doctrine\Bundle\FixturesBundle\ORMFixtureInterface;
 class UserFixture extends AbstractFixture implements OrderedFixtureInterface, ORMFixtureInterface
 {
 
-    public const VOLUNTEER_REFERENCE = 'volunteer';
-
     private $encoder;
 
     public function __construct(UserPasswordEncoderInterface $encoder)
@@ -126,7 +124,11 @@ class UserFixture extends AbstractFixture implements OrderedFixtureInterface, OR
             $admin->setEnabled(true);
             $admin->setFname('Benny');
             $admin->setSname('Borko');
-            $admin->setRoles(['ROLE_ADMIN']);
+            $admin->setRoles([
+                'ROLE_VOLUNTEER',
+                'ROLE_STAFF',
+                'ROLE_ADMIN',
+            ]);
             $password4 = $this->encoder->encodePassword($admin, '123Abc');
             $admin->setPassword($password4);
             $manager->persist($admin);

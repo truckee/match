@@ -31,10 +31,12 @@ class AdminController extends AbstractController
     {
         $volChart = $charter->volunteerChart();
         $searchGauge = $charter->searchGauge();
+        $focus = $charter->sankeyFocus();
 
         return $this->render('Admin/index.html.twig', [
                     'vol_chart' => $volChart,
                     'search_gauge' => $searchGauge,
+                    'focus' => $focus
         ]);
     }
 

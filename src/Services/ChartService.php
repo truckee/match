@@ -18,6 +18,7 @@ namespace App\Services;
  */
 class ChartService
 {
+
     public function volunteerChart()
     {
         $m = date_format(new \DateTime(), 'm');
@@ -59,7 +60,7 @@ class ChartService
     public function searchGauge()
     {
         $gauge = new \CMEN\GoogleChartsBundle\GoogleCharts\Charts\GaugeChart;
-        $gauge->getData()->setArrayToDataTable([
+        $gauge->setElementID('div-search')->getData()->setArrayToDataTable([
             ['Label', 'Value'],
             ['Search', 40],
         ]);
@@ -72,7 +73,41 @@ class ChartService
         $gauge->getOptions()->setGreenFrom(20);
         $gauge->getOptions()->setGreenTo(100);
         $gauge->getOptions()->setMinorTicks(5);
-        
+
         return $gauge;
     }
+
+    public function sankeyFocus()
+    {
+        $focus = new \CMEN\GoogleChartsBundle\GoogleCharts\Charts\SankeyDiagram();
+        $focus->setElementID('div_focus')->getData()->setArrayToDataTable(
+                [
+                    [['label' => 'Focus', 'type' => 'string'], ['label' => 'Nonprofit', 'type' => 'string'],
+                        ['label' => 'Weight', 'type' => 'number']],
+                    ['Education', 'Alpha', 5],
+                    ['Education', 'Beta', 7],
+                    ['Education', 'Gamma', 6],
+                    ['Health', 'Alpha', 5],
+                    ['Health', 'Beta', 9],
+                    ['Health', 'Gamma', 4],
+                    ['Seniors', 'Alpha', 9],
+                    ['Seniors', 'Beta', 5],
+                    ['Seniors', 'Gamma', 4]
+        ]);
+        $focus->getOptions()->setWidth(300);
+        $focus->getOptions()->setHeight(200);
+        $focus->getOptions()->getSankey()->getNode()->setColors(['#a6cee3', '#b2df8a', '#fb9a99', '#fdbf6f', '#cab2d6', '#ffff99', '#1f78b4', '#33a02c']);
+        $focus->getOptions()->getSankey()->getLink()->setColors(['#a6cee3', '#b2df8a', '#fb9a99', '#fdbf6f', '#cab2d6', '#ffff99', '#1f78b4', '#33a02c']);
+        $focus->getOptions()->getSankey()->getLink()->setColorMode('gradient');
+        $focus->getOptions()->getSankey()->getNode()->getLabel()->setFontName('Times-Roman');
+        $focus->getOptions()->getSankey()->getNode()->getLabel()->setFontSize(14);
+        $focus->getOptions()->getSankey()->getNode()->getLabel()->setColor('#871b47');
+        $focus->getOptions()->getSankey()->getNode()->getLabel()->setItalic(true);
+        $focus->getOptions()->getSankey()->getNode()->getLabel()->setBold(true);
+//        $focus->getOptions()->getSankey()->getNode()->setNodePadding(60)
+                ;
+        
+        return $focus;
+    }
+
 }

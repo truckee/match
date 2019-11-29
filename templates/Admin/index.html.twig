@@ -8,7 +8,10 @@
             <p>Last 7 days searches</p>
             <div id="div_search"></div>
         </div>
-
+        <div class="col-4">
+            <p>Volunteer Focus -> Nonprofit Focus</p>
+            <div id="div_focus"></div>
+        </div>
     </div>
 
     <div ></div>
@@ -17,6 +20,6 @@
     {{ parent() }}
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     <script type="text/javascript">
-        {{ gc_draw([vol_chart, search_gauge], ['div_vol', 'div_search']) }}
+        {{ gc_draw([vol_chart, search_gauge, focus], ['div_vol', 'div_search', 'div_focus']) }}
     </script>
 {% endblock %}
