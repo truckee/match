@@ -76,12 +76,6 @@ class LoginFormAuthenticator extends AbstractFormLoginAuthenticator
             // fail authentication with a custom error
             throw new CustomUserMessageAuthenticationException('Credentials could not be found.');
         }
-        if ($user->hasRole('role_staff') && !$user->getNonprofit()->isActive()) {
-            throw new CustomUserMessageAuthenticationException('Nonprofit has not yet been activated');
-        }
-        if (!$user->isEnabled()) {
-            throw new CustomUserMessageAuthenticationException('Account has not been confirmed');
-        }
 
         return $user;
     }
