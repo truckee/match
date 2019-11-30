@@ -1,9 +1,10 @@
 <p>A new nonprofit has submitted registration on {{ ''|date("m/d/Y") }}. This organization 
     will not be able to post any volunteer opportunities until it is verified and activated.</p>
-<p>Nonprofit: {{ orgname }}</p>
-<p>EIN: {{ ein }}</p>
+<p>Nonprofit: {{ org.orgname }}</p>
+<p>EIN: {{ org.ein }}</p>
 <p>The <a href="https://apps.irs.gov/app/eos/">IRS Tax Exempt Organization Search </a>
-    can be used to verify {{ orgname }}. It's EIN is {{ ein }}.</p>
-<p>Activation can be done by clicking <a href="{{ path('activate_nonprofit', {"ein":ein}) }}">here</a>. 
-    Activation requires an admin login at the Volunteer Connections web site</p>
+    can be used to verify {{ org.orgname }}. It's EIN is {{ org.ein }}.</p>
+<p>Activation requires an admin login at the ConnectionsReno web site. 
+    Activation can be done by clicking <a href="{{ absolute_url('activate_nonprofit', {"id":org.id}) }}">here</a>. 
+ </p>
 <p>Tne ConnectionsReno Team</p>

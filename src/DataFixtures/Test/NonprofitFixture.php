@@ -35,6 +35,7 @@ class NonprofitFixture extends AbstractFixture implements OrderedFixtureInterfac
         $npo->setOrgname('Marmot Fund');
         $npo->setEin('123456789');
         $npo->setActive(false);
+        $this->setReference('marmot', $npo);
 
         $npo1 = new Nonprofit();
         $npo1->setOrgname('Turkey Fund');
@@ -60,8 +61,8 @@ class NonprofitFixture extends AbstractFixture implements OrderedFixtureInterfac
         $staff1->setEnabled(true);
         $staff1->setFname('Misfit');
         $staff1->setSname('Bogus');
-        $password = $this->encoder->encodePassword($staff1, '123Abc');
-        $staff1->setPassword($password);
+        $password1 = $this->encoder->encodePassword($staff1, '123Abc');
+        $staff1->setPassword($password1);
         $staff1->setRoles(['ROLE_STAFF']);
 
         $npo->setStaff($staff);

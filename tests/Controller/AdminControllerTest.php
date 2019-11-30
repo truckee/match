@@ -7,7 +7,7 @@
  * file that was distributed with this source code.
  */
 
-//tests/Controller/AdminController.php
+//tests/Controller/AdminControllerTest.php
 
 namespace App\Tests\Controller;
 
@@ -16,10 +16,15 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class AdminControllerTest extends WebTestCase
 {
+    use FixturesTrait;
 
     public function setup(): void
     {
-//        $this->loadFixtures();
+        $this->fixtures = $this->loadFixtures([
+                    'App\DataFixtures\Test\OptionsFixture',
+                    'App\DataFixtures\Test\NonprofitFixture',
+                ])
+                ->getReferenceRepository();
         $this->client = static::createClient();
         $this->client->followRedirects();
         $this->client->request('GET', '/login');
@@ -38,20 +43,22 @@ class AdminControllerTest extends WebTestCase
     
     public function testActivateNonprofit()
     {
+        $id = $this->fixtures->getReference('marmot')->getId();
         
         $this->client->request('GET', '/admin/activate/3456789');
         
         $this->assertStringContainsString('Nonprofit not found', $this->client->getResponse()->getContent());
 
-        $this->client->request('GET', '/admin/activate/123456789');
+        $this->client->request('GET', '/admin/activate/' . $id);
         
         $this->assertStringContainsString('Nonprofit activated!', $this->client->getResponse()->getContent());
     }
     
     public function testActivationEmail()
     {
+        $id = $this->fixtures->getReference('marmot')->getId();
         $this->client->followRedirects(false);
-        $this->client->request('GET', '/admin/activate/123456789');
+        $this->client->request('GET', '/admin/activate/' . $id);
         $mailCollector = $this->client->getProfile()->getCollector('swiftmailer');
 
         $this->assertSame(1, $mailCollector->getMessageCount());

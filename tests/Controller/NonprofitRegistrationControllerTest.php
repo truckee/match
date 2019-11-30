@@ -36,7 +36,7 @@ class NonprofitRegistrationControllerTest extends WebTestCase
         ];
         $this->nonprofitRegistration($params);
         $content = $this->client->getResponse()->getContent();
-
+        
         $this->assertStringContainsString('Look for the confirmation email', $content);
     }
     
@@ -48,18 +48,7 @@ class NonprofitRegistrationControllerTest extends WebTestCase
             'email'=>'quasi@modo.org'
         ];
         $this->client->followRedirects(false);
-        $crawler = $this->client->request('GET', '/register/nonprofit');
-        $buttonCrawlerNode = $crawler->selectButton('submit');
-        $form = $buttonCrawlerNode->form();
-        $form['org[orgname]'] = 'Marmot Fund';
-        $form['org[ein]'] = $params['ein'];
-        $form['org[staff][fname]'] = 'Benny';
-        $form['org[staff][sname]'] = 'Borko';
-        $form['org[staff][email]'] = $params['email'];
-        $form['org[staff][plainPassword][first]'] = '123Abc';
-        $form['org[staff][plainPassword][second]'] = '123Abc';
-        $form['org[focuses]'][0]->tick();
-        $this->client->submit($form);
+        $this->nonprofitRegistration($params);
         
         $mailCollector = $this->client->getProfile()->getCollector('swiftmailer');
 
@@ -108,7 +97,7 @@ class NonprofitRegistrationControllerTest extends WebTestCase
         $crawler = $this->client->request('GET', '/register/nonprofit');
         $buttonCrawlerNode = $crawler->selectButton('submit');
         $form = $buttonCrawlerNode->form();
-        $form['org[orgname]'] = 'Marmot Fund';
+        $form['org[orgname]'] = 'Glenshire Fund';
         $form['org[ein]'] = $params['ein'];
         $form['org[staff][fname]'] = 'Benny';
         $form['org[staff][sname]'] = 'Borko';

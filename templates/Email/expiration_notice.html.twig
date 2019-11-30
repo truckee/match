@@ -2,7 +2,7 @@
 <p>We're writing to let you know that the {{ opp.oppname }} opportunity will
 expire next week, on {{ opp.expiredate|date('l, F j') }}. If you want to 
 extend the offering of that opportunity, log in at <a 
-    href='{{ url('opp_edit', {'id':opp.id})}}'>this link</a>.
+    href='{{ absolute_url('opp_edit', {'id':opp.id})}}'>this link</a>.
 If not you can simply ignore this notice.</p>
 <p>Tne ConnectionsReno Team</p>
     

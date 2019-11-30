@@ -16,6 +16,7 @@ use App\Services\EmailerService;
 use App\Services\ChartService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * @Route("/admin")
@@ -41,13 +42,13 @@ class AdminController extends AbstractController
     }
 
     /**
-     * @Route("/activate/{ein}", name="activate_nonprofit")
+     * @Route("/activate/{id}", name="activate_nonprofit")
      * 
      */
-    public function activate(EmailerService $mailer, $ein = null)
+    public function activate(Request $request, EmailerService $mailer, $id = null)
     {
         $em = $this->getDoctrine()->getManager();
-        $npo = $em->getRepository(Nonprofit::class)->findOneBy(['ein' => $ein]);
+        $npo = $em->getRepository(Nonprofit::class)->find($id);
         if (null === $npo) {
             $this->addFlash(
                     'warning',
@@ -75,6 +76,11 @@ class AdminController extends AbstractController
                 'success',
                 'Nonprofit activated!'
         );
+
+        $route = $request->query->get('route');
+        if (null !== $route) {
+            return $this->redirectToRoute('easyadmin', ['entity' => 'Nonprofit']);
+        }
 
         return $this->redirectToRoute('admin');
     }

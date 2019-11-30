@@ -351,8 +351,7 @@ class RegistrationController extends AbstractController
             $em->persist($org);
             // notice to admin
             $view = $this->renderView('Email/new_nonprofit_notice.html.twig', [
-                'orgname' => $org->getOrgname(),
-                'ein' => $org->getEin(),
+                'org' => $org,
             ]);
             $mailParams = [
                 'view' => $view,
@@ -369,13 +368,14 @@ class RegistrationController extends AbstractController
         $user->setTokenExpiresAt(null);
         $user->setEnabled(true);
         $em->persist($user);
-        
+
         $em->flush();
 
         $this->addFlash(
                 'success',
                 $flashMessage
         );
+        
         return $this->redirectToRoute('app_login');
     }
 
@@ -404,7 +404,7 @@ class RegistrationController extends AbstractController
         $volunteer->setConfirmationToken(md5(uniqid(rand(), true)));
         $expiresAt = new \DateTime();
         $volunteer->setTokenExpiresAt($expiresAt->add(new \DateInterval('PT3H')));
-        }
+    }
 
     //  Note that User cannot be instantiated as it is now an abstract class!!!
 //    /**

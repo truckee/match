@@ -5,7 +5,7 @@ easy_admin:
         display_avatar: false
     design:
         menu:
-#            - Nonprofit
+            - Nonprofit
 #            - Volunteer
             - Focus
             - Skill
@@ -46,9 +46,13 @@ easy_admin:
 #                    - 'enabled'
 #            edit:
 #                fields: [{ property: 'sname', label: 'Last name'}, { property: 'fname', label: 'First name'}, 'receiveEmail', 'enabled']
-#        Nonprofit:
-#            class: App\Entity\Nonprofit
-#            list:
-#                fields: ['active', 'orgname', 'address', 'city', 'state', 'zip', 'website', 'phone']
-#            edit:
-#                fields: ['active', 'orgname', 'ein', 'address', 'city', 'state', 'zip', 'website', 'areacode', 'phone']
+        Nonprofit:
+            class: App\Entity\Nonprofit
+            disabled_actions: ['new']
+            list:
+                fields: 
+                    - {property: 'active', template: 'Nonprofit/activate.html.twig'}
+                    - {property: 'orgname', label: 'Name'}
+            edit: 
+                fields: 
+                    - {property: 'orgname', label: 'Name'}
