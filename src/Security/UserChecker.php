@@ -12,13 +12,12 @@
 namespace App\Security;
 
 use App\Entity\User as AppUser;
-use Symfony\Component\Security\Core\Exception\AccountExpiredException;
 use Symfony\Component\Security\Core\Exception\CustomUserMessageAuthenticationException;
 use Symfony\Component\Security\Core\User\UserCheckerInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
- * 
+ *
  */
 class UserChecker implements UserCheckerInterface
 {
@@ -33,6 +32,10 @@ class UserChecker implements UserCheckerInterface
     {
         if (!$user instanceof AppUser) {
             return;
+        }
+        
+        if ($user->isLocked()) {
+            throw new CustomUserMessageAuthenticationException('Account is locked');
         }
 
         if ($user->hasRole('role_staff') && !$user->hasRole('ROLE_ADMIN') && !$user->getNonprofit()->isActive()) {

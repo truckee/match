@@ -27,7 +27,6 @@ use Symfony\Component\Security\Core\User\UserInterface;
  */
 abstract class User implements UserInterface
 {
-    
 
     /**
      * @ORM\Id()
@@ -78,7 +77,10 @@ abstract class User implements UserInterface
      */
     private $tokenExpiresAt;
 
-    protected $staff;
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $locked;
 
     public function getId(): ?int
     {
@@ -187,12 +189,13 @@ abstract class User implements UserInterface
             $this->roles[] = $role;
         }
         return $this;
-    }    
-    
-    public function hasRole($role) {
+    }
+
+    public function hasRole($role)
+    {
         return in_array(strtoupper($role), $this->roles);
     }
-    
+
     public function hasRoleAdmin()
     {
         return (in_array('ROLE_ADMIN', $this->getRoles())) ? 'Yes' : 'No';
@@ -252,6 +255,26 @@ abstract class User implements UserInterface
         return $this;
     }
 
+    public function isLocked()
+    {
+        return $this->locked;
+    }
+
+    public function setLocked($lock)
+    {
+        $this->locked = $lock;
+
+        return $this;
+    }
+
+//    public function unlock()
+//    {
+//        $this->locked = false;
+//
+//        return $this;
+//
+//    }
+
     /**
      * Used only on successful authentication
      */
@@ -267,7 +290,7 @@ abstract class User implements UserInterface
     {
         return $this->lastLogin;
     }
-    
+
     public function getFullName()
     {
         return $this->fname . ' ' . $this->sname;

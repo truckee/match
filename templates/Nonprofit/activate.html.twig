@@ -3,5 +3,7 @@
        href="{{ path('activate_nonprofit', {'id':item.id, 'route':app.request.attributes.get('_route')}) }}">
         Activate</a>
 {% else %}
-    <button class="btn btn-sm btn-danger">Deactivate</button>
+    <a class="btn btn-sm btn-danger" 
+       href="{{ path('deactivate', {'id':item.id, 'route':app.request.attributes.get('_route')}) }}">
+        Deactivate</a>
 {% endif %}

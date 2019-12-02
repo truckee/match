@@ -5,10 +5,10 @@ easy_admin:
         display_avatar: false
     design:
         menu:
-            - Nonprofit
-#            - Volunteer
             - Focus
             - Skill
+            - Nonprofit
+#            - Volunteer
             - { label: 'Home', route: 'home' }
     edit:
         actions: ['-show', '-delete']
@@ -48,11 +48,13 @@ easy_admin:
 #                fields: [{ property: 'sname', label: 'Last name'}, { property: 'fname', label: 'First name'}, 'receiveEmail', 'enabled']
         Nonprofit:
             class: App\Entity\Nonprofit
-            disabled_actions: ['new']
+            disabled_actions: ['new', 'edit']
             list:
                 fields: 
                     - {property: 'active', template: 'Nonprofit/activate.html.twig'}
                     - {property: 'orgname', label: 'Name'}
+                    - {property: 'staff.fullName', label: 'Staff'}
+                    - {property: 'staff.email', label: 'Email', template: 'Nonprofit/staff_email.html.twig'}
             edit: 
                 fields: 
                     - {property: 'orgname', label: 'Name'}

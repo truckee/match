@@ -26,7 +26,7 @@ class AdminController extends AbstractController
 
     /**
      * @Route("/", name="admin")
-     * 
+     *
      */
     public function index(ChartService $charter)
     {
@@ -43,7 +43,7 @@ class AdminController extends AbstractController
 
     /**
      * @Route("/activate/{id}", name="activate_nonprofit")
-     * 
+     *
      */
     public function activate(Request $request, EmailerService $mailer, $id = null)
     {
@@ -51,15 +51,18 @@ class AdminController extends AbstractController
         $npo = $em->getRepository(Nonprofit::class)->find($id);
         if (null === $npo) {
             $this->addFlash(
-                    'warning',
-                    'Nonprofit not found'
+                'warning',
+                'Nonprofit not found'
             );
 
             return $this->redirectToRoute('admin');
         }
 
         $npo->setActive(true);
+        $staff = $npo->getStaff();
+        $staff->setLocked(false);
         $em->persist($npo);
+        $em->persist($staff);
         $em->flush();
 
         $view = $this->renderView('Email/nonprofit_activated.html.twig', [
@@ -73,8 +76,8 @@ class AdminController extends AbstractController
         $mailer->appMailer($mailParams);
 
         $this->addFlash(
-                'success',
-                'Nonprofit activated!'
+            'success',
+            'Nonprofit activated!'
         );
 
         $route = $request->query->get('route');
@@ -85,9 +88,40 @@ class AdminController extends AbstractController
         return $this->redirectToRoute('admin');
     }
 
+    /**
+     * @Route("/deactivate/{id}", name = "deactivate")
+     */
+    public function deactivate(Request $request, $id)
+    {
+        $route = $request->query->get('route');
+        $em = $this->getDoctrine()->getManager();
+        $npo = $em->getRepository(Nonprofit::class)->find($id);
+        if (null === $npo) {
+            $this->addFlash(
+                'warning',
+                'Nonprofit not found'
+            );
+
+            return $this->redirectToRoute('admin');
+        }
+        
+        $npo->setActive(false);
+        $staff = $npo->getStaff();
+        $staff->setLocked(true);
+        $em->persist($npo);
+        $em->persist($staff);
+        $em->flush();
+        $this->addFlash(
+            'success',
+            'Nonprofit deactivated; staff account locked'
+        );
+        
+        return $this->redirectToRoute('easyadmin', ['entity' => 'Nonprofit']);
+    }
+    
 //    /**
 //     * Use only for testing spooling of email
-//     * 
+//     *
 //     * @Route("/spool", name = "spool_test")
 //     */
 //    public function spool(EmailerService $mailer)
