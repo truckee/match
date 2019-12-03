@@ -27,7 +27,6 @@ use Symfony\Component\Security\Core\User\UserInterface;
  */
 abstract class User implements UserInterface
 {
-
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
@@ -80,7 +79,7 @@ abstract class User implements UserInterface
     /**
      * @ORM\Column(type="boolean")
      */
-    private $locked;
+    private $locked = false;
 
     public function getId(): ?int
     {
