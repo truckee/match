@@ -16,9 +16,10 @@ use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\NotBlank;
 
 /**
- * Description of NewUserType
+ * Description of NewPasswordType
  *
  * @author George Brooks <truckeesolutions@gmail.com>
  */
@@ -30,8 +31,28 @@ class NewPasswordType extends AbstractType
                 ->add('plainPassword', RepeatedType::class, array(
                     'type' => PasswordType::class,
                     'mapped' => false,
-                    'first_options' => array('label' => 'Password'),
-                    'second_options' => array('label' => 'Confirm password'),
+                    'constraints' => [new NotBlank(['message' => "Password may not empty"])],
+                    'invalid_message' => 'Passwords do not match',
+                    'first_options' => [
+                        'attr' => [
+                            'class' => 'mb-2',
+                            'size' => '15',
+                            'required' => true,
+                        ],
+                        'label' => 'Password:',
+                        'label_attr' => ['class' => 'mr-2'],
+                        'required' => true,
+                    ],
+                    'second_options' => [
+                        'attr' => [
+                            'class' => 'mb-2',
+                            'size' => '15',
+                            'required' => true,
+                        ],
+                        'label' => 'Confirm:',
+                        'label_attr' => ['class' => 'mr-2'],
+                        'required' => true,
+                    ],
                 ))
         ;
     }
@@ -39,7 +60,6 @@ class NewPasswordType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-//            'data_class' => User::class,
             'required' => false,
         ));
     }

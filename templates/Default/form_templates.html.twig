@@ -4,6 +4,10 @@
     <div class="text-center text-uppercase mb-2" style="font-size: 18px;">
         <b>{{ headerText }}</b>
     </div>
+    <div class="text-center">
+        <span class="text-danger">*</span> indicates item is required
+    </div>
+
     {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
     <div class="row">
         {% for template in templates %}

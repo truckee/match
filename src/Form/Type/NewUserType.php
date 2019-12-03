@@ -24,12 +24,15 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 
 class NewUserType extends AbstractType
 {
-    public function buildForm(FormBuilderInterface $builder, array $options) {
+
+    public function buildForm(FormBuilderInterface $builder, array $options)
+    {
         $builder
                 ->add('sname', null, [
                     'attr' => [
                         'class' => 'mb-2',
                         'size' => '15',
+                        'required' => true,
                     ],
                     'label' => 'Last name: ',
                     'label_attr' => ['class' => 'mr-2'],
@@ -39,6 +42,7 @@ class NewUserType extends AbstractType
                     'attr' => [
                         'class' => 'mb-2',
                         'size' => '15',
+                        'required' => true,
                     ],
                     'label' => 'First name: ',
                     'label_attr' => ['class' => 'mr-2'],
@@ -48,6 +52,7 @@ class NewUserType extends AbstractType
                     'attr' => [
                         'class' => 'mb-2',
                         'size' => '15',
+                        'required' => true,
                     ],
                     'label' => 'Email: ',
                     'label_attr' => ['class' => 'mr-2'],
@@ -62,6 +67,7 @@ class NewUserType extends AbstractType
                         'attr' => [
                             'class' => 'mb-2',
                             'size' => '15',
+                            'required' => true,
                         ],
                         'label' => 'Password:',
                         'label_attr' => ['class' => 'mr-2'],
@@ -71,6 +77,7 @@ class NewUserType extends AbstractType
                         'attr' => [
                             'class' => 'mb-2',
                             'size' => '15',
+                            'required' => true,
                         ],
                         'label' => 'Confirm:',
                         'label_attr' => ['class' => 'mr-2'],
@@ -83,13 +90,18 @@ class NewUserType extends AbstractType
                     ->add('focuses', FocusFieldType::class)
                     ->add('skills', SkillFieldType::class)
             ;
+            if (false === $options['register']) {
+                $builder->add('receiveEmail');
+            }
         }
     }
 
-    public function configureOptions(OptionsResolver $resolver) {
+    public function configureOptions(OptionsResolver $resolver)
+    {
         $resolver->setDefaults([
-            'data_class' => Staff::class,
+            'data_class' => null,
             'required' => false,
+            'register' => false,
         ]);
     }
 

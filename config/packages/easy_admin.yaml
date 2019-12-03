@@ -50,6 +50,7 @@ easy_admin:
             class: App\Entity\Nonprofit
             disabled_actions: ['new', 'edit']
             list:
+                help: 'Activate sends notice to staff; deactivate blocks staff log in'
                 fields: 
                     - {property: 'active', template: 'Nonprofit/activate.html.twig'}
                     - {property: 'orgname', label: 'Name'}

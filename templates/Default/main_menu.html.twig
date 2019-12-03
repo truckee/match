@@ -20,9 +20,7 @@
                         Admin
                     </a>
                     <div class="dropdown-menu" aria-labelledby="navbarAdmin">
-                        {#<a class="dropdown-item" href="{{ path('home') }}">Invite user</a>#}
                         <a class="dropdown-item" href="/admin/entity">Options</a>
-                        {#<a class="dropdown-item" href="{{ path('home') }}">Change status</a>#}
                     </div>
                 </li>
             {% endif %}
@@ -33,8 +31,10 @@
                     </a>
                     <div class="dropdown-menu" aria-labelledby="navbarAccount">
                         <a class="dropdown-item" href="{{ path('reset_password') }}">Change password</a>
-                        <a class="dropdown-item" href="{{ path('profile') }}">Edit profile</a>
-                        <a class="dropdown-item" href="{{ path('home') }}">Logout</a>
+                            <a class="dropdown-item" href="{{ path('profile_person') }}">Edit personal profile</a>
+                        {% if is_granted("ROLE_STAFF") %}
+                            <a class="dropdown-item" href="{{ path('profile_nonprofit') }}">Edit nonprofit profile</a>
+                        {% endif %}
                     </div>
                 </li>
             {% endif %}

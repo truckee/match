@@ -32,7 +32,7 @@ class ProfileControllerTest extends WebTestCase
             'email' => 'pseudo@bogus.info',
             'password' => '123Abc',
         ]);
-        $this->client->request('GET', '/profile');
+        $this->client->request('GET', '/profile/person');
         
         $this->assertStringContainsString('Very Bogus profile', $this->client->getResponse()->getContent());
         
@@ -45,7 +45,7 @@ class ProfileControllerTest extends WebTestCase
             'email' => 'staff@bogus.info',
             'password' => '123Abc',
         ]);
-        $this->client->request('GET', '/profile');
+        $this->client->request('GET', '/profile/nonprofit');
         
         $this->assertStringContainsString('Turkey Fund profile', $this->client->getResponse()->getContent());
         

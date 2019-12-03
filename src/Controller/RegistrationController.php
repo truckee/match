@@ -15,7 +15,7 @@ use App\Entity\Staff;
 use App\Entity\Volunteer;
 use App\Entity\Nonprofit;
 use App\Form\Type\NonprofitType;
-use App\Form\Type\VolunteerType;
+use App\Form\Type\NewUserType;
 use App\Form\Type\NewPasswordType;
 use App\Form\Type\UserEmailType;
 use App\Services\EmailerService;
@@ -140,7 +140,7 @@ class RegistrationController extends AbstractController
                 return $this->redirectToRoute('home');
             }
         }
-
+        $templates[] = 'Registration/password.html.twig';
         $form = $this->createForm(NewPasswordType::class, $user);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
@@ -165,9 +165,10 @@ class RegistrationController extends AbstractController
             return $this->redirectToRoute('home');
         }
 
-        return $this->render('Registration/user_password.html.twig', [
+        return $this->render('Default/form_templates.html.twig', [
                     'form' => $form->createView(),
                     'headerText' => 'Set new password',
+                    'templates' => $templates,
         ]);
     }
 
@@ -177,7 +178,10 @@ class RegistrationController extends AbstractController
     public function registerVolunteer(Request $request, EmailerService $mailer)
     {
         $volunteer = new Volunteer();
-        $form = $this->createForm(VolunteerType::class, $volunteer, ['register' => true,]);
+        $form = $this->createForm(NewUserType::class, $volunteer, [
+            'register' => true,
+            'data_class' => Volunteer::class,
+        ]);
         $templates = [
             'Registration/new_user.html.twig',
             'Default/focuses.html.twig',
@@ -375,7 +379,7 @@ class RegistrationController extends AbstractController
                 'success',
                 $flashMessage
         );
-        
+
         return $this->redirectToRoute('app_login');
     }
 

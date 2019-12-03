@@ -63,7 +63,7 @@ class OpportunityController extends AbstractController
                     'Opportunity added; ' . count($volunteers) . ' volunteer(s) will be notified'
             );
 
-            return $this->redirectToRoute('profile');
+            return $this->redirectToRoute('profile_nonprofit');
         }
 
         return $this->render('Default/form_templates.html.twig', [
@@ -99,7 +99,7 @@ class OpportunityController extends AbstractController
                     'Opportunity updated'
             );
 
-            return $this->redirectToRoute('profile');
+            return $this->redirectToRoute('profile_nonprofit');
         }
 
         return $this->render('Default/form_templates.html.twig', [

@@ -1,0 +1,6 @@
+{{ form_row(form.fname) }}
+{{ form_row(form.sname) }}
+{#{{ form.vars.value.email }}#}
+{% if is_granted('ROLE_VOLUNTEER') %}
+    {{ form_row(form.receiveEmail) }}
+{% endif %}

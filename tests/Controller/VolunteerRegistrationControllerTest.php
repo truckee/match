@@ -63,13 +63,13 @@ class VolunteerRegistrationControllerTest extends WebTestCase
         $crawler = $this->client->request('GET', '/register/volunteer');
         $buttonCrawlerNode = $crawler->selectButton('submit');
         $form = $buttonCrawlerNode->form();
-        $form['volunteer[fname]'] = 'Benny';
-        $form['volunteer[sname]'] = 'Borko';
-        $form['volunteer[email]'] = 'bborko@bogus.info';
-        $form['volunteer[plainPassword][first]'] = '123Abc';
-        $form['volunteer[plainPassword][second]'] = '123Abc';
-        $form['volunteer[focuses]'][0]->tick();
-        $form['volunteer[skills]'][0]->tick();
+        $form['new_user[fname]'] = 'Benny';
+        $form['new_user[sname]'] = 'Borko';
+        $form['new_user[email]'] = 'bborko@bogus.info';
+        $form['new_user[plainPassword][first]'] = '123Abc';
+        $form['new_user[plainPassword][second]'] = '123Abc';
+        $form['new_user[focuses]'][0]->tick();
+        $form['new_user[skills]'][0]->tick();
         $this->client->submit($form);
 
         $mailCollector = $this->client->getProfile()->getCollector('swiftmailer');
@@ -86,13 +86,13 @@ class VolunteerRegistrationControllerTest extends WebTestCase
         $crawler = $this->client->request('GET', '/register/volunteer');
         $buttonCrawlerNode = $crawler->selectButton('submit');
         $form = $buttonCrawlerNode->form();
-        $form['volunteer[fname]'] = 'Benny';
-        $form['volunteer[sname]'] = 'Borko';
-        $form['volunteer[email]'] = 'bborko@bogus.info';
-        $form['volunteer[plainPassword][first]'] = '123Abc';
-        $form['volunteer[plainPassword][second]'] = '123Abc';
-        $form['volunteer[focuses]'][0]->tick();
-        $form['volunteer[skills]'][0]->tick();
+        $form['new_user[fname]'] = 'Benny';
+        $form['new_user[sname]'] = 'Borko';
+        $form['new_user[email]'] = 'bborko@bogus.info';
+        $form['new_user[plainPassword][first]'] = '123Abc';
+        $form['new_user[plainPassword][second]'] = '123Abc';
+        $form['new_user[focuses]'][0]->tick();
+        $form['new_user[skills]'][0]->tick();
         $this->client->submit($form);
 
         return $this->client->getResponse()->getContent();

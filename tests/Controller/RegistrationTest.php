@@ -95,9 +95,9 @@ class RegistrationTest extends WebTestCase
     {
         $this->client->request('GET', '/register/reset/ghijkl');
 
-        $this->assertStringContainsString('Set password', $this->client->getResponse()->getContent());
+        $this->assertStringContainsString('Set new password', $this->client->getResponse()->getContent());
 
-        $this->client->submitForm('Set password', [
+        $this->client->submitForm('Save', [
             'new_password[plainPassword][first]' => 'Abc123',
             'new_password[plainPassword][second]' => 'Abc123',
         ]);

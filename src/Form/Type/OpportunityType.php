@@ -31,12 +31,16 @@ class OpportunityType extends AbstractType
                     'label' => 'Name ',
                     'attr' => [
                         'class' => 'mb-2',
+                        'required' => true,
                     ],
+                    'label_attr' => ['class' => 'mr-2'],
                 ])
                 ->add('description', TextareaType::class, [
                     'attr' => [
                         'class' => 'mb-2',
+                        'required' => true,
                     ],
+                    'label_attr' => ['class' => 'mr-2'],
                 ])
                 ->add('expiredate', DateType::class, [
                     'label' => 'Expiration ',
@@ -44,7 +48,10 @@ class OpportunityType extends AbstractType
                     'format' => 'M/d/y',
                     'html5' => false,
                     'attr' => [
-                        'class' => 'js-datepicker mb-2'],
+                        'class' => 'js-datepicker mb-2',
+                        'required' => true,
+                    ],
+                    'label_attr' => ['class' => 'mr-2'],
                         ]
                 )
                 ->add('minage', ChoiceType::class, [

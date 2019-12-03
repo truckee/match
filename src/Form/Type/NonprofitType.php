@@ -13,6 +13,7 @@ namespace App\Form\Type;
 
 use App\Form\Type\Field\FocusFieldType;
 use App\Entity\Nonprofit;
+use App\Entity\Staff;
 use App\Form\Type\NewUserType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -20,6 +21,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class NonprofitType extends AbstractType
 {
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
@@ -27,6 +29,7 @@ class NonprofitType extends AbstractType
                     'attr' => [
                         'class' => 'mb-2',
                         'size' => '15',
+                        'required' => true,
                     ],
                     'label' => 'Name: ',
                     'label_attr' => ['class' => 'mr-2'],
@@ -35,6 +38,7 @@ class NonprofitType extends AbstractType
                     'attr' => [
                         'class' => 'mb-2',
                         'size' => '15',
+                        'required' => true,
                     ],
                     'label' => 'EIN: ',
                     'label_attr' => ['class' => 'mr-2'],
@@ -100,6 +104,7 @@ class NonprofitType extends AbstractType
         if (true === $options['register']) {
             $builder->add('staff', NewUserType::class, [
                 'label' => false,
+                'data_class'=> Staff::class,
             ]);
         }
     }
@@ -117,4 +122,5 @@ class NonprofitType extends AbstractType
     {
         return 'org';
     }
+
 }

@@ -39,7 +39,7 @@ class OpportunityTest extends WebTestCase
 
     public function testAddButton()
     {
-        $this->client->request('GET', '/profile');
+        $this->client->clickLink('Edit nonprofit profile');
         $crawler = $this->client->clickLink('Add');
         $node = $crawler->selectButton('submit');
         $form = $node->form();
@@ -53,7 +53,7 @@ class OpportunityTest extends WebTestCase
 
     public function testEditButton()
     {
-        $this->client->request('GET', '/profile');
+        $this->client->request('GET', '/profile/nonprofit');
         $oppId = $this->fixtures->getReference('opp')->getId();
         $crawler = $this->client->request('GET', '/opportunity/edit/' . $oppId);
         $node = $crawler->selectButton('submit');

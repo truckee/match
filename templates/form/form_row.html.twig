@@ -1,7 +1,7 @@
 {%- block form_row -%}
     <div class="row">
         <div class="col">
-            {{ form_label(form) }}
+            {{ form_label(form) }}{% if form.vars.attr.required is defined %}<span style="color: red;">*</span>{% endif %}
         </div>
         <div class="col">
             {{ form_widget(form) }}
