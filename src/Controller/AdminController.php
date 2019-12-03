@@ -51,8 +51,8 @@ class AdminController extends AbstractController
         $npo = $em->getRepository(Nonprofit::class)->find($id);
         if (null === $npo) {
             $this->addFlash(
-                'warning',
-                'Nonprofit not found'
+                    'warning',
+                    'Nonprofit not found'
             );
 
             return $this->redirectToRoute('admin');
@@ -66,7 +66,8 @@ class AdminController extends AbstractController
         $em->flush();
 
         $view = $this->renderView('Email/nonprofit_activated.html.twig', [
-            'orgname' => $npo->getOrgname(),
+            'npo' => $npo,
+            'staff' => $npo->getStaff(),
         ]);
         $mailParams = [
             'view' => $view,
@@ -76,8 +77,8 @@ class AdminController extends AbstractController
         $mailer->appMailer($mailParams);
 
         $this->addFlash(
-            'success',
-            'Nonprofit activated!'
+                'success',
+                'Nonprofit activated!'
         );
 
         $route = $request->query->get('route');
@@ -98,13 +99,13 @@ class AdminController extends AbstractController
         $npo = $em->getRepository(Nonprofit::class)->find($id);
         if (null === $npo) {
             $this->addFlash(
-                'warning',
-                'Nonprofit not found'
+                    'warning',
+                    'Nonprofit not found'
             );
 
             return $this->redirectToRoute('admin');
         }
-        
+
         $npo->setActive(false);
         $staff = $npo->getStaff();
         $staff->setLocked(true);
@@ -112,13 +113,13 @@ class AdminController extends AbstractController
         $em->persist($staff);
         $em->flush();
         $this->addFlash(
-            'success',
-            'Nonprofit deactivated; staff account locked'
+                'success',
+                'Nonprofit deactivated; staff account locked'
         );
-        
+
         return $this->redirectToRoute('easyadmin', ['entity' => 'Nonprofit']);
     }
-    
+
 //    /**
 //     * Use only for testing spooling of email
 //     *

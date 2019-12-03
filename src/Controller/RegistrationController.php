@@ -351,7 +351,7 @@ class RegistrationController extends AbstractController
             $em->persist($org);
             // notice to admin
             $view = $this->renderView('Email/new_nonprofit_notice.html.twig', [
-                'org' => $org,
+                'npo' => $org,
             ]);
             $mailParams = [
                 'view' => $view,
