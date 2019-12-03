@@ -65,7 +65,7 @@ class AdminControllerTest extends WebTestCase
         $collectedMessages = $mailCollector->getMessages();
         $message = $collectedMessages[0];
         
-        $this->assertStringContainsString('You will now be able post opportunites', $message->getBody());        
+        $this->assertStringContainsString('You will now be able post opportunities', $message->getBody());        
     }
     
 // this test creates spooled messages regardless of the disable_delivery setting

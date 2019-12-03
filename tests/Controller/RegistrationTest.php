@@ -144,7 +144,7 @@ class RegistrationTest extends WebTestCase
         $collectedMessages = $mailCollector->getMessages();
         $message = $collectedMessages[0];
         
-        $this->assertStringContainsString('the link to changing your password', $message->getBody());
+        $this->assertStringContainsString('to change your password', $message->getBody());
     }
     
     public function testNewNonprofitActivationEmail()
