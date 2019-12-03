@@ -68,6 +68,23 @@ class AdminControllerTest extends WebTestCase
         $this->assertStringContainsString('You will now be able post opportunities', $message->getBody());        
     }
     
+    public function testDeactivateNonprofit()
+    {
+        $id = $this->fixtures->getReference('marmot')->getId();
+        $this->client->request('GET', '/admin/activate/' . $id);
+        $this->client->request('GET', '/admin/deactivate/' . $id);
+        
+        $this->assertStringContainsString('Nonprofit deactivated', $this->client->getResponse()->getContent()); 
+        
+        $this->client->request('GET', '/login');
+        $this->client->submitForm('Sign in', [
+            'email'=>'unknown@bogus.info',
+            'password'=>'123Abc',
+        ]);
+        
+        $this->assertStringContainsString('Account is locked', $this->client->getResponse()->getContent()); 
+    }
+    
 // this test creates spooled messages regardless of the disable_delivery setting
 // use it sparingly    
 //    public function testSpoolEmail()
