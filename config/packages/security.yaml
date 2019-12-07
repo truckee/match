@@ -22,10 +22,11 @@ security:
             logout:
                 path:   app_logout
                 target: /
+            remember_me:
+                secret:   '%kernel.secret%'
+                lifetime: 604800 # 1 week in seconds
+                path:     /
 
     access_control:
         - { path: ^/login$, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-#        - { path: ^/register/*, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-#        - { path: ^/reports/foodbank/*, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-#        - { path: ^/, roles: ROLE_USER }
         - { path: ^/admin, roles: ROLE_ADMIN }
