@@ -28,7 +28,7 @@ class DefaultController extends AbstractController
     public function index()
     {
         if (null !== $this->getUser() && $this->getUser()->hasRole('ROLE_ADMIN')) {
-            return $this->redirectToRoute('admin');
+            return $this->redirectToRoute('dashboard');
         }
         return $this->render('Default/home.html.twig');
     }

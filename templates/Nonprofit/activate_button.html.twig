@@ -1,0 +1,9 @@
+{% if not item.active %}
+    <a class="btn btn-sm btn-success" 
+       href="{{ path('status', {'id':item.id, 'route':app.request.attributes.get('_route')}) }}">
+        Activate</a>
+{% else %}
+    <a class="btn btn-sm btn-danger" 
+       href="{{ path('status', {'id':item.id, 'route':app.request.attributes.get('_route')}) }}">
+        Deactivate</a>
+{% endif %}

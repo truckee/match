@@ -36,7 +36,7 @@ class AdminControllerTest extends WebTestCase
     
     public function testLogin()
     {
-        $this->client->request('GET', '/admin');
+        $this->client->request('GET', '/admin/dashboard');
         
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
     }
@@ -45,11 +45,11 @@ class AdminControllerTest extends WebTestCase
     {
         $id = $this->fixtures->getReference('marmot')->getId();
         
-        $this->client->request('GET', '/admin/activate/3456789');
+        $this->client->request('GET', '/admin/status/3456789');
         
         $this->assertStringContainsString('Nonprofit not found', $this->client->getResponse()->getContent());
 
-        $this->client->request('GET', '/admin/activate/' . $id);
+        $this->client->request('GET', '/admin/status/' . $id);
         
         $this->assertStringContainsString('Nonprofit activated!', $this->client->getResponse()->getContent());
     }
@@ -58,7 +58,7 @@ class AdminControllerTest extends WebTestCase
     {
         $id = $this->fixtures->getReference('marmot')->getId();
         $this->client->followRedirects(false);
-        $this->client->request('GET', '/admin/activate/' . $id);
+        $this->client->request('GET', '/admin/status/' . $id);
         $mailCollector = $this->client->getProfile()->getCollector('swiftmailer');
 
         $this->assertSame(1, $mailCollector->getMessageCount());
@@ -71,8 +71,8 @@ class AdminControllerTest extends WebTestCase
     public function testDeactivateNonprofit()
     {
         $id = $this->fixtures->getReference('marmot')->getId();
-        $this->client->request('GET', '/admin/activate/' . $id);
-        $this->client->request('GET', '/admin/deactivate/' . $id);
+        $this->client->request('GET', '/admin/status/' . $id);
+        $this->client->request('GET', '/admin/status/' . $id);
         
         $this->assertStringContainsString('Nonprofit deactivated', $this->client->getResponse()->getContent()); 
         

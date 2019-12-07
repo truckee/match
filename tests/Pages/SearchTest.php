@@ -7,10 +7,11 @@
  * file that was distributed with this source code.
  */
 
-//src/insert_path_here/SearchTest.php
+//tests/Pages/SearchTest.php
 
 namespace App\Tests\Pages;
 
+use Liip\TestFixturesBundle\Test\FixturesTrait;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 /**
@@ -18,9 +19,14 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
  */
 class SearchTest extends WebTestCase
 {
+    use FixturesTrait;
 
     public function setup(): void
     {
+        $this->loadFixtures([
+            'App\DataFixtures\Test\OptionsFixture',
+            'App\DataFixtures\Test\NonprofitFixture',
+            ]);
         $this->client = static::createClient();
         $this->client->followRedirects();
     }
