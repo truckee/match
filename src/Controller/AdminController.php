@@ -12,12 +12,12 @@
 namespace App\Controller;
 
 use App\Entity\Nonprofit;
+use App\Entity\User;
 use App\Entity\Volunteer;
 use App\Services\EmailerService;
 use App\Services\ChartService;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\EasyAdminController;
 
 /**
@@ -104,21 +104,27 @@ class AdminController extends EasyAdminController
     }
 
     /**
-     * @Route("/lock/{id}", name = "lock_volunteer")
+     * @Route("/lock/{id}", name = "lock_user")
      */
-    public function lockVolunteer($id)
+    public function lockUser($id)
     {
         if (null === $id) {
             return;
         }
         $em = $this->getDoctrine()->getManager();
-        $volunteer = $em->getRepository(Volunteer::class)->find($id);
-        $state = $volunteer->isLocked();
-        $volunteer->setLocked(!$state);
-        $em->persist($volunteer);
+        $user = $em->getRepository(User::class)->find($id);
+        $state = $user->isLocked();
+        $user->setLocked(!$state);
+        $em->persist($user);
         $em->flush();
+        if (Volunteer::class === get_class($user)) {
+            $entity = 'Volunteer';
+        } else {
+            $entity = 'Staff';
+        }
+        
 
-        return $this->redirectToRoute('easyadmin', ['entity' => 'Volunteer']);
+        return $this->redirectToRoute('easyadmin', ['entity' => $entity]);
     }
 
     protected function createListQueryBuilder($entityClass, $sortDirection, $sortField = null, $dqlFilter = null)

@@ -8,6 +8,7 @@ easy_admin:
             - Focus
             - Skill
             - Nonprofit
+            - Staff
             - Volunteer
             - { label: 'Home', route: 'home' }
     edit:
@@ -41,9 +42,8 @@ easy_admin:
             disabled_actions: ['new', 'edit']
             list:
                 fields: 
-                    - { property: 'locked', label: 'Locked?', template: 'Volunteer/locked_badge.html.twig'}
-                    - { property: 'sname', label: 'Last name'}
-                    - { property: 'fname', label: 'First name'}
+                    - { property: 'locked', label: 'Locked?', template: 'Admin/locked_badge.html.twig'}
+                    - { property: 'fullName', label: 'Name'}
                     - email
                     - 'receiveEmail'
         Nonprofit:
@@ -59,3 +59,11 @@ easy_admin:
             edit: 
                 fields: 
                     - {property: 'orgname', label: 'Name'}
+        Staff:
+            class: App\Entity\Staff
+            disabled_actions: ['new', 'edit']
+            list:
+                fields: 
+                    - { property: 'locked', label: 'Locked?', template: 'Admin/locked_badge.html.twig'}
+                    - { property: 'fullName', label: 'Name'}
+                    - { property: 'nonprofit.orgname', label: 'Nonprofit'}

@@ -44,4 +44,21 @@ class Staff extends User
 
         return $this;
     }
+    
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    public $replacementOrg;
+    
+    public function getReplacementOrg()
+    {
+        return $this->replacementOrg;
+    }
+    
+    public function setReplacementOrg($id)
+    {
+        $this->replacementOrg = $id;
+        
+        return $this;
+    }
 }
