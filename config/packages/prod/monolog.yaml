@@ -5,32 +5,32 @@ monolog:
             action_level: critical
             handler: deduplicated
             excluded_http_codes: [404, 405]
-        grouped:
-            type:    group
-            members: [streamed, deduplicated]
-        streamed:
-            type:  stream
-            path:  '%kernel.logs_dir%/%kernel.environment%.log'
-            level: debug
-        console:
-            type: console
-            process_psr_3_messages: false
-            channels: ["!event", "!doctrine"]
-        deprecation:
-            type: stream
-            path: "%kernel.logs_dir%/%kernel.environment%.deprecations.log"
-        deprecation_filter:
-            type: filter
-            handler: deprecation
-            max_level: info
-            channels: ["php"]
+#        grouped:
+#            type:    group
+#            members: [streamed, deduplicated]
+#        streamed:
+#            type:  stream
+#            path:  '%kernel.logs_dir%/%kernel.environment%.log'
+#            level: debug
+#        console:
+#            type: console
+#            process_psr_3_messages: false
+#            channels: ["!event", "!doctrine"]
+#        deprecation:
+#            type: stream
+#            path: "%kernel.logs_dir%/%kernel.environment%.deprecations.log"
+#        deprecation_filter:
+#            type: filter
+#            handler: deprecation
+#            max_level: info
+#            channels: ["php"]
         deduplicated:
             type:    deduplication
             handler: swift
         swift:
             type:       swift_mailer
             from_email: 'admin@bogus.info'
-            to_email:   'admin@bogus.info'
+            to_email:   'truckeesolutions@gmail.com'
             # or list of recipients
             # to_email:   ['dev1@example.com', 'dev2@example.com', ...]
             subject:    'An Error Occurred! %%message%%'
