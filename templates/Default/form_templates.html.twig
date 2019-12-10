@@ -1,8 +1,10 @@
 {% extends 'base.html.twig' %}
 {% form_theme form 'form/form_row.html.twig' %}
 {% block body %}
-    <div class="text-center text-uppercase mb-2" style="font-size: 18px;">
-        <b>{{ headerText }}</b>
+    <div class="text-center mb-2" style="font-size: 18px;">
+        {% autoescape %}
+        <b>{{ headerText|raw }}</b>
+        {% endautoescape %}
     </div>
     <div class="text-center">
         <span class="text-danger">*</span> indicates item is required
