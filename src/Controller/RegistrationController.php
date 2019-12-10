@@ -152,6 +152,15 @@ class RegistrationController extends AbstractController
                             $form->get('plainPassword')->getData()
                     )
             );
+            if (Staff::class === get_class($user) && null !== $user->getReplacementOrg()) {
+                $id = $user->getReplacementOrg();
+                $nonprofit = $em->getRepository(Nonprofit::class)->find($id);
+                $staff = $nonprofit->getStaff();
+                $nonprofit->setStaff($user);
+                $user->setNonprofit($nonprofit);
+                $em->persist($nonprofit);
+                $em->remove($staff);
+            }
             $em->persist($user);
             $em->flush();
 
