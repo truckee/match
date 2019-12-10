@@ -12,8 +12,10 @@
 namespace App\Controller;
 
 use App\Entity\Nonprofit;
+use App\Entity\Staff;
 use App\Entity\User;
 use App\Entity\Volunteer;
+use App\Form\Type\UserType;
 use App\Services\EmailerService;
 use App\Services\ChartService;
 use Symfony\Component\Routing\Annotation\Route;
@@ -64,7 +66,7 @@ class AdminController extends EasyAdminController
         $npo->setActive(!$status);
         $staff = $npo->getStaff();
 
-        // activate if $status is false
+// activate if $status is false
         if (false === $status) {
             $staff->setLocked(false);
             $view = $this->renderView('Email/nonprofit_activated.html.twig', [
@@ -122,7 +124,7 @@ class AdminController extends EasyAdminController
         } else {
             $entity = 'Staff';
         }
-        
+
 
         return $this->redirectToRoute('easyadmin', ['entity' => $entity]);
     }
@@ -149,6 +151,68 @@ class AdminController extends EasyAdminController
         }
 
         return $queryBuilder;
+    }
+
+    /**
+     * @Route("/replaceStaff/{id}", name="replace_staff")
+     */
+    public function replaceStaff(Request $request, EmailerService $mailer, $id)
+    {
+        if (null === $id) {
+            return;
+        }
+
+        $replacement = new Staff();
+        $em = $this->getDoctrine()->getManager();
+        $staff = $em->getRepository(Staff::class)->find($id);
+        $nonprofit = $staff->getNonprofit();
+        $form = $this->createForm(UserType::class, $replacement, [
+            'data_class' => Staff::class,
+            'npo_id'=> $nonprofit->getId(),
+        ]);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $email = $request->request->get('user')['email'];
+            $id = $request->request->get('user')['npoid'];
+            $token = md5(uniqid(rand(), true));
+            $expiresAt = new \DateTime();
+            $view = $this->renderView('Email/staff_replacement.html.twig', [
+                'replacement' => $replacement,
+                'nonprofit' => $nonprofit,
+                'token' => $token,
+                'expires' => $expiresAt,
+            ]);
+            $mailParams = [
+                'view' => $view,
+                'recipient' => $email,
+                'subject' => $nonprofit->getOrgname() . ' staff replacement'
+            ];
+            $mailer->appMailer($mailParams);
+            
+            $replacement->setConfirmationToken($token);
+            $replacement->setTokenExpiresAt($expiresAt->add(new \DateInterval('PT3H')));
+            $replacement->setReplacementOrg($id);
+            // password is required but never used
+            $replacement->setPassword('hailhail');
+            $replacement->setEnabled(false);
+            $em->persist($replacement);
+            $em->flush();
+            
+            $this->addFlash('success', 'Replacement email sent');
+
+            return $this->redirectToRoute('dashboard');
+        }
+
+        return $this->render('Default/form_templates.html.twig', [
+                    'form' => $form->createView(),
+                    'templates' => [
+                        'Default/empty.html.twig',
+                        'Profile/user.html.twig'],
+                    'staff' => $staff,
+                    'headerText' => 'Replacement for ' . $staff->getFullName() . '<br />' .
+                    $staff->getNonprofit()->getOrgname(),
+                ])
+        ;
     }
 
 //    /**

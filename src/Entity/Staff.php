@@ -61,4 +61,9 @@ class Staff extends User
         
         return $this;
     }
+    
+    public function getOrgname()
+    {
+        return $this->nonprofit->getOrgname();
+    }
 }

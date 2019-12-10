@@ -65,5 +65,6 @@ easy_admin:
             list:
                 fields: 
                     - { property: 'locked', label: 'Locked?', template: 'Admin/locked_badge.html.twig'}
+                    - { property: 'replace', template: 'Admin/replace_staff.html.twig'}
                     - { property: 'fullName', label: 'Name'}
-                    - { property: 'nonprofit.orgname', label: 'Nonprofit'}
+                    - { property: 'orgname', label: 'Nonprofit'}

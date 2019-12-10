@@ -14,10 +14,13 @@ namespace App\Form\Type;
 use App\Entity\Volunteer;
 use App\Form\Type\Field\FocusFieldType;
 use App\Form\Type\Field\SkillFieldType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
 
 /**
  * 
@@ -55,6 +58,29 @@ class UserType extends AbstractType
                     ->add('skills', SkillFieldType::class)
             ;
         }
+
+        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
+            $user = $event->getData();
+            $form = $event->getForm();
+
+            if (null === $user->getId()) {
+                $form->add('email', null, [
+                            'attr' => [
+                                'class' => 'mb-2',
+                                'size' => '15',
+                                'required' => true,
+                            ],
+                            'label' => 'Email: ',
+                            'label_attr' => ['class' => 'mr-2'],
+                            'constraints' => [new NotBlank(['message' => "Email is required"])],
+                        ])
+                        ->add('npoid', HiddenType::class, [
+                            'mapped' => false,
+                            'data' => $form->getConfig()->getOption('npo_id')
+                        ])
+                ;
+            }
+        });
     }
 
     public function configureOptions(OptionsResolver $resolver)
@@ -62,7 +88,7 @@ class UserType extends AbstractType
         $resolver->setDefaults([
             'data_class' => null,
             'required' => false,
-            'register' => false,
+            'npo_id' => null,
         ]);
     }
 
