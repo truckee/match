@@ -2,12 +2,15 @@ monolog:
     handlers:
         main:
             type: fingers_crossed
-            action_level: error
-            handler: nested
+            action_level: critical
+            handler: deduplicated
             excluded_http_codes: [404, 405]
-        nested:
-            type: stream
-            path: "%kernel.logs_dir%/%kernel.environment%.log"
+        grouped:
+            type:    group
+            members: [streamed, deduplicated]
+        streamed:
+            type:  stream
+            path:  '%kernel.logs_dir%/%kernel.environment%.log'
             level: debug
         console:
             type: console
@@ -21,3 +24,16 @@ monolog:
             handler: deprecation
             max_level: info
             channels: ["php"]
+        deduplicated:
+            type:    deduplication
+            handler: swift
+        swift:
+            type:       swift_mailer
+            from_email: 'admin@bogus.info'
+            to_email:   'admin@bogus.info'
+            # or list of recipients
+            # to_email:   ['dev1@example.com', 'dev2@example.com', ...]
+            subject:    'An Error Occurred! %%message%%'
+            level:      debug
+            formatter:  monolog.formatter.html
+            content_type: text/html
