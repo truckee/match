@@ -2,29 +2,11 @@ swiftmailer:
     default_mailer: memory
     mailers:
         memory:
-            sender_address: 'admin@bogus.info'
             transport:        smtp
-            username:         admin@bogus.info
-            password:         123Abcd
-            host:             localhost
             spool: { type: 'memory' }
-            stream_options:
-                ssl:
-                    allow_self_signed: true
-                    verify_peer: false
-                    verify_peer_name: false
         spooler:
-                sender_address: 'admin@bogus.info'
                 transport:        smtp
-                username:         admin@bogus.info
-                password:         123Abcd
-                host:             localhost
                 spool:
                     type: file
                     path: '%kernel.project_dir%/var/spool'
-#                stream_options:
-#                    ssl:
-#                        allow_self_signed: true
-#                        verify_peer: false
-#                        verify_peer_name: false
         
