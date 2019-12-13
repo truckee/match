@@ -49,7 +49,7 @@ class RegistrationController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $email = $request->request->get('user_email')['email'];
             $em = $this->getDoctrine()->getManager();
-            $sender = $this->getParameter('swiftmailer.mailer.memory.sender_address');
+            $sender = $this->getParameter('app.sender_address');
             $user = $em->getRepository('App:User')->findOneBy(['email' => $email]);
             $this->addFlash(
                     'success',
