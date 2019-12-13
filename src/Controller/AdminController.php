@@ -118,12 +118,15 @@ class AdminController extends EasyAdminController
         $state = $user->isLocked();
         $user->setLocked(!$state);
         $em->persist($user);
-        $em->flush();
         if (Volunteer::class === get_class($user)) {
             $entity = 'Volunteer';
         } else {
             $entity = 'Staff';
+            $nonprofit = $user->getNonprofit();
+            $nonprofit->setActive(false);
+            $em->persist($nonprofit);
         }
+        $em->flush();
 
 
         return $this->redirectToRoute('easyadmin', ['entity' => $entity]);
@@ -144,7 +147,7 @@ class AdminController extends EasyAdminController
             $queryBuilder->andWhere($dqlFilter);
         }
 
-        if (Volunteer::class === $this->entity['class']) {
+        if (Volunteer::class === $this->entity['class'] || Staff::class === $this->entity['class']) {
             $queryBuilder->addOrderBy('entity.sname', 'ASC');
             $queryBuilder->addOrderBy('entity.fname', 'ASC');
             $queryBuilder->addOrderBy('entity.email', 'ASC');

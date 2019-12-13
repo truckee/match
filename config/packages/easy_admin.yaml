@@ -63,8 +63,10 @@ easy_admin:
             class: App\Entity\Staff
             disabled_actions: ['new', 'edit']
             list:
+                help: 'Locking staff deactivates nonprofit and blocks staff log in. Replacing also removes current staff.'
                 fields: 
                     - { property: 'locked', label: 'Locked?', template: 'Admin/locked_badge.html.twig'}
                     - { property: 'replace', template: 'Admin/replace_staff.html.twig'}
                     - { property: 'fullName', label: 'Name'}
+                    - email
                     - { property: 'orgname', label: 'Nonprofit'}
