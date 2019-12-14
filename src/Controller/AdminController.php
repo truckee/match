@@ -69,6 +69,7 @@ class AdminController extends EasyAdminController
 // activate if $status is false
         if (false === $status) {
             $staff->setLocked(false);
+            $staff->setEnabled(true);
             $view = $this->renderView('Email/nonprofit_activated.html.twig', [
                 'npo' => $npo,
                 'staff' => $npo->getStaff(),
@@ -118,13 +119,17 @@ class AdminController extends EasyAdminController
         $state = $user->isLocked();
         $user->setLocked(!$state);
         $em->persist($user);
-        $em->flush();
         if (Volunteer::class === get_class($user)) {
             $entity = 'Volunteer';
         } else {
             $entity = 'Staff';
+            $nonprofit = $user->getNonprofit();
+            $nonprofit->setActive(false);
+            $em->persist($nonprofit);
         }
-
+        $em->flush();
+        $lockState = $user->isLocked() ? ' is now locked' : ' is now unlocked';
+        $this->addFlash('success', $user->getFullName() . $lockState);
 
         return $this->redirectToRoute('easyadmin', ['entity' => $entity]);
     }
@@ -132,19 +137,19 @@ class AdminController extends EasyAdminController
     protected function createListQueryBuilder($entityClass, $sortDirection, $sortField = null, $dqlFilter = null)
     {
         /* @var EntityManager */
-        $em = $this->getDoctrine()->getManagerForClass($this->entity['class']);
+        $em = $this->getDoctrine()->getManagerForClass($entityClass);
 
         /* @var QueryBuilder */
         $queryBuilder = $em->createQueryBuilder()
                 ->select('entity')
-                ->from($this->entity['class'], 'entity')
+                ->from($entityClass, 'entity')
         ;
 
         if (!empty($dqlFilter)) {
             $queryBuilder->andWhere($dqlFilter);
         }
 
-        if (Volunteer::class === $this->entity['class']) {
+        if (Volunteer::class === $entityClass || Staff::class === $entityClass) {
             $queryBuilder->addOrderBy('entity.sname', 'ASC');
             $queryBuilder->addOrderBy('entity.fname', 'ASC');
             $queryBuilder->addOrderBy('entity.email', 'ASC');

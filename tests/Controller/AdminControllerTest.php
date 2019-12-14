@@ -23,6 +23,7 @@ class AdminControllerTest extends WebTestCase
         $this->fixtures = $this->loadFixtures([
                     'App\DataFixtures\Test\OptionsFixture',
                     'App\DataFixtures\Test\NonprofitFixture',
+                    'App\DataFixtures\Test\UserFixture',
                 ])
                 ->getReferenceRepository();
         $this->client = static::createClient();
@@ -83,6 +84,38 @@ class AdminControllerTest extends WebTestCase
         ]);
         
         $this->assertStringContainsString('Account is locked', $this->client->getResponse()->getContent()); 
+    }
+    
+    public function testEasyAdminPage()
+    {
+        $this->client->request('GET', '/admin');
+        
+        $this->assertStringContainsString('Benny Borko', $this->client->getResponse()->getContent());
+    }
+    
+    public function testLockUser()
+    {
+        $id = $this->fixtures->getReference('volunteer')->getId();
+        $this->client->request('GET', '/admin/lock/' . $id);
+        
+        $this->assertStringContainsString('is now locked', $this->client->getResponse()->getContent());
+        
+        $this->client->request('GET', '/admin/lock/' . $id);
+        
+        $this->assertStringContainsString('is now unlocked', $this->client->getResponse()->getContent());
+    }
+    
+    public function testReplaceStaff()
+    {
+        $id = $this->fixtures->getReference('staff')->getId();
+        $this->client->request('GET', '/admin/replaceStaff/' . $id);
+        $this->client->submitForm('Save', [
+            'user[fname]' => 'Useless',
+            'user[sname]' => 'Garbage',
+            'user[email]' => 'ugar@bogus.info'
+        ]);
+        
+        $this->assertStringContainsString('Replacement email sent', $this->client->getResponse()->getContent());
     }
     
 // this test creates spooled messages regardless of the disable_delivery setting

@@ -39,10 +39,6 @@ class CreateUserCommand extends Command
     {
         $this
                 ->setName('app:create-admin')
-//                ->addArgument('fname', InputArgument::REQUIRED, 'First name: ')
-//                ->addArgument('sname', InputArgument::REQUIRED, 'Last name: ')
-//                ->addArgument('email', InputArgument::REQUIRED, 'Email: ')
-//                ->addArgument('password', InputArgument::REQUIRED, 'Password: ')
                 ->setDescription('Creates a new admin user.')
                 ->setHelp('Only creates an admin user. Volunteers & nonprofit staff '
                         . 'must register via the website.')
@@ -93,7 +89,7 @@ class CreateUserCommand extends Command
             $question = new Question('Password: ', '');
             $password = $helper->ask($input, $output, $question);
             if (empty($password)) {
-                throw new \Exception('Passworf may not be empty');
+                throw new \Exception('Password may not be empty');
             }
             $input->setOption('password', $password);
         }
