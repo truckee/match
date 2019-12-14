@@ -64,6 +64,7 @@ class NonprofitFixture extends AbstractFixture implements OrderedFixtureInterfac
         $password1 = $this->encoder->encodePassword($staff1, '123Abc');
         $staff1->setPassword($password1);
         $staff1->setRoles(['ROLE_STAFF']);
+        $this->setReference('staff', $staff1);
 
         $npo->setStaff($staff);
         $manager->persist($staff);

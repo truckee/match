@@ -16,6 +16,7 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class ProfileControllerTest extends WebTestCase
 {
+
     use FixturesTrait;
 
     public function setup(): void
@@ -24,20 +25,25 @@ class ProfileControllerTest extends WebTestCase
         $this->client = static::createClient();
         $this->client->followRedirects();
     }
-    
+
     public function testVolunteerProfile()
     {
         $this->client->request('GET', '/login');
         $this->client->submitForm('Sign in', [
-            'email' => 'pseudo@bogus.info',
+            'email' => 'volunteer@bogus.info',
             'password' => '123Abc',
         ]);
         $this->client->request('GET', '/profile/person');
-        
-        $this->assertStringContainsString('Very Bogus profile', $this->client->getResponse()->getContent());
-        
+
+        $this->assertStringContainsString('Exceptionally Bogus profile', $this->client->getResponse()->getContent());
+
+        $this->client->submitForm('Save', [
+            'user[fname]' => 'Unchained',
+        ]);
+
+        $this->assertStringContainsString('Profile updated', $this->client->getResponse()->getContent());
     }
-    
+
     public function testNonprofitProfile()
     {
         $this->client->request('GET', '/login');
@@ -46,10 +52,12 @@ class ProfileControllerTest extends WebTestCase
             'password' => '123Abc',
         ]);
         $this->client->request('GET', '/profile/nonprofit');
-        
+
         $this->assertStringContainsString('Turkey Fund profile', $this->client->getResponse()->getContent());
-        
-//        $this->client->submitForm()
+
+        $this->client->submitForm('Save');
+
+        $this->assertStringContainsString('Profile updated', $this->client->getResponse()->getContent());
     }
-    
+
 }
