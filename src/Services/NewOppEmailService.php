@@ -24,10 +24,13 @@ use Twig\Environment;
 class NewOppEmailService
 {
     private $em;
+    private $activater;
 
-    public function __construct(EntityManagerInterface $em)
+
+    public function __construct(EntityManagerInterface $em, $npoActivater)
     {
         $this->em = $em;
+        $this->activater = $npoActivater;
     }
 
     /**
@@ -72,6 +75,7 @@ class NewOppEmailService
             foreach ($volOpps[$volId] as $oppId) {
                 $opportunities[] = $this->em->getRepository(Opportunity::class)->find($oppId);
             }
+            // email volunteer
             $view = $templating->render('Email/volunteer_opportunities.html.twig', [
                 'fname' => $fname,
                 'opportunities' => $opportunities,
@@ -84,6 +88,20 @@ class NewOppEmailService
             ];
             $mailer->appMailer($mailParams);
         }
+        
+        // email admin on emails sent
+        $countVolunteers = $list->getNVolunteers();
+        $countOpportunities = $list->getNOpportunities();
+        $view = $templating->render('Email/opportunity_email_report.html.twig', [
+                'nVolunteers' => $countVolunteers,
+                'nOpportunities' => $countOpportunities,
+            ]);
+        $mailParams = [
+            'view'=>$view,
+            'recipient'=> $this->activater,
+            'subject'=>'Volunteer opportunities email report'
+        ];
+        $mailer->appMailer($mailParams);
         
         $list->setSent(true);
         $this->em->persist($list);
