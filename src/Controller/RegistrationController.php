@@ -368,7 +368,7 @@ class RegistrationController extends AbstractController
             ]);
             $mailParams = [
                 'view' => $view,
-                'recipient' => null,
+                'recipient' => $this->getParameter('app.npo_activater'),
                 'subject' => 'New Nonprofit Registration'
             ];
 

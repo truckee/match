@@ -36,3 +36,6 @@ services:
         $projectDir:    '%kernel.project_dir%'
         $npoActivater:  '%app.npo_activater%'
 
+    App\Services\NewOppEmailService:
+        $npoActivater:  '%app.npo_activater%'
+        
