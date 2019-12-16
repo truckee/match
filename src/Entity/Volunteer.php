@@ -24,7 +24,6 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class Volunteer extends User
 {
-
     public function __construct()
     {
         $this->addRole('ROLE_VOLUNTEER');
@@ -196,5 +195,4 @@ class Volunteer extends User
             array_push($this->jsonSkill, $item->getId());
         }
     }
-
 }

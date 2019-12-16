@@ -23,7 +23,6 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class OpportunityType extends AbstractType
 {
-
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
@@ -42,7 +41,10 @@ class OpportunityType extends AbstractType
                     ],
                     'label_attr' => ['class' => 'mr-2'],
                 ])
-                ->add('expiredate', DateType::class, [
+                ->add(
+                    'expiredate',
+                    DateType::class,
+                    [
                     'label' => 'Expiration ',
                     'widget' => 'single_text',
                     'format' => 'M/d/y',
@@ -87,5 +89,4 @@ class OpportunityType extends AbstractType
             'required' => false,
         ]);
     }
-
 }

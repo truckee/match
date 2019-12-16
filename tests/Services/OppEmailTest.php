@@ -64,7 +64,7 @@ class OppEmailTest extends TestCase
                 ->method('getRepository')
                 ->willReturn($repository);
 
-        $service = new NewOppEmailService($objectManager);
+        $service = new NewOppEmailService($objectManager, 'admin@bogus.info');
 
         $newList = $service->addToList([1, 3], 16);
         $this->assertEquals(3, count(array_keys($newList)));

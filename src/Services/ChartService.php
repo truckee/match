@@ -18,7 +18,6 @@ namespace App\Services;
  */
 class ChartService
 {
-
     public function volunteerChart()
     {
         $m = date_format(new \DateTime(), 'm');
@@ -81,7 +80,7 @@ class ChartService
     {
         $focus = new \CMEN\GoogleChartsBundle\GoogleCharts\Charts\SankeyDiagram();
         $focus->setElementID('div_focus')->getData()->setArrayToDataTable(
-                [
+            [
                     [['label' => 'Focus', 'type' => 'string'], ['label' => 'Nonprofit', 'type' => 'string'],
                         ['label' => 'Weight', 'type' => 'number']],
                     ['Education', 'Alpha', 5],
@@ -93,7 +92,8 @@ class ChartService
                     ['Seniors', 'Alpha', 9],
                     ['Seniors', 'Beta', 5],
                     ['Seniors', 'Gamma', 4]
-        ]);
+        ]
+        );
         $focus->getOptions()->setWidth(300);
         $focus->getOptions()->setHeight(200);
         $focus->getOptions()->getSankey()->getNode()->setColors(['#a6cee3', '#b2df8a', '#fb9a99', '#fdbf6f', '#cab2d6', '#ffff99', '#1f78b4', '#33a02c']);
@@ -104,10 +104,7 @@ class ChartService
         $focus->getOptions()->getSankey()->getNode()->getLabel()->setColor('#871b47');
         $focus->getOptions()->getSankey()->getNode()->getLabel()->setItalic(true);
         $focus->getOptions()->getSankey()->getNode()->getLabel()->setBold(true);
-//        $focus->getOptions()->getSankey()->getNode()->setNodePadding(60)
-                ;
         
         return $focus;
     }
-
 }

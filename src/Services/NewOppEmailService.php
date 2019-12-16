@@ -26,7 +26,6 @@ class NewOppEmailService
     private $em;
     private $activater;
 
-
     public function __construct(EntityManagerInterface $em, $npoActivater)
     {
         $this->em = $em;

@@ -47,28 +47,9 @@ class EmailerService
         ;
 
         if (!array_key_exists('spool', $mailParams)) {
-           $this->defaultMailer->send($message);
+            $this->defaultMailer->send($message);
         } else {
             $this->spoolMailer->send($message);
         }
     }
 }
-
-//// custom function to send an email
-//// inject \Swift_Mailer like you normally would
-//public function sendMessage($name, \Swift_Mailer $mailer, $bypassSpool = false)
-//{
-//    $message = new \Swift_Message('Hello Email')
-//        ->setFrom(/* from */)
-//        ->setTo(/* to */)
-//        ->setBody(/* render view */);
-//
-//    $mailer->send($message); // pushes the message to the spool queue
-//
-//    if($bypassSpool) {
-//        $spool = $mailer->getTransport->getSpool()
-//        $spool->flushQueue(new Swift_SmtpTransport(
-//            /* Get host, username and password from config */
-//        ));
-//    }
-//}

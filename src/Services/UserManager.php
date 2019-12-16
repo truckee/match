@@ -16,7 +16,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 /**
- * 
+ *
  */
 class UserManager
 {
@@ -37,8 +37,9 @@ class UserManager
         $admin->setEmail($user['email']);
         $admin->setEnabled(true);
         $admin->setPassword($this->encoder->encodePassword(
-                            $admin,
-                            $user['password']));
+            $admin,
+            $user['password']
+        ));
         $admin->setRoles([
             'ROLE_VOLUNTEER',
             'ROLE_STAFF',
@@ -49,5 +50,4 @@ class UserManager
         
         return $admin;
     }
-
 }

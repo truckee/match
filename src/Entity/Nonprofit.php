@@ -22,13 +22,12 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  * Nonprofit
  *
  * @ORM\Table(name="nonprofit")
- * @ORM\Entity(repositoryClass = "App\Repository\NonprofitRepository")
+ * @ORM\Entity
  * @UniqueEntity(fields="ein", message="Nonprofit is already registered")
  * @ORM\HasLifecycleCallbacks()
  */
 class Nonprofit
 {
-
     public function __construct()
     {
         $this->opportunities = new ArrayCollection();
@@ -270,8 +269,6 @@ class Nonprofit
     /**
      * Add focuses.
      *
-     * @param Focus $focuses
-     *
      * @return Nonprofit
      */
     public function addFocus(Focus $focus)
@@ -359,5 +356,4 @@ class Nonprofit
             array_push($this->jsonFocus, $item->getId());
         }
     }
-    
 }

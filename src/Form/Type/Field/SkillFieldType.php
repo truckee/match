@@ -20,13 +20,14 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\Count;
 
 /**
- * 
+ *
  */
 class SkillFieldType extends AbstractType
 {
     private $repo;
     
-    public function __construct(Repo $repo) {
+    public function __construct(Repo $repo)
+    {
         $this->repo = $repo;
     }
 
@@ -48,14 +49,13 @@ class SkillFieldType extends AbstractType
                 'choice_label' => 'skill',
                 'expanded' => true,
                 'multiple' => true,
-//                'attr' => array('class' => 'list-inline'),
                 'constraints' => [new Count(['min' => 1, 'minMessage' => 'At least one skill please'])],
                 'query_builder' => function (EntityRepository $er) {
-                return $er->createQueryBuilder('s')
+                    return $er->createQueryBuilder('s')
                         ->orderBy('s.skill', 'ASC')
                         ->where("s.enabled = '1'")
                         ->andWhere("s.skill <> 'All'");
-            },
+                },
                 'label' => $this->isPopulated(),
             )
         )

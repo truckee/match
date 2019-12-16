@@ -17,7 +17,6 @@ use Doctrine\Common\Persistence\ManagerRegistry;
 
 class VolunteerRepository extends ServiceEntityRepository
 {
-
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Volunteer::class);
@@ -34,6 +33,7 @@ class VolunteerRepository extends ServiceEntityRepository
                 ->select('v')
                 ->where('v.receiveEmail = true')
                 ->andWhere('v.enabled = true')
+                ->andWhere('v.locked = false')
                 ->getQuery()->getResult();
         $volunteers = [];
         foreach ($qb as $entity) {
@@ -46,11 +46,7 @@ class VolunteerRepository extends ServiceEntityRepository
                 array_push($volunteers, $id);
             }
         }
-//        foreach ($volunteers as $id) {
-//            $result[] = ['id'=>$id];
-//        }
-//dd($result);
+
         return $volunteers;
     }
-
 }

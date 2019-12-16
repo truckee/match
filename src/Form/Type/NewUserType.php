@@ -23,7 +23,6 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 
 class NewUserType extends AbstractType
 {
-
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
@@ -103,5 +102,4 @@ class NewUserType extends AbstractType
             'register' => false,
         ]);
     }
-
 }

@@ -220,7 +220,8 @@ class Opportunity
         return $this;
     }
 
-    public function getNonprofit() {
+    public function getNonprofit()
+    {
         return $this->nonprofit;
     }
 

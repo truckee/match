@@ -18,11 +18,10 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
- * 
+ *
  */
 class OpportunitySearchType extends AbstractType
 {
-
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
@@ -46,5 +45,4 @@ class OpportunitySearchType extends AbstractType
     {
         return 'search';
     }
-
 }
