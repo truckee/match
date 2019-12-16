@@ -41,6 +41,7 @@ class UserChecker implements UserCheckerInterface
         if ($user->hasRole('role_staff') && !$user->hasRole('ROLE_ADMIN') && !$user->getNonprofit()->isActive()) {
             throw new CustomUserMessageAuthenticationException('Nonprofit has not yet been activated');
         }
+        
         if (!$user->isEnabled()) {
             throw new CustomUserMessageAuthenticationException('Account has not been confirmed');
         }

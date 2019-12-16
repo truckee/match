@@ -17,18 +17,17 @@ use Doctrine\Common\Persistence\ManagerRegistry;
 use Doctrine\ORM\QueryBuilder;
 
 /**
- * 
+ *
  */
-class OpportunityRepository extends ServiceEntityRepository {
-
-//    private $qb;
-
-    public function __construct(ManagerRegistry $registry) {
+class OpportunityRepository extends ServiceEntityRepository
+{
+    public function __construct(ManagerRegistry $registry)
+    {
         parent::__construct($registry, Opportunity::class);
     }
 
-    private function opportunityQueryBuilder(QueryBuilder $qb) {
-
+    private function opportunityQueryBuilder(QueryBuilder $qb)
+    {
         return $qb
                         ->select('o')
                         ->join('o.nonprofit', 'n')
@@ -39,7 +38,8 @@ class OpportunityRepository extends ServiceEntityRepository {
         ;
     }
 
-    public function getAllOpenOpps() {
+    public function getAllOpenOpps()
+    {
         $now = new \DateTime();
         $qb = $this->createQueryBuilder('o');
 
@@ -47,10 +47,10 @@ class OpportunityRepository extends ServiceEntityRepository {
                         ->andWhere('o.expiredate > :now')
                         ->setParameter('now', $now)
                         ->getQuery()->getResult();
-        ;
     }
 
-    public function getOppsByFocusOrSkill($focuses, $skills) {
+    public function getOppsByFocusOrSkill($focuses, $skills)
+    {
         $now = new \DateTime();
         $qb = $this->createQueryBuilder('o');
 
@@ -71,14 +71,14 @@ class OpportunityRepository extends ServiceEntityRepository {
         return $matches;
     }
 
-    public function getExpiringOpps() {
+    public function getExpiringOpps()
+    {
         $qb = $this->createQueryBuilder('o');
-        $expiring = (new \DateTime())->add(new \DateInterval('P7D'))->settime(0,0);;
+        $expiring = (new \DateTime())->add(new \DateInterval('P7D'))->settime(0, 0);
 
         return $this->opportunityQueryBuilder($qb)
                         ->andWhere('o.expiredate = :expiring')
                         ->setParameter('expiring', $expiring)
                         ->getQuery()->getResult();
     }
-
 }

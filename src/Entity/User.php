@@ -103,7 +103,7 @@ abstract class User implements UserInterface
         return $this->email;
     }
 
-    public function setUsername($username)
+    public function setUsername()
     {
         $this->username = substr($this->fname, 0, 1) . $this->sname;
 
@@ -181,12 +181,10 @@ abstract class User implements UserInterface
     public function addRole($role)
     {
         $role = strtoupper($role);
-//        if ($role === static::ROLE_DEFAULT) {
-//            return $this;
-//        }
         if (!in_array($role, $this->roles, true)) {
             $this->roles[] = $role;
         }
+        
         return $this;
     }
 
