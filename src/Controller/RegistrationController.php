@@ -375,6 +375,8 @@ class RegistrationController extends AbstractController
             $mailer->appMailer($mailParams);
 
             $flashMessage .= '; please wait for nonprofit activation to login';
+        } elseif ('volunteer' === $actor) {
+            $user->setReceiveEmail(true);
         }
 
         $user->setConfirmationToken(null);

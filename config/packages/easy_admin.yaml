@@ -43,6 +43,7 @@ easy_admin:
             list:
                 fields: 
                     - { property: 'locked', label: 'Locked?', template: 'Admin/locked_badge.html.twig'}
+                    - enabled
                     - { property: 'fullName', label: 'Name'}
                     - email
                     - 'receiveEmail'

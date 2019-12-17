@@ -1,15 +1,10 @@
 @import "./jquery-ui.min.css";
 @import "~bootstrap/scss/bootstrap";
 
-.imageContainer {
-  position: relative;
-  text-align: center;
-}
+@media screen {
+    .imageContainer {
+        width: 100%;
+        height: auto;
+    }
 
-.overlay span{
-  position:absolute;
-  top:50%;
-  left:50%;
-  transform:translate(-50%,-50%);
-  color:#fff;
 }
