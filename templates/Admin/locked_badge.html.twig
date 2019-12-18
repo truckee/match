@@ -1,9 +1,9 @@
 {% if not item.isLocked %}
     <a class="badge badge-success" 
        href="{{ path('lock_user', {'id':item.id}) }}">
-        No</a>
+        Lock</a>
 {% else %}
     <a class="badge badge-danger" 
        href="{{ path('lock_user', {'id':item.id}) }}">
-        Yes</a>
+        Unlock</a>
 {% endif %}

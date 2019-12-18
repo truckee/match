@@ -5,9 +5,9 @@ easy_admin:
         display_avatar: false
     design:
         menu:
+            - Nonprofit
             - Focus
             - Skill
-            - Nonprofit
             - Staff
             - Volunteer
             - { label: 'Home', route: 'home' }
@@ -17,6 +17,19 @@ easy_admin:
     list:
         actions: ['edit', 'search', '-delete']
     entities:
+        Nonprofit:
+            class: App\Entity\Nonprofit
+            disabled_actions: ['new', 'edit']
+            list:
+                help: 'Activate sends notice to staff; deactivate blocks staff log in, opportunities will not be found'
+                fields: 
+                    - {property: 'active', template: 'Nonprofit/activate_button.html.twig'}
+                    - {property: 'orgname', label: 'Name'}
+                    - {property: 'staff.fullName', label: 'Staff'}
+                    - {property: 'staff.email', label: 'Email', template: 'Nonprofit/staff_email.html.twig'}
+            edit: 
+                fields: 
+                    - {property: 'orgname', label: 'Name'}
         Focus:
             class: App\Entity\Focus
             list:
@@ -47,19 +60,6 @@ easy_admin:
                     - { property: 'fullName', label: 'Name'}
                     - email
                     - 'receiveEmail'
-        Nonprofit:
-            class: App\Entity\Nonprofit
-            disabled_actions: ['new', 'edit']
-            list:
-                help: 'Activate sends notice to staff; deactivate blocks staff log in, opportunities will not be found'
-                fields: 
-                    - {property: 'active', template: 'Nonprofit/activate_button.html.twig'}
-                    - {property: 'orgname', label: 'Name'}
-                    - {property: 'staff.fullName', label: 'Staff'}
-                    - {property: 'staff.email', label: 'Email', template: 'Nonprofit/staff_email.html.twig'}
-            edit: 
-                fields: 
-                    - {property: 'orgname', label: 'Name'}
         Staff:
             class: App\Entity\Staff
             disabled_actions: ['new', 'edit']
