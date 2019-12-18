@@ -191,11 +191,11 @@ class RegistrationController extends AbstractController
             'register' => true,
             'data_class' => Volunteer::class,
         ]);
-        $templates = [
-            'Registration/new_user.html.twig',
-            'Default/focuses.html.twig',
-            'Default/skills.html.twig',
-        ];
+//        $templates = [
+//            'Registration/new_user.html.twig',
+//            'Default/focuses.html.twig',
+//            'Default/skills.html.twig',
+//        ];
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $userData = $request->request->get('new_user');
@@ -230,13 +230,13 @@ class RegistrationController extends AbstractController
             return $this->redirectToRoute('home');
         }
 
-        return $this->render('Default/form_templates.html.twig', [
+        return $this->render('Volunteer/volunteer_form.html.twig', [
                     'form' => $form->createView(),
                     'headerText' => 'Become a volunteer',
                     'userHeader' => 'Volunteer',
                     'focusHeader' => "Volunteer's Focus(es)",
                     'skillHeader' => "Volunteer's Skill(s)",
-                    'templates' => $templates,
+//                    'templates' => $templates,
         ]);
     }
 
