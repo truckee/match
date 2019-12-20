@@ -33,15 +33,11 @@ class CreateUserTest extends KernelTestCase
             '--sname' => 'ball',
             '--email' => 'bball@bogus.info',
             '--password' => '123Abc',
-
-            // prefix the key with two dashes when passing options,
-            // e.g: '--some-option' => 'option_value',
         ]);
 
         // the output of the command in the console
         $output = $commandTester->getDisplay();
-        $this->assertContains('Admin user created', $output);
 
-        // ...
+        $this->assertStringContainsString('Admin user created', $output);
     }
 }
