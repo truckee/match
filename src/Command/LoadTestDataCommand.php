@@ -53,6 +53,8 @@ class LoadTestDataCommand extends Command
         $arguments4 = ['command' => 'doctrine:fixtures:load'];
         $loadFixtures = new ArrayInput($arguments4);
         $command4->run($loadFixtures, $output);
+        
+        return 0;
     }
 
 }

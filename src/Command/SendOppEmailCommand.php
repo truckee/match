@@ -52,5 +52,7 @@ class SendOppEmailCommand extends Command
         $arguments = ['command' => 'swiftmailer:spool:send',];
         $mailed = new ArrayInput($arguments);
         $command->run($mailed, $output);
+
+        return 0;
     }
 }

@@ -97,7 +97,6 @@ class CreateUserCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-
         $manager = new UserManager($this->em, $this->encoder);
         $admin = $manager->createAdmin($input->getOptions());
         if (is_object($admin)) {
@@ -105,6 +104,8 @@ class CreateUserCommand extends Command
         } else {
             $output->writeln('Something went wrong!');
         }
+        
+        return 0;
     }
 
 }
