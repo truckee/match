@@ -43,6 +43,6 @@ class NewOppEmailFixture extends AbstractFixture implements OrderedFixtureInterf
 
     public function getOrder()
     {
-        return 5; // the order in which fixtures will be loaded
+        return 4; // the order in which fixtures will be loaded
     }
 }

@@ -8,3 +8,25 @@
     }
 
 }
+
+// cfwn red: #C53A32
+.oppTable thead th{
+    background: #d9e5f2; 
+}
+
+.oppTable thead th:first-of-type{
+    border-top-left-radius: 10px; 
+}
+
+.oppTable thead th:last-of-type{
+    border-top-right-radius: 10px; 
+}
+
+.ul-cfwn {
+    border-bottom: 3px solid  #C53A32;
+}
+
+.cfwn-blue {
+    font-weight: bold;
+    color: #274b72;
+}

@@ -41,6 +41,7 @@ class NonprofitFixture extends AbstractFixture implements OrderedFixtureInterfac
         $npo1->setOrgname('Turkey Fund');
         $npo1->setEin('321654978');
         $npo1->setActive(true);
+        $npo1->setWebsite('http://turkeysRUs.bogus.info');
         $npo1->addFocus($this->getReference('focus_health'));
         $this->setReference('nonprofit', $npo1);
 
@@ -74,7 +75,10 @@ class NonprofitFixture extends AbstractFixture implements OrderedFixtureInterfac
         $opp->setNonprofit($npo1);
         $opp->setActive(true);
         $opp->setOppname('Feeder');
-        $opp->setDescription('Get them to eat');
+        $opp->setDescription('Lorem ipsum dolor sit amet, consectetuer adipiscing '
+                . 'elit. Maecenas porttitor congue massa. Fusce posuere, magna '
+                . 'sed pulvinar ultricies, purus lectus malesuada libero, sit '
+                . 'amet commodo magna eros quis urna.');
         $opp->addSkill($this->getReference('skill_admin'));
         $this->setReference('opp', $opp);
         
