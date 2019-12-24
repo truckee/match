@@ -1,6 +1,6 @@
 {# form.staff occurs when registering a nonprofit #}
 {% if form.staff is defined %}{% set user = form.staff %}{% else %}{% set user = form %}{% endif %}
-<div class="text-center text-bold">
+<div class="text-center text-bold ul-cfwn mb-2">
     {{ userHeader }}
 </div>
 {{ form_row(user.fname) }}

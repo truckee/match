@@ -12,6 +12,7 @@
 namespace App\Controller;
 
 use App\Entity\Opportunity;
+use App\Entity\Staff;
 use App\Entity\Volunteer;
 use App\Form\Type\NonprofitType;
 use App\Form\Type\UserType;
@@ -76,9 +77,10 @@ class ProfileController extends AbstractController
             return $this->redirectToRoute('home');
         }
         $em = $this->getDoctrine()->getManager();
-        $templates = [
-            'Profile/user.html.twig',
-        ];
+        if (Staff::class === get_class($user)) {
+            $templates[] = 'Default/empty.html.twig';
+        }
+        $templates[] = 'Profile/user.html.twig';
         if (Volunteer::class === get_class($user)) {
             $templates[] = 'Default/focuses.html.twig';
             $templates[] = 'Default/skills.html.twig';
@@ -110,71 +112,5 @@ class ProfileController extends AbstractController
          
         return $this->render('Default/form_templates.html.twig', $options);
     }
-
-//    /**
-//     * @Route("/", name="profile")
-//     */
-//    public function index(Request $request)
-//    {
-//        $user = $this->getUser();
-//        if (!$user) {
-//            return $this->redirectToRoute('home');
-//        }
-//
-//        $em = $this->getDoctrine()->getManager();
-//        if (Volunteer::class === get_class($user)) {
-//            $entity = $user;
-//            $templates = [
-//                'Profile/user.html.twig',
-////                'Volunteer/receive_email_form.html.twig',
-//                'Default/focuses.html.twig',
-//                'Default/skills.html.twig',
-//            ];
-//            $headerText = $user->getFname() . ' ' . $user->getSname() . ' profile';
-//            $form = $this->createForm(UserType::class, $user, [
-//                'data_class' => Volunteer::class,
-//            ]);
-//            $destination = $this->render('Default/form_templates.html.twig', [
-//                'form' => $form->createView(),
-//                'templates' => $templates,
-//                'headerText' => $headerText,
-//                'focusHeader' => "Volunteer's Focus(es)",
-//                'skillHeader' => "Volunteer's Skill(s)",
-//            ]);
-//        }
-//
-//        if (Staff::class === get_class($user)) {
-//            $entity = $npo = $user->getNonprofit();
-//            $opps = $em->getRepository(Opportunity::class)->findBy(['nonprofit' => $npo], ['oppname' => 'ASC']);
-//            $templates = [
-//                'Nonprofit/nonprofit_form.html.twig',
-//                'Default/focuses.html.twig',
-//                'Nonprofit/opportunities.html.twig',
-//            ];
-//            $headerText = $npo->getOrgname() . ' profile';
-//            $form = $this->createForm(NonprofitType::class, $npo);
-//            $destination = $this->render('Default/form_templates.html.twig', [
-//                'form' => $form->createView(),
-//                'templates' => $templates,
-//                'headerText' => $headerText,
-//                'npo' => $npo,
-//                'focusHeader' => $npo->getOrgname() . "'s Focus(es)",
-//                'opportunities' => $opps,
-//            ]);
-//        }
-//        $form->handleRequest($request);
-//        if ($form->isSubmitted() && $form->isValid()) {
-//            $em->persist($entity);
-//            $em->flush();
-//            $this->addFlash(
-//                    'success',
-//                    'Profile updated'
-//            );
-//
-//            return $this->redirectToRoute('home');
-//        }
-//
-//        return $destination;
-//    }
 
 }

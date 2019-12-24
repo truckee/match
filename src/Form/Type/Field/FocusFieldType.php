@@ -66,6 +66,6 @@ class FocusFieldType extends AbstractType
     {
         $populated = $this->repo->findAll();
 
-        return (0 === count($populated)) ? 'Sign in as Admin; add focus options' : 'Focus options';
+        return (0 === count($populated)) ? 'Sign in as Admin; add focus options' : false;
     }
 }

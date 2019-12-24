@@ -1,6 +1,12 @@
 {% form_theme form 'bootstrap_4_layout.html.twig' %}
-<div class="text-center mb-2">
-    {{ focusHeader }}<br />
-    (One or more required)
+<div class="text-center ul-cfwn">
+    {{ focusHeader }}
 </div>
+<div class="text-center">
+    {% if submitValue is not defined %}
+        <br />
+        (One or more required)
+    {% endif %}
+</div>
+
 {{ form_row(form.focuses) }}

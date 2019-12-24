@@ -146,8 +146,8 @@ class OpportunityController extends AbstractController
                     'form' => $form->createView(),
                     'templates' => $templates,
                     'headerText' => 'Opportunity search',
-                    'focusHeader' => '',
-                    'skillHeader' => '',
+                    'focusHeader' => 'Focus options',
+                    'skillHeader' => 'Skill options',
                     'submitValue' => 'Search',
         ]);
     }

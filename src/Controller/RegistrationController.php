@@ -140,7 +140,10 @@ class RegistrationController extends AbstractController
                 return $this->redirectToRoute('home');
             }
         }
-        $templates[] = 'Registration/password.html.twig';
+        $templates = [
+            'Default/empty.html.twig',
+            'Registration/password.html.twig',
+        ];
         $form = $this->createForm(NewPasswordType::class, $user);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
@@ -191,11 +194,6 @@ class RegistrationController extends AbstractController
             'register' => true,
             'data_class' => Volunteer::class,
         ]);
-//        $templates = [
-//            'Registration/new_user.html.twig',
-//            'Default/focuses.html.twig',
-//            'Default/skills.html.twig',
-//        ];
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $userData = $request->request->get('new_user');

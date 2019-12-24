@@ -2,7 +2,7 @@
 {% block body %}
     <p>We found the following opportunites that might be of interest</p>
     {% set npo = '' %}
-    <table class="table m-2 oppTable">
+    <table class="table oppTable table-sm">
         <thead>
             <tr class="d-flex">
                 <th class="col-2">Nonprofit</th>
@@ -14,29 +14,35 @@
         <tbody>
             {% for opp in opportunities %}
                 <tr class="d-flex">
-                    {% if npo != opp.nonprofit.orgname %}
-                        {% set npo = opp.nonprofit.orgname %}
-                        <td class="col-2">
-                            <a class="cfwn-blue" href="{{ path('npo_view', {'id': opp.nonprofit.id}) }}">{{ npo }}</a><br />
-                            <a class="cfwn-blue" href="mailto:{{ opp.nonprofit.staff.email }}">{{ opp.nonprofit.staff.email }}</a>
-                            {% if opp.nonprofit.website is defined %}
-                                <a class="cfwn-blue" href="{{ opp.nonprofit.website }}">Website</a>
-                            {% endif %}
-                        </td>
-                    {% else %}
-                        <td class="col-2"></td>
-                    {% endif %}
-                    <td class="col-2">{{ opp.oppname }}</td>
-                    <td id="oppDesc" class="col-4 v-ellipsis " data-expandlink="<span style='color:#C53A32;'><i>Read more</i></span>" data-collapselink="<span style='color:#C53A32;'><i>Read less</i></span>">{{ opp.description }}</td>
+                    {% set npo = opp.nonprofit.orgname %}
                     <td class="col-2">
-                        <span class="ul-cfwn">Expires</span> {{ opp.expiredate|date('m/d/Y') }}<br />
-                        <span class="ul-cfwn">Min age</span> {{ opp.minage }}
-                    </td>
+                        <table class="table table-borderless">
+                            <tr><td><a class="cfwn-blue" href="{{ path('npo_view', {'id': opp.nonprofit.id}) }}">{{ npo }}</a>
+                            <tr><td><a class="cfwn-blue" href="mailto:{{ opp.nonprofit.staff.email }}">{{ opp.nonprofit.staff.email }}</a>
+                            <tr><td>
+                                    {% if opp.nonprofit.website is defined %}
+                                        <a class="cfwn-blue" href="{{ opp.nonprofit.website }}">Website</a>
+                                    {% endif %}
+                        </table>
                     <td class="col-2">
-                        <span class="ul-cfwn">Group OK?</span> {{ opp.groupOk ? 'Yes':'No'  }}<br />
-                        <span class="ul-cfwn">Background check?</span> {{ opp.background ? 'Yes':'No'  }}
-                    </td>
-                {% endfor %}
+                        <table class="table table-borderless">
+                            <tr><td>{{ opp.oppname }}
+                        </table>
+                    <td class="col-4">
+                        <table class="table table-borderless">
+                            <tr><td id="oppDesc" class="col-4 v-ellipsis " data-expandlink="<span style='color:#C53A32;'><i>Read more</i></span>" data-collapselink="<span style='color:#C53A32;'><i>Read less</i></span>">{{ opp.description }}
+                        </table>
+                    <td class="col-2">
+                        <table class="table table-borderless">
+                            <tr><td><span class="ul-cfwn">Expires</span> {{ opp.expiredate|date('m/d/Y') }}
+                            <tr><td><span class="ul-cfwn">Min age</span> {{ opp.minage }}
+                        </table>
+                    <td class="col-2">
+                        <table class="table table-borderless">
+                            <tr><td><span class="ul-cfwn">Group OK?</span> {{ opp.groupOk ? 'Yes':'No'  }}
+                            <tr><td><span class="ul-cfwn">Background check?</span> {{ opp.background ? 'Yes':'No'  }}
+                        </table>
+                    {% endfor %}
         </tbody>
     </table>
 {% endblock %}
@@ -48,7 +54,7 @@
             $().vEllipsis({
                 'expandLink': true,
                 'collapseLink': true,
-                'lines': 1,
+                'lines': 3,
                 'onlyFullWords': true,
             });
         });

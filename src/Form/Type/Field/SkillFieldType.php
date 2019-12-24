@@ -66,6 +66,6 @@ class SkillFieldType extends AbstractType
     {
         $populated = $this->repo->findAll();
 
-        return (0 === $populated) ? 'Sign in as Admin; add skill options' : 'Skill options';
+        return (0 === $populated) ? 'Sign in as Admin; add skill options' : false;
     }
 }

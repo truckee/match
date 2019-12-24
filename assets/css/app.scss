@@ -1,3 +1,21 @@
+$cfwn-red:#C53A32;
+$cfwn-darkblue:#274b72;
+$cfwn-blue:#417dbe;
+
+$info:$cfwn-blue;
+$danger:$cfwn-red;
+$success:#00cc00;
+
+// underscores focus & skill field labels
+/*legend.col-form-label {
+    padding-top: calc(0.375rem + 1px);
+    padding-bottom: calc(0.375rem + 1px);
+    margin-bottom: 0;
+    font-size: inherit;
+    line-height: 1.5;
+    border-bottom: 3px solid  $cfwn-red;
+}*/
+
 @import "./jquery-ui.min.css";
 @import "~bootstrap/scss/bootstrap";
 
@@ -6,10 +24,14 @@
         width: 100%;
         height: auto;
     }
-
 }
 
-// cfwn red: #C53A32
+
+.cfwn-blue {
+    font-weight: bold;
+    color: #274b72;
+}
+
 .oppTable thead th{
     background: #d9e5f2; 
 }
@@ -23,10 +45,9 @@
 }
 
 .ul-cfwn {
-    border-bottom: 3px solid  #C53A32;
+    border-bottom: 3px solid  $cfwn-red;
 }
 
-.cfwn-blue {
-    font-weight: bold;
-    color: #274b72;
-}
+/*.btn-info {
+    @include button-variant($cfwn-darkblue);
+}*/
