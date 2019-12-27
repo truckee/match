@@ -45,6 +45,12 @@ class NonprofitFixture extends AbstractFixture implements OrderedFixtureInterfac
         $npo1->addFocus($this->getReference('focus_health'));
         $this->setReference('nonprofit', $npo1);
 
+        $npo3 = new Nonprofit();
+        $npo3->setOrgname('Talk Trash Fund');
+        $npo3->setEin('978654321');
+        $npo3->setActive(true);
+        $npo3->setWebsite('http://ttrash.bogus.info');
+
         $staff = new Staff();
         $staff->setConfirmationToken('tuvxyz');
         $staff->setEmail('unknown@bogus.info');
@@ -62,10 +68,19 @@ class NonprofitFixture extends AbstractFixture implements OrderedFixtureInterfac
         $staff1->setEnabled(true);
         $staff1->setFname('Misfit');
         $staff1->setSname('Bogus');
-        $password1 = $this->encoder->encodePassword($staff1, '123Abc');
-        $staff1->setPassword($password1);
+        $password2 = $this->encoder->encodePassword($staff1, '123Abc');
+        $staff1->setPassword($password2);
         $staff1->setRoles(['ROLE_STAFF']);
         $this->setReference('staff', $staff1);
+
+        $staff2 = new Staff();
+        $staff2->setEmail('rather@bogus.info');
+        $staff2->setEnabled(true);
+        $staff2->setFname('Rather');
+        $staff2->setSname('Bogus');
+        $password1 = $this->encoder->encodePassword($staff2, '123Abc');
+        $staff2->setPassword($password1);
+        $staff2->setRoles(['ROLE_STAFF']);
 
         $npo->setStaff($staff);
         $manager->persist($staff);
@@ -81,13 +96,30 @@ class NonprofitFixture extends AbstractFixture implements OrderedFixtureInterfac
                 . 'amet commodo magna eros quis urna.');
         $opp->addSkill($this->getReference('skill_admin'));
         $this->setReference('opp', $opp);
+
+        $opp1 = new Opportunity();
+        $opp1->setNonprofit($npo3);
+        $opp1->setActive(true);
+        $opp1->setOppname('Talker');
+        $opp1->setBackground(false);
+        $opp1->setGroupOk(true);
+        $opp1->setMinage('18');
+        $opp1->setDescription('Fusce aliquet pede non pede. Suspendisse dapibus'
+                . ' lorem pellentesque magna. Integer nulla. Donec blandit '
+                . 'feugiat ligula. Donec hendrerit, felis et imperdiet euismod, '
+                . 'purus ipsum pretium metus, in lacinia nulla nisl eget sapien.');
+        $opp1->addSkill($this->getReference('skill_admin'));
         
         $npo1->addOpportunity($opp);
+        $npo3->addOpportunity($opp1);
         
         $manager->persist($opp);
+        $manager->persist($opp1);
         $npo1->setStaff($staff1);
+        $npo3->setStaff($staff2);
         $manager->persist($staff1);
         $manager->persist($npo1);
+        $manager->persist($npo3);
         
         $manager->flush();
     }

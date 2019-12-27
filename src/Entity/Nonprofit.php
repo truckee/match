@@ -93,6 +93,9 @@ class Nonprofit
      * @var string|null
      *
      * @ORM\Column(name="website", type="string", length=50, nullable=true)
+     * @Assert\Url(
+     *      message = "'{{ value }}' is not a valid url")
+     *      
      */
     private $website;
 

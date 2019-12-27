@@ -94,6 +94,7 @@ class NonprofitType extends AbstractType
                     'attr' => [
                         'class' => 'mb-2',
                         'size' => '15',
+                        'placeholder'=>'http://'
                     ],
                     'label' => 'Web site: ',
                     'label_attr' => ['class' => 'mr-2'],
