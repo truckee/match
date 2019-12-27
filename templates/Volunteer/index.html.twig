@@ -12,15 +12,17 @@
             </div>
             <div class="col-6">
                 <p>Register to be notified of new opportunities - they're coming in 
-                all the time. You'll be asked for an email address where we can 
-                send information about new volunteer opportunities. And we'd 
-                like to know what your focuses are so we can select opportunities 
-                that best match them, along with selecting from a  
-                set of possible skills you offer. That's all we do with the information 
-                you provide. Your information will never be shared.</p>
-                <div class='text-center'>
-                    <p><a href='{{ path('register_volunteer') }}' class='btn btn-sm btn-info'>Become a volunteer</a>
-                </div>
+                    all the time. You'll be asked for an email address where we can 
+                    send information about new volunteer opportunities. And we'd 
+                    like to know what your focuses are so we can select opportunities 
+                    that best match them, along with selecting from a  
+                    set of possible skills you offer. That's all we do with the information 
+                    you provide. Your information will never be shared.</p>
+                    {% if not is_granted('ROLE_STAFF') and not is_granted('ROLE_ADMIN') %}
+                    <div class='text-center'>
+                        <p><a href='{{ path('register_volunteer') }}' class='btn btn-sm btn-info'>Become a volunteer</a>
+                    </div>
+                {% endif %}
             </div>
             <div class="col-3">
                 <img class="imageContainer" src="{{ asset('build/images/vol_hands.jpg') }}" alt="hands on" />
@@ -32,11 +34,11 @@
             </div>
             <div class="col-6">
                 <p>Search for an opportunity. Nonprofits have listed 
-                many requests for volunteers here. You can look at all of them, 
-                or search by an nonprofit's focus, or search for opportunities 
-                requiring certain skills. When you find something you'd like to 
-                do, please contact the organization directly. Let us know how it 
-                works out.</p>
+                    many requests for volunteers here. You can look at all of them, 
+                    or search by an nonprofit's focus, or search for opportunities 
+                    requiring certain skills. When you find something you'd like to 
+                    do, please contact the organization directly. Let us know how it 
+                    works out.</p>
                 <div class='text-center'>
                     <p><a href='{{ path('opp_search') }}' class='btn btn-sm btn-info'>Search for opportunities</a>
                 </div>

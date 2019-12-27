@@ -23,9 +23,11 @@
                     volunteers who have selected the focus of the nonprofit and 
                     the skills required by the opportunity. The email will include
                     the opportunity's description and the nonprofit's contact information. </p>
+                {% if not is_granted('ROLE_VOLUNTEER') and not is_granted('ROLE_ADMIN') %}
                 <div>
                     <p><a href='{{ path('register_org') }}' class='btn btn-sm btn-info'>Register a nonprofit</a>
                 </div>
+                {% endif %}
             </div>
                 <div class="col-3">
                     <img class="imageContainer" src="{{ asset('build/images/nonprofit.jpg') }}" alt="hands on" />
