@@ -13,6 +13,7 @@ namespace App\Entity;
 
 use App\Entity\Focus;
 use App\Entity\Opportunity;
+use App\Validator\Constraints as CustomAssert;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -28,6 +29,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  */
 class Nonprofit
 {
+
     public function __construct()
     {
         $this->opportunities = new ArrayCollection();
@@ -93,9 +95,7 @@ class Nonprofit
      * @var string|null
      *
      * @ORM\Column(name="website", type="string", length=50, nullable=true)
-     * @Assert\Url(
-     *      message = "'{{ value }}' is not a valid url")
-     *      
+     * @CustomAssert\URLConstraint
      */
     private $website;
 
@@ -247,8 +247,12 @@ class Nonprofit
 
     public function setWebsite(?string $website): self
     {
-        $this->website = $website;
-
+        if (null !== $website && !preg_match("^(http|https)://^", $website)) {
+            $this->website = "http://" . $website;
+        } else {
+            $this->website = $website;
+        }
+        
         return $this;
     }
 
@@ -290,7 +294,7 @@ class Nonprofit
     {
         $this->focuses->removeElement($focus);
     }
-    
+
     public function getOpportunities()
     {
         return $this->opportunities;
@@ -347,7 +351,7 @@ class Nonprofit
     {
         return $this->jsonFocus;
     }
-    
+
     /**
      * @ORM\PreUpdate()
      */
@@ -359,4 +363,5 @@ class Nonprofit
             array_push($this->jsonFocus, $item->getId());
         }
     }
+
 }

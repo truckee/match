@@ -16,11 +16,13 @@ use App\Entity\Nonprofit;
 use App\Entity\Staff;
 use App\Form\Type\NewUserType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\CallbackTransformer;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class NonprofitType extends AbstractType
 {
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
@@ -94,19 +96,41 @@ class NonprofitType extends AbstractType
                     'attr' => [
                         'class' => 'mb-2',
                         'size' => '15',
-                        'placeholder'=>'http://'
+                        'placeholder' => 'http://'
                     ],
                     'label' => 'Web site: ',
                     'label_attr' => ['class' => 'mr-2'],
                 ])
                 ->add('focuses', FocusFieldType::class)
         ;
+
         if (true === $options['register']) {
             $builder->add('staff', NewUserType::class, [
                 'label' => false,
-                'data_class'=> Staff::class,
+                'data_class' => Staff::class,
             ]);
         }
+
+//        $builder->get('website')
+//                ->addModelTransformer(new CallbackTransformer(
+//                                function ($withProtocol) {
+////                            dump($withProtocol);
+//                            // transform for rendering
+//                            return $withProtocol;
+//                        },
+//                                function ($unknownProtocol) {
+//                            // transform for storage
+////                            dump($unknownProtocol, preg_match("^(http|https)://^", $unknownProtocol));
+//                            if (preg_match("^(http|https)://^", $unknownProtocol)) {
+//                                return;
+//                            } elseif (strlen($unknownProtocol) > 0) {
+//                                return 'http://' . $unknownProtocol;
+//                            }
+//
+//                            return $unknownProtocol;
+//                        }
+//                ))
+//        ;
     }
 
     public function configureOptions(OptionsResolver $resolver)
@@ -122,4 +146,5 @@ class NonprofitType extends AbstractType
     {
         return 'org';
     }
+
 }
