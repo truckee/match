@@ -112,13 +112,6 @@ class Nonprofit
     private $addDate;
 
     /**
-     * @var int|null
-     *
-     * @ORM\Column(name="areacode", type="integer", nullable=true)
-     */
-    private $areacode;
-
-    /**
      * @ORM\Column(type="string")
      * @Assert\NotBlank(message="EIN is required")
      * @Assert\Length(min = 9, max = 9, exactMessage = "EIN has 9 digits")
@@ -321,18 +314,6 @@ class Nonprofit
     public function getFocuses()
     {
         return $this->focuses;
-    }
-
-    public function getAreacode(): ?int
-    {
-        return $this->areacode;
-    }
-
-    public function setAreacode(?int $areacode): self
-    {
-        $this->areacode = $areacode;
-
-        return $this;
     }
 
     public function getEin(): ?string

@@ -3,7 +3,7 @@
 {% block body %}
     <div class="text-center mb-2" style="font-size: 18px;">
         {% autoescape %}
-        <b>{{ headerText|raw }}</b>
+            <b>{{ headerText|raw }}</b>
         {% endautoescape %}
     </div>
     <div class="text-center">
@@ -29,3 +29,18 @@
     </div>
     {{ form_end(form) }}
 {% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.inputmask/3.1.62/jquery.inputmask.bundle.js"></script>
+    <script type="text/javascript">
+        $(window).load(function ()
+        {
+            var phones = [{"mask": "(###) ###-####"}, {"mask": "(###) ###-##############"}];
+            $('#org_phone').inputmask({
+                mask: phones,
+                greedy: false,
+                definitions: {'#': {validator: "[0-9]", cardinality: 1}}});
+        });
+    </script>
+{% endblock javascripts %}

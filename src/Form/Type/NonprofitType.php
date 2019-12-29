@@ -77,14 +77,6 @@ class NonprofitType extends AbstractType
                     'label' => 'Zip: ',
                     'label_attr' => ['class' => 'mr-2'],
                 ])
-                ->add('area_code', null, [
-                    'attr' => [
-                        'class' => 'mb-2',
-                        'size' => '15',
-                    ],
-                    'label' => 'Area code: ',
-                    'label_attr' => ['class' => 'mr-2'],
-                ])
                 ->add('phone', null, [
                     'attr' => [
                         'class' => 'mb-2',
