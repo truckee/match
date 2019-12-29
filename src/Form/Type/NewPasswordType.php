@@ -38,6 +38,7 @@ class NewPasswordType extends AbstractType
                             'class' => 'mb-2',
                             'size' => '15',
                             'required' => true,
+                            'autofocus' => null,
                         ],
                         'label' => 'Password:',
                         'label_attr' => ['class' => 'mr-2'],

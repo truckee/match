@@ -41,6 +41,7 @@ class NewUserType extends AbstractType
                         'class' => 'mb-2',
                         'size' => '15',
                         'required' => true,
+                        'autofocus' => null,
                     ],
                     'label' => 'First name: ',
                     'label_attr' => ['class' => 'mr-2'],

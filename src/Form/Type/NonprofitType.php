@@ -31,6 +31,7 @@ class NonprofitType extends AbstractType
                         'class' => 'mb-2',
                         'size' => '15',
                         'required' => true,
+                        'autofocus' => null,
                     ],
                     'label' => 'Name: ',
                     'label_attr' => ['class' => 'mr-2'],
@@ -88,6 +89,7 @@ class NonprofitType extends AbstractType
                     'attr' => [
                         'class' => 'mb-2',
                         'size' => '15',
+                        'placeholder' => '(___) ___-____',
                     ],
                     'label' => 'Phone: ',
                     'label_attr' => ['class' => 'mr-2'],

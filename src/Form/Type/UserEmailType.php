@@ -24,18 +24,22 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
  */
 class UserEmailType extends AbstractType
 {
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
                 ->add('email', EmailType::class, [
+                    'attr' => [
+                        'autofocus' => null,
+                    ],
                     'label' => 'Email: ',
                     'label_attr' => ['class' => 'mr-2'],
                 ])
                 ->add('submit', SubmitType::class, [
-                    'attr'=>[
-                        'class'=>'btn btn-sm btn-info'
+                    'attr' => [
+                        'class' => 'btn btn-sm btn-info'
                     ],
-                    'label'=>'Submit request'
+                    'label' => 'Submit request'
                 ])
         ;
     }
@@ -46,4 +50,5 @@ class UserEmailType extends AbstractType
             'required' => false,
         ));
     }
+
 }

@@ -31,6 +31,7 @@ class OpportunityType extends AbstractType
                     'attr' => [
                         'class' => 'mb-2',
                         'required' => true,
+                        'autofocus' => null,
                     ],
                     'label_attr' => ['class' => 'mr-2'],
                 ])
