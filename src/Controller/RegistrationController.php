@@ -58,12 +58,8 @@ class RegistrationController extends AbstractController
 
             // if nonUser
             if (null === $user) {
-                $forgotView = $this->renderView(
-                        'Email/non_user_forgotten_password.html.twig',
-                        [
-                            'supportEmail' => $sender
-                        ]
-                );
+                $view = 'Email/non_user_forgotten_password.html.twig';
+                $context = ['supportEmail' => $sender];
             } else {
                 $token = md5(uniqid(rand(), true));
                 $user->setConfirmationToken($token);
@@ -72,18 +68,17 @@ class RegistrationController extends AbstractController
 
                 $em->persist($user);
                 $em->flush();
-                $forgotView = $this->renderView(
-                        'Email/forgotten.html.twig',
-                        [
+                $view = 'Email/forgotten.html.twig';
+                $context = [
                             'fname' => $user->getFname(),
                             'token' => $token,
                             'expiresAt' => $expiresAt,
-                        ]
-                        )
-                ;
+                        ];
             }
+            
             $mailParams = [
-                'view' => $forgotView,
+                'view' => $view,
+                'context' => $context,
                 'recipient' => $email,
                 'subject' => 'Volunteer Connections forgotten password',
             ];
@@ -200,20 +195,15 @@ class RegistrationController extends AbstractController
             $this->volunteerProperties($volunteer, $userData);
 
             // send confirmation email
-            $view = $this->renderView(
-                    'Email/volunteer_confirmation.html.twig',
-                    [
+            $mailParams = [
+                'view' => 'Email/volunteer_confirmation.html.twig',
+                'context' => [
                         'fname' => $volunteer->getFname(),
                         'token' => $volunteer->getConfirmationToken(),
                         'expires' => $volunteer->getTokenExpiresAt(),
-                    ]
-            );
-            $recipient = $volunteer->getEmail();
-            $subject = 'Volunteer Connections';
-            $mailParams = [
-                'view' => $view,
-                'recipient' => $recipient,
-                'subject' => $subject,
+                    ],
+                'recipient' => $volunteer->getEmail(),
+                'subject' => 'Volunteer Connections',
             ];
             $mailer->appMailer($mailParams);
 
@@ -258,21 +248,16 @@ class RegistrationController extends AbstractController
             $org->setStaff($staff);
             $org->setActive(false);
             // send confirmation email
-            $view = $this->renderView(
-                    'Email/staff_confirmation.html.twig',
-                    [
+            $mailParams = [
+                'view' => 'Email/staff_confirmation.html.twig',
+                'context' => [
                         'fname' => $staff->getFname(),
                         'token' => $staff->getConfirmationToken(),
                         'expires' => $staff->getTokenExpiresAt(),
                         'orgname' => $org->getOrgname(),
-                    ]
-            );
-            $recipient = $staff->getEmail();
-            $subject = 'Volunteer Connections';
-            $mailParams = [
-                'view' => $view,
-                'recipient' => $recipient,
-                'subject' => $subject,
+                    ],
+                'recipient' => $staff->getEmail(),
+                'subject' => 'Volunteer Connections',
             ];
             $mailer->appMailer($mailParams);
 
@@ -361,13 +346,11 @@ class RegistrationController extends AbstractController
             $org->setActive(true);
             $em->persist($org);
             // notice to admin
-            $view = $this->renderView('Email/new_nonprofit_notice.html.twig', [
-                'npo' => $org,
-            ]);
             $mailParams = [
-                'view' => $view,
+                'view' => 'Email/new_nonprofit_notice.html.twig',
+                'context' => ['npo' => $org,],
                 'recipient' => $this->getParameter('app.npo_activater'),
-                'subject' => 'New Nonprofit Registration'
+                'subject' => 'New Nonprofit Registration',
             ];
 
             $mailer->appMailer($mailParams);

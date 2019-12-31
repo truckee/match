@@ -70,12 +70,9 @@ class AdminController extends EasyAdminController
         if (false === $status) {
             $staff->setLocked(false);
             $staff->setEnabled(true);
-            $view = $this->renderView('Email/nonprofit_activated.html.twig', [
-                'npo' => $npo,
-                'staff' => $npo->getStaff(),
-            ]);
             $mailParams = [
-                'view' => $view,
+                'view' => 'Email/nonprofit_activated.html.twig',
+                'context' => ['npo' => $npo, 'staff' => $npo->getStaff(),],
                 'recipient' => $npo->getStaff()->getEmail(),
                 'subject' => 'Nonprofit activated!',
             ];
@@ -173,7 +170,7 @@ class AdminController extends EasyAdminController
         $nonprofit = $staff->getNonprofit();
         $form = $this->createForm(UserType::class, $replacement, [
             'data_class' => Staff::class,
-            'npo_id'=> $nonprofit->getId(),
+            'npo_id' => $nonprofit->getId(),
         ]);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
@@ -181,19 +178,21 @@ class AdminController extends EasyAdminController
             $id = $request->request->get('user')['npoid'];
             $token = md5(uniqid(rand(), true));
             $expiresAt = new \DateTime();
-            $view = $this->renderView('Email/staff_replacement.html.twig', [
+            $view = 'Email/staff_replacement.html.twig';
+            $context = [
                 'replacement' => $replacement,
                 'nonprofit' => $nonprofit,
                 'token' => $token,
                 'expires' => $expiresAt,
-            ]);
+            ];
             $mailParams = [
                 'view' => $view,
                 'recipient' => $email,
-                'subject' => $nonprofit->getOrgname() . ' staff replacement'
+                'subject' => $nonprofit->getOrgname() . ' staff replacement',
+                'context' => $context,
             ];
             $mailer->appMailer($mailParams);
-            
+
             $replacement->setConfirmationToken($token);
             $replacement->setTokenExpiresAt($expiresAt->add(new \DateInterval('PT3H')));
             $replacement->setReplacementOrg($id);
@@ -202,7 +201,7 @@ class AdminController extends EasyAdminController
             $replacement->setEnabled(false);
             $em->persist($replacement);
             $em->flush();
-            
+
             $this->addFlash('success', 'Replacement email sent');
 
             return $this->redirectToRoute('dashboard');

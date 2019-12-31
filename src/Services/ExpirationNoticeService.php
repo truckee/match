@@ -33,14 +33,13 @@ class ExpirationNoticeService
         }
         foreach ($opps as $item) {
             $staff = $item->getNonprofit()->getStaff();
-            $view = $templating->render('Email/expiration_notice.html.twig', [
-                'opp'=>$item,
-                'staff'=>$staff,
-            ]);
+            $view = 'Email/expiration_notice.html.twig';
+            $context = ['opp'=>$item, 'staff'=>$staff,];
             $mailParams = [
                 'view'=>$view,
                 'recipient'=>$staff->getEmail(),
                 'subject'=>'Expiring opportunity',
+                'context' => $context,
             ];
             $mailer->appMailer($mailParams);
         }

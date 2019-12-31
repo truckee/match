@@ -115,50 +115,29 @@ class RegistrationTest extends WebTestCase
     
     public function testFogottenPasswordNotAUser()
     {
-        $this->client->followRedirects(false);
         $this->client->request('GET', '/register/forgot');
         $this->client->submitForm('Submit request', [
             'user_email[email]' => 'swimming@pool.com',
         ]);
         
-        $mailCollector = $this->client->getProfile()->getCollector('swiftmailer');
-
-        $this->assertSame(1, $mailCollector->getMessageCount());
-        $collectedMessages = $mailCollector->getMessages();
-        $message = $collectedMessages[0];
-        
-        $this->assertStringContainsString('email is not recognized', $message->getBody());
+        $this->assertStringContainsString('Email sent to address provided', $this->client->getResponse()->getContent());
     }
     
     public function testFogottenPasswordUser()
     {
-        $this->client->followRedirects(false);
         $this->client->request('GET', '/register/forgot');
         $this->client->submitForm('Submit request', [
             'user_email[email]' => 'random@bogus.info',
         ]);
         
-        $mailCollector = $this->client->getProfile()->getCollector('swiftmailer');
-
-        $this->assertSame(1, $mailCollector->getMessageCount());
-        $collectedMessages = $mailCollector->getMessages();
-        $message = $collectedMessages[0];
-        
-        $this->assertStringContainsString('to change your password', $message->getBody());
+        $this->assertStringContainsString('Email sent to address provided', $this->client->getResponse()->getContent());
     }
     
-    public function testNewNonprofitActivationEmail()
+    public function testNewNonprofitActivation()
     {
-        $this->client->followRedirects(false);
         $this->client->request('GET', '/register/confirm/tuvxyz');
         
-        $mailCollector = $this->client->getProfile()->getCollector('swiftmailer');
-
-        $this->assertSame(1, $mailCollector->getMessageCount());
-        $collectedMessages = $mailCollector->getMessages();
-        $message = $collectedMessages[0];
-        
-        $this->assertStringContainsString('new nonprofit has submitted registration', $message->getBody());
+        $this->assertStringContainsString('Account is confirmed; please wait for nonprofit activation to login', $this->client->getResponse()->getContent());
     }
     
 }

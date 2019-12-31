@@ -11,23 +11,18 @@
 
 namespace App\Services;
 
-/**
- *
- */
+use Symfony\Bridge\Twig\Mime\TemplatedEmail;
+
 class EmailerService
 {
-    private $defaultMailer;
-    private $spoolMailer;
+    private $mailer;
     private $sender;
-    private $projectDir;
     private $activater;
 
-    public function __construct($defaultMailer, $spoolMailer, $senderAddress, $projectDir, $npoActivater)
+    public function __construct($mailer, $senderAddress, $npoActivater)
     {
-        $this->defaultMailer = $defaultMailer;
-        $this->spoolMailer = $spoolMailer;
+        $this->mailer = $mailer;
         $this->sender = $senderAddress;
-        $this->projectDir = $projectDir;
         $this->activater = $npoActivater;
     }
 
@@ -36,20 +31,15 @@ class EmailerService
         if (null === $mailParams['recipient']) {
             $mailParams['recipient'] = $this->activater;
         }
-
-        $message = (new \Swift_Message($mailParams['subject']))
-                ->setFrom($this->sender)
-                ->setTo($mailParams['recipient'])
-                ->setBody(
-                    $mailParams['view'],
-                    'text/html'
-                )
-        ;
-
-        if (!array_key_exists('spool', $mailParams)) {
-            $this->defaultMailer->send($message);
-        } else {
-            $this->spoolMailer->send($message);
-        }
+        $email = (new TemplatedEmail())
+                ->from($this->sender)
+                ->to($mailParams['recipient'])
+                ->subject($mailParams['subject'])
+                ->htmlTemplate($mailParams['view'])
+                ->context($mailParams['context']);
+        
+        $this->mailer->send($email);
+        
+        return $email;
     }
 }

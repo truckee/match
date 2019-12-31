@@ -75,14 +75,13 @@ class NewOppEmailService
                 $opportunities[] = $this->em->getRepository(Opportunity::class)->find($oppId);
             }
             // email volunteer
-            $view = $templating->render('Email/volunteer_opportunities.html.twig', [
-                'fname' => $fname,
-                'opportunities' => $opportunities,
-            ]);
+            $view = 'Email/volunteer_opportunities.html.twig';
+            $context = ['fname' => $fname, 'opportunities' => $opportunities,];
             $mailParams = [
                 'view' => $view,
                 'recipient' => $email,
                 'subject' => 'Latest volunteer opportunities',
+                'context' => $context,
                 'spool' => true,
             ];
             $mailer->appMailer($mailParams);
@@ -91,14 +90,13 @@ class NewOppEmailService
         // email admin on emails sent
         $countVolunteers = $list->getNVolunteers();
         $countOpportunities = $list->getNOpportunities();
-        $view = $templating->render('Email/opportunity_email_report.html.twig', [
-                'nVolunteers' => $countVolunteers,
-                'nOpportunities' => $countOpportunities,
-            ]);
+        $view = 'Email/opportunity_email_report.html.twig';
+        $context = ['nVolunteers' => $countVolunteers, 'nOpportunities' => $countOpportunities,];
         $mailParams = [
             'view'=>$view,
             'recipient'=> $this->activater,
-            'subject'=>'Volunteer opportunities email report'
+            'subject'=>'Volunteer opportunities email report',
+            'context' => $context,
         ];
         $mailer->appMailer($mailParams);
         

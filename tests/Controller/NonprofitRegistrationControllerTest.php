@@ -39,26 +39,7 @@ class NonprofitRegistrationControllerTest extends WebTestCase
         
         $this->assertStringContainsString('Look for the confirmation email', $content);
     }
-    
-    // Note: this test uses text from templates/Email/staff_confirmation.html.twig
-    public function testNonprofitRegistrationEmail()
-    {
-        $params = [
-            'ein'=> '987654321',
-            'email'=>'quasi@modo.org'
-        ];
-        $this->client->followRedirects(false);
-        $this->nonprofitRegistration($params);
         
-        $mailCollector = $this->client->getProfile()->getCollector('swiftmailer');
-
-        $this->assertSame(1, $mailCollector->getMessageCount());
-        $collectedMessages = $mailCollector->getMessages();
-        $message = $collectedMessages[0];
-        
-        $this->assertStringContainsString('until the Foundation has activated the account', $message->getBody());
-    }
-    
     public function testNonprofitAlreadyRegistered()
     {
         $params = [
