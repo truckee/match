@@ -38,6 +38,13 @@ class VolunteerRegistrationControllerTest extends WebTestCase
         $this->assertStringContainsString('At least one skill', $this->client->getResponse()->getContent());
     }
 
+    public function testVolunteerRegistration()
+    {
+        $content = $this->volunteerRegistration();
+
+        $this->assertStringContainsString('registration confirmation has been sent', $content);
+    }
+
     public function testDuplicateVolunteerRegistration()
     {
         $content = $this->volunteerRegistration();
@@ -50,8 +57,9 @@ class VolunteerRegistrationControllerTest extends WebTestCase
     }
 
     // Note: this test uses text from templates/Email/volunteer_confirmation.html.twig
-    public function testVolunteerRegistration()
+    public function testVolunteerRegistrationEmail()
     {
+        $this->client->followRedirects(false);
         $crawler = $this->client->request('GET', '/register/volunteer');
         $buttonCrawlerNode = $crawler->selectButton('submit');
         $form = $buttonCrawlerNode->form();
@@ -64,7 +72,13 @@ class VolunteerRegistrationControllerTest extends WebTestCase
         $form['new_user[skills]'][0]->tick();
         $this->client->submit($form);
 
-        $this->assertStringContainsString('A volunteer registration confirmation has been sent to your email address', $this->client->getResponse()->getContent());
+        $mailCollector = $this->client->getProfile()->getCollector('swiftmailer');
+
+        $this->assertSame(1, $mailCollector->getMessageCount());
+        $collectedMessages = $mailCollector->getMessages();
+        $message = $collectedMessages[0];
+
+        $this->assertStringContainsString('you will begin to receive emails', $message->getBody());
     }
 
     private function volunteerRegistration()

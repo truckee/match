@@ -58,8 +58,9 @@ class RegistrationController extends AbstractController
 
             // if nonUser
             if (null === $user) {
-                $view = 'Email/non_user_forgotten_password.html.twig';
-                $context = ['supportEmail' => $sender];
+                $view = $this->renderView('Email/non_user_forgotten_password.html.twig', [
+                    'supportEmail' => $sender
+                ]);
             } else {
                 $token = md5(uniqid(rand(), true));
                 $user->setConfirmationToken($token);
@@ -68,17 +69,15 @@ class RegistrationController extends AbstractController
 
                 $em->persist($user);
                 $em->flush();
-                $view = 'Email/forgotten.html.twig';
-                $context = [
-                            'fname' => $user->getFname(),
-                            'token' => $token,
-                            'expiresAt' => $expiresAt,
-                        ];
+                $view = $this->renderView('Email/forgotten.html.twig', [
+                    'fname' => $user->getFname(),
+                    'token' => $token,
+                    'expiresAt' => $expiresAt,
+                ]);
             }
-            
+
             $mailParams = [
                 'view' => $view,
-                'context' => $context,
                 'recipient' => $email,
                 'subject' => 'Volunteer Connections forgotten password',
             ];
@@ -195,13 +194,13 @@ class RegistrationController extends AbstractController
             $this->volunteerProperties($volunteer, $userData);
 
             // send confirmation email
+            $view = $this->renderView('Email/volunteer_confirmation.html.twig', [
+                    'fname' => $volunteer->getFname(),
+                    'token' => $volunteer->getConfirmationToken(),
+                    'expires' => $volunteer->getTokenExpiresAt(),
+                ]);
             $mailParams = [
-                'view' => 'Email/volunteer_confirmation.html.twig',
-                'context' => [
-                        'fname' => $volunteer->getFname(),
-                        'token' => $volunteer->getConfirmationToken(),
-                        'expires' => $volunteer->getTokenExpiresAt(),
-                    ],
+                'view' => $view,
                 'recipient' => $volunteer->getEmail(),
                 'subject' => 'Volunteer Connections',
             ];
@@ -248,14 +247,14 @@ class RegistrationController extends AbstractController
             $org->setStaff($staff);
             $org->setActive(false);
             // send confirmation email
+            $view = $this->renderView('Email/staff_confirmation.html.twig', [
+                    'fname' => $staff->getFname(),
+                    'token' => $staff->getConfirmationToken(),
+                    'expires' => $staff->getTokenExpiresAt(),
+                    'orgname' => $org->getOrgname(),
+                ]);
             $mailParams = [
-                'view' => 'Email/staff_confirmation.html.twig',
-                'context' => [
-                        'fname' => $staff->getFname(),
-                        'token' => $staff->getConfirmationToken(),
-                        'expires' => $staff->getTokenExpiresAt(),
-                        'orgname' => $org->getOrgname(),
-                    ],
+                'view' => $view,
                 'recipient' => $staff->getEmail(),
                 'subject' => 'Volunteer Connections',
             ];
@@ -346,9 +345,9 @@ class RegistrationController extends AbstractController
             $org->setActive(true);
             $em->persist($org);
             // notice to admin
+            $view = $this->renderView('Email/new_nonprofit_notice.html.twig', ['npo' => $org,]);
             $mailParams = [
-                'view' => 'Email/new_nonprofit_notice.html.twig',
-                'context' => ['npo' => $org,],
+                'view' => $view,
                 'recipient' => $this->getParameter('app.npo_activater'),
                 'subject' => 'New Nonprofit Registration',
             ];

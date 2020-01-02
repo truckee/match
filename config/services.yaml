@@ -30,8 +30,10 @@ services:
     
     ## service to send immediate (memory) and spooled email
     App\Services\EmailerService:
-        $mailer: '@mailer'
+        $spoolMailer:   '@swiftmailer.mailer.spooler'
+        $defaultMailer: '@swiftmailer.mailer'
         $senderAddress: '%app.sender_address%'
+        $projectDir:    '%kernel.project_dir%'
         $npoActivater:  '%app.npo_activater%'
 
     App\Services\NewOppEmailService:

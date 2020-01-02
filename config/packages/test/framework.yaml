@@ -3,8 +3,8 @@ framework:
     session:
         storage_id: session.storage.mock_file
     profiler: { collect: true }
-    mailer:
-        dsn: 'null://null'
+#    mailer:
+#        dsn: 'null://null'
 liip_test_fixtures:
     keep_database_and_schema: true
     cache_db:

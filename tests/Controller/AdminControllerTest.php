@@ -55,12 +55,18 @@ class AdminControllerTest extends WebTestCase
         $this->assertStringContainsString('Nonprofit activated!', $this->client->getResponse()->getContent());
     }
     
-    public function testActivation()
+    public function testActivationEmail()
     {
         $id = $this->fixtures->getReference('marmot')->getId();
+        $this->client->followRedirects(false);
         $this->client->request('GET', '/admin/status/' . $id);
+        $mailCollector = $this->client->getProfile()->getCollector('swiftmailer');
+
+        $this->assertSame(1, $mailCollector->getMessageCount());
+        $collectedMessages = $mailCollector->getMessages();
+        $message = $collectedMessages[0];
         
-        $this->assertStringContainsString('Nonprofit activated!', $this->client->getResponse()->getContent());        
+        $this->assertStringContainsString('You will now be able post opportunities', $message->getBody());        
     }
     
     public function testDeactivateNonprofit()

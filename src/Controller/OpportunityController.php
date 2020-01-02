@@ -58,8 +58,6 @@ class OpportunityController extends AbstractController
 
             $volunteers = $em->getRepository(Volunteer::class)->opportunityEmails($opportunity);
             $oppMail->newOppEmail($mailer, $volunteers, $opportunity);
-//            $oppMail->addToList($volunteers, $opportunity->getId());
-
             $this->addFlash(
                     'success',
                     'Opportunity added; ' . count($volunteers) . ' volunteer(s) will be notified'

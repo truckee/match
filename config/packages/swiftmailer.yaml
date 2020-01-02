@@ -1,0 +1,12 @@
+swiftmailer:
+    default_mailer: memory
+    mailers:
+        memory:
+            transport:        smtp
+            spool: { type: 'memory' }
+        spooler:
+                transport:        smtp
+                spool:
+                    type: file
+                    path: '%kernel.project_dir%/var/spool'
+        

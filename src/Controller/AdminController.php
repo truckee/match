@@ -70,9 +70,12 @@ class AdminController extends EasyAdminController
         if (false === $status) {
             $staff->setLocked(false);
             $staff->setEnabled(true);
+            $view = $this->renderView('Email/nonprofit_activated.html.twig', [
+                'npo' => $npo, 
+                'staff' => $npo->getStaff(),
+                ]);
             $mailParams = [
-                'view' => 'Email/nonprofit_activated.html.twig',
-                'context' => ['npo' => $npo, 'staff' => $npo->getStaff(),],
+                'view' => $view,
                 'recipient' => $npo->getStaff()->getEmail(),
                 'subject' => 'Nonprofit activated!',
             ];
@@ -178,18 +181,16 @@ class AdminController extends EasyAdminController
             $id = $request->request->get('user')['npoid'];
             $token = md5(uniqid(rand(), true));
             $expiresAt = new \DateTime();
-            $view = 'Email/staff_replacement.html.twig';
-            $context = [
+            $view = $this->renderView('Email/staff_replacement.html.twig', [
                 'replacement' => $replacement,
                 'nonprofit' => $nonprofit,
                 'token' => $token,
                 'expires' => $expiresAt,
-            ];
+            ]);
             $mailParams = [
                 'view' => $view,
                 'recipient' => $email,
                 'subject' => $nonprofit->getOrgname() . ' staff replacement',
-                'context' => $context,
             ];
             $mailer->appMailer($mailParams);
 
