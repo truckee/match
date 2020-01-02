@@ -15,6 +15,7 @@ use App\Entity\Opportunity;
 use App\Entity\Volunteer;
 use App\Form\Type\OpportunityType;
 use App\Form\Type\OpportunitySearchType;
+use App\Services\EmailerService;
 use App\Services\NewOppEmailService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -38,7 +39,7 @@ class OpportunityController extends AbstractController
     /**
      * @Route("/add", name = "opp_add")
      */
-    public function addOpp(Request $request, NewOppEmailService $oppMail)
+    public function addOpp(Request $request, EmailerService $mailer, NewOppEmailService $oppMail)
     {
         $user = $this->getUser();
         if (null === $user || !$user->hasRole('ROLE_STAFF')) {
@@ -56,7 +57,8 @@ class OpportunityController extends AbstractController
             $em->flush();
 
             $volunteers = $em->getRepository(Volunteer::class)->opportunityEmails($opportunity);
-            $oppMail->addToList($volunteers, $opportunity->getId());
+            $oppMail->newOppEmail($mailer, $volunteers, $opportunity);
+//            $oppMail->addToList($volunteers, $opportunity->getId());
 
             $this->addFlash(
                     'success',

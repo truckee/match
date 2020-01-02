@@ -13,11 +13,11 @@ namespace App\Services;
 
 use App\Entity\Opportunity;
 use App\Services\EmailerService;
-use Twig\Environment;
 use Doctrine\ORM\EntityManagerInterface;
 
 class ExpirationNoticeService
 {
+
     private $em;
 
     public function __construct(EntityManagerInterface $em)
@@ -25,7 +25,7 @@ class ExpirationNoticeService
         $this->em = $em;
     }
 
-    public function expirationNotices(EmailerService $mailer, Environment $templating)
+    public function expirationNotices(EmailerService $mailer)
     {
         $opps = $this->em->getRepository(Opportunity::class)->getExpiringOpps();
         if (empty($opps)) {
@@ -34,14 +34,15 @@ class ExpirationNoticeService
         foreach ($opps as $item) {
             $staff = $item->getNonprofit()->getStaff();
             $view = 'Email/expiration_notice.html.twig';
-            $context = ['opp'=>$item, 'staff'=>$staff,];
+            $context = ['opp' => $item, 'staff' => $staff,];
             $mailParams = [
-                'view'=>$view,
-                'recipient'=>$staff->getEmail(),
-                'subject'=>'Expiring opportunity',
+                'view' => $view,
                 'context' => $context,
+                'recipient' => $staff->getEmail(),
+                'subject' => 'Expiring opportunity',
             ];
             $mailer->appMailer($mailParams);
         }
     }
+
 }

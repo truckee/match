@@ -42,4 +42,5 @@ class DefaultController extends AbstractController
         
         return $this->redirectToRoute('home');
     }
+
 }

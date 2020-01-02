@@ -28,7 +28,7 @@ class NewOppEmail
     /**
      * @ORM\Column(type="json_array")
      */
-    private $volunteerEmail = [];
+    private $opportunityEmail = [];
 
     /**
      * @ORM\Column(type="date")
@@ -44,11 +44,6 @@ class NewOppEmail
      * @ORM\Column(type="integer", nullable=true)
      */
     private $nVolunteers;
-
-    /**
-     * @ORM\Column(type="integer", nullable=true)
-     */
-    private $nOpportunities;
     
     public function __construct()
     {
@@ -61,14 +56,14 @@ class NewOppEmail
         return $this->id;
     }
 
-    public function getVolunteerEmail(): ?array
+    public function getOpportunityEmail(): ?array
     {
-        return $this->volunteerEmail;
+        return $this->opportunityEmail;
     }
 
-    public function setVolunteerEmail(array $volunteerEmail): self
+    public function setOpportunityEmail(array $opportunityEmail): self
     {
-        $this->volunteerEmail = $volunteerEmail;
+        $this->opportunityEmail = $opportunityEmail;
 
         return $this;
     }
@@ -105,18 +100,6 @@ class NewOppEmail
     public function setNVolunteers(?int $nVolunteers): self
     {
         $this->nVolunteers = $nVolunteers;
-
-        return $this;
-    }
-
-    public function getNOpportunities(): ?int
-    {
-        return $this->nOpportunities;
-    }
-
-    public function setNOpportunities(?int $nOpportunities): self
-    {
-        $this->nOpportunities = $nOpportunities;
 
         return $this;
     }
