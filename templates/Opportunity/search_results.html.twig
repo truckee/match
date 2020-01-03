@@ -20,7 +20,7 @@
                             <tr><td><a class="cfwn-blue" href="{{ path('npo_view', {'id': opp.nonprofit.id}) }}">{{ npo }}</a>
                             <tr><td><a class="cfwn-blue" href="mailto:{{ opp.nonprofit.staff.email }}">{{ opp.nonprofit.staff.email }}</a>
                             <tr><td>
-                                    {% if opp.nonprofit.website is defined %}
+                                    {% if opp.nonprofit.website is not null %}
                                         <a class="cfwn-blue" href="{{ opp.nonprofit.website }}">Website</a>
                                     {% endif %}
                         </table>
