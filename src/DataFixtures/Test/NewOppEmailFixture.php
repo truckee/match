@@ -33,7 +33,6 @@ class NewOppEmailFixture extends AbstractFixture implements OrderedFixtureInterf
         $opportunity = $this->getReference('opp');
         $oppId = $opportunity->getId();
         $new->setDateAdded(new \DateTime());
-        $new->setVolunteerEmail([$vId=>[$oppId]]);
         $new->setNVolunteers(1);
         $manager->persist($new);
         
