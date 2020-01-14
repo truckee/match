@@ -27,9 +27,9 @@ class Opportunity
 {
     public function __construct()
     {
-        $now = new \DateTime();
-        $this->addDate = $now;
+        $this->addDate = new \DateTime();
         $this->active = true;
+        $now = new \DateTime();
         $this->expiredate = $now->add(new \DateInterval('P91D'));
     }
     
@@ -125,11 +125,6 @@ class Opportunity
      *      ))
      */
     protected $skills;
-
-    /**
-     * @ORM\Column(type="json_array")
-     */
-    private $jsonSkill = [];
 
     public function getId(): ?int
     {
@@ -252,7 +247,6 @@ class Opportunity
     public function addSkill(Skill $skill)
     {
         $this->skills[] = $skill;
-        array_push($this->jsonSkill, $skill->getId());
 
         return $this;
     }
@@ -275,22 +269,5 @@ class Opportunity
     public function getSkills()
     {
         return $this->skills;
-    }
-
-    public function getJsonSkill(): ?array
-    {
-        return $this->jsonSkill;
-    }
-    
-    /**
-     * @ORM\PreUpdate()
-     */
-    public function updateJsonSkills()
-    {
-        $skills = $this->skills;
-        $this->jsonSkill = [];
-        foreach ($skills as $item) {
-            array_push($this->jsonSkill, $item->getId());
-        }
     }
 }

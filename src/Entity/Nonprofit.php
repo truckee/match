@@ -139,11 +139,6 @@ class Nonprofit
      */
     protected $focuses;
 
-    /**
-     * @ORM\Column(type="json_array")
-     */
-    private $jsonFocus = [];
-
     public function getId(): ?int
     {
         return $this->id;
@@ -274,7 +269,6 @@ class Nonprofit
     public function addFocus(Focus $focus)
     {
         $this->focuses[] = $focus;
-        array_push($this->jsonFocus, $focus->getId());
 
         return $this;
     }
@@ -326,23 +320,6 @@ class Nonprofit
         $this->ein = $ein;
 
         return $this;
-    }
-
-    public function getJsonFocus(): ?array
-    {
-        return $this->jsonFocus;
-    }
-
-    /**
-     * @ORM\PreUpdate()
-     */
-    public function updateJsonFocus()
-    {
-        $focuses = $this->focuses;
-        $this->jsonFocus = [];
-        foreach ($focuses as $item) {
-            array_push($this->jsonFocus, $item->getId());
-        }
     }
 
 }

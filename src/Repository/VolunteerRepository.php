@@ -21,32 +21,41 @@ class VolunteerRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Volunteer::class);
     }
-
+    
     public function opportunityEmails($opportunity)
     {
-        $nonprofit = $opportunity->getNonprofit();
-        $orgFocuses = $nonprofit->getJsonFocus();
-        $oppSkills = $opportunity->getJsonSkill();
+        $conn  = $this->getEntityManager()->getConnection();
+        $npoId = $opportunity->getNonprofit()->getId();
+        $oppId = $opportunity->getId();
         
-        // get elibible volunteers
-        $qb = $this->createQueryBuilder('v')
-                ->select('v')
-                ->where('v.receiveEmail = true')
-                ->andWhere('v.enabled = true')
-                ->andWhere('v.locked = false')
-                ->getQuery()->getResult();
-        $volunteers = [];
-        foreach ($qb as $entity) {
-            $id = $entity->getId();
-            if (!empty(array_intersect($orgFocuses, $entity->getJsonFocus()))) {
-                array_push($volunteers, $id);
-            }
-            if (!empty(array_intersect($oppSkills, $entity->getJsonSkill())) &&
-                    !in_array($id, $volunteers)) {
-                array_push($volunteers, $id);
+        // focus selected volunteers
+        $focusSQL = 'SELECT v.id '
+                . 'FROM volunteer v '
+                . 'JOIN vol_focus vf ON vf.volid = v.id '
+                . 'JOIN org_focus of ON of.focusid = vf.focusid '
+                . 'WHERE of.orgId = :npoId'
+                ;
+        $focusStmt = $conn->prepare($focusSQL);
+        $focusStmt->execute(['npoId' => $npoId]);
+        $focusVolunteers = $focusStmt->fetchAll();
+        foreach ($focusVolunteers as $item) {
+            $volunteers[] = $item['id'];
+        }
+        
+        // skill selected volunteers
+        $skillSQL = 'SELECT v.id FROM volunteer v '
+                . 'JOIN vol_skill vs on vs.volId = v.id '
+                . 'JOIN opp_skill os ON os.skillId = vs.skillId '
+                . 'WHERE os.oppId = :oppId';
+        $skillStmt = $conn->prepare($skillSQL);
+        $skillStmt->execute(['oppId' => $oppId]);
+        $skillVolunteers = $skillStmt->fetchAll();
+        foreach ($skillVolunteers as $item) {
+            if (!in_array($item['id'], $volunteers)) {
+                $volunteers[] = $item['id'];
             }
         }
-
+        
         return $volunteers;
     }
 }

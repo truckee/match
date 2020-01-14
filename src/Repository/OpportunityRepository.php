@@ -21,6 +21,7 @@ use Doctrine\ORM\QueryBuilder;
  */
 class OpportunityRepository extends ServiceEntityRepository
 {
+
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Opportunity::class);
@@ -49,26 +50,53 @@ class OpportunityRepository extends ServiceEntityRepository
                         ->getQuery()->getResult();
     }
 
+    /**
+     * Return opportunities, selected by focus and/or skill criteria
+     * 
+     * $focuses, $skills are arrays of ids
+     */
     public function getOppsByFocusOrSkill($focuses, $skills)
     {
-        $now = new \DateTime();
-        $qb = $this->createQueryBuilder('o');
+        $conn = $this->getEntityManager()->getConnection();
+        $now = date('Y-m-d');
+        $opps = [];
 
-        $opps = $this->opportunityQueryBuilder($qb)
-                        ->addSelect('o, n.jsonFocus, o.jsonSkill')
-                        ->andWhere('o.expiredate > :now')
-                        ->setParameter('now', $now)
-                        ->getQuery()->getResult()
-        ;
-        $matches = [];
-        foreach ($opps as $item) {
-            if (!empty(array_intersect($item['jsonFocus'], $focuses)) ||
-                    !empty(array_intersect($item['jsonSkill'], $skills))) {
-                array_push($matches, $item[0]);
+        // opps by skills
+        if (!empty($skills)) {
+            $skillSQL = 'SELECT o.id FROM opportunity o '
+                    . 'JOIN nonprofit n ON n.id = o.orgId '
+                    . 'JOIN opp_skill os ON os.oppId = o.id '
+                    . 'WHERE n.active = true '
+                    . 'AND o.expiredate > ' . $now . ' '
+                    . 'AND os.skillId IN (?)';
+            $skillStmt = $conn->executeQuery($skillSQL, 
+                    [$skills], [\Doctrine\DBAL\Connection::PARAM_INT_ARRAY]);
+            $skillOpps = $skillStmt->fetchAll();
+            foreach ($skillOpps as $item) {
+                $opps[] = $this->getEntityManager()->getRepository(Opportunity::class)->find($item['id']);
             }
         }
-
-        return $matches;
+        
+        // opps by focus
+        if (!empty($focuses)) {
+            $focusSQL = 'SELECT o.id FROM opportunity o '
+                    . 'JOIN nonprofit n ON n.id = o.orgId '
+                    . 'JOIN org_focus of ON of.orgId = n.id '
+                    . 'WHERE n.active = true '
+                    . 'AND o.expiredate > ' . $now . ' '
+                    . 'AND of.focusId IN (?)'
+            ;
+            $focusStmt = $conn->executeQuery($focusSQL, 
+                    [$focuses], [\Doctrine\DBAL\Connection::PARAM_INT_ARRAY]);
+            $focusOpps = $focusStmt->fetchAll();
+            foreach ($focusOpps as $item) {
+                if (!in_array($item['id'], $focusOpps)) {
+                    $opps[] = $this->getEntityManager()->getRepository(Opportunity::class)->find($item['id']);
+                }
+            }
+        }
+        
+        return $opps;
     }
 
     public function getExpiringOpps()

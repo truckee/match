@@ -12,8 +12,6 @@
 namespace App\DataFixtures\Test;
 
 use App\Entity\NewOppEmail;
-use App\DataFixtures\TEST\OpportunityFixture;
-use App\DataFixtures\TEST\UserFixture;
 use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
