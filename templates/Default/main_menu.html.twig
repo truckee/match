@@ -32,7 +32,7 @@
                     <div class="dropdown-menu" aria-labelledby="navbarAccount">
                         <a class="dropdown-item" href="{{ path('reset_password') }}">Change password</a>
                             <a class="dropdown-item" href="{{ path('profile_person') }}">Edit personal profile</a>
-                        {% if is_granted("ROLE_STAFF") %}
+                        {% if is_granted("ROLE_STAFF") and not is_granted('ROLE_ADMIN')%}
                             <a class="dropdown-item" href="{{ path('profile_nonprofit') }}">Edit nonprofit profile</a>
                         {% endif %}
                     </div>
