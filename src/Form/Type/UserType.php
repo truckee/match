@@ -14,6 +14,7 @@ namespace App\Form\Type;
 use App\Entity\Volunteer;
 use App\Form\Type\Field\FocusFieldType;
 use App\Form\Type\Field\SkillFieldType;
+use App\Validator\Constraints\GloballyUnique;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -27,6 +28,7 @@ use Symfony\Component\Form\FormEvents;
  */
 class UserType extends AbstractType
 {
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
@@ -65,22 +67,24 @@ class UserType extends AbstractType
 
             if (null === $user->getId()) {
                 $form->add('email', null, [
-                            'attr' => [
-                                'class' => 'mb-2',
-                                'size' => '15',
-                                'required' => true,
-                            ],
-                            'label' => 'Email: ',
-                            'label_attr' => ['class' => 'mr-2'],
-                            'constraints' => [new NotBlank(['message' => "Email is required"])],
-                        ])
-                ;
-                if (null !== $form->getConfig()->getOption('npo_id')) {
-                        $form->add('npoid', HiddenType::class, [
-                            'mapped' => false,
-                            'data' => $form->getConfig()->getOption('npo_id')
-                        ]);
-                }
+                    'attr' => [
+                        'class' => 'mb-2',
+                        'size' => '15',
+                        'required' => true,
+                    ],
+                    'label' => 'Email: ',
+                    'label_attr' => ['class' => 'mr-2'],
+                    'constraints' => [
+                        new NotBlank(['message' => "Email is required"]),
+                        new GloballyUnique(),
+                    ]
+                ]);
+            }
+            if (null === $user->getId() && null !== $form->getConfig()->getOption('npo_id')) {
+                $form->add('npoid', HiddenType::class, [
+                    'mapped' => false,
+                    'data' => $form->getConfig()->getOption('npo_id')
+                ]);
             }
         });
     }
@@ -93,4 +97,5 @@ class UserType extends AbstractType
             'npo_id' => null,
         ]);
     }
+
 }

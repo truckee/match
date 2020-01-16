@@ -9,13 +9,12 @@
 
 //src/Form/Type/UserEmailType.php
 
-namespace App\Form\Type;
+namespace App\Form\Type\Field;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Form\Extension\Core\Type\EmailType;
-use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Validator\Constraints\NotBlank;
 
 /**
  * Description of EmailType
@@ -28,19 +27,18 @@ class UserEmailType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-                ->add('email', EmailType::class, [
-                    'attr' => [
-                        'autofocus' => null,
-                    ],
-                    'label' => 'Email: ',
-                    'label_attr' => ['class' => 'mr-2'],
-                ])
-                ->add('submit', SubmitType::class, [
-                    'attr' => [
-                        'class' => 'btn btn-sm btn-info'
-                    ],
-                    'label' => 'Submit request'
-                ])
+                ->add('email', null, [
+                            'attr' => [
+                                'class' => 'mb-2',
+                                'size' => '15',
+                                'required' => true,
+                            ],
+                            'label' => 'Email: ',
+                            'label_attr' => ['class' => 'mr-2'],
+                            'constraints' => [
+                                new NotBlank(['message' => "Email is required"])
+                                ]
+                        ])
         ;
     }
 
@@ -48,6 +46,7 @@ class UserEmailType extends AbstractType
     {
         $resolver->setDefaults(array(
             'required' => false,
+            'validation_groups'
         ));
     }
 

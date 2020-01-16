@@ -12,9 +12,8 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
-use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Security\Core\User\UserInterface;
+
 
 /**
  * @ORM\Table(name="usertable")
@@ -23,7 +22,6 @@ use Symfony\Component\Security\Core\User\UserInterface;
  * @ORM\InheritanceType("JOINED")
  * @ORM\DiscriminatorColumn(name="type", type="string")
  * @ORM\DiscriminatorMap({"staff" = "Staff", "volunteer" = "Volunteer", "admin" = "Admin"})
- * @UniqueEntity(fields="email", message="Email already registered")
  */
 abstract class User implements UserInterface
 {
@@ -47,7 +45,6 @@ abstract class User implements UserInterface
 
     /**
      * @ORM\Column(type="string", length=180, unique=true)
-     * @Assert\Email(message="A valid email address is required")
      */
     private $email;
 

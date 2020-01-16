@@ -17,7 +17,7 @@ use App\Entity\Nonprofit;
 use App\Form\Type\NonprofitType;
 use App\Form\Type\NewUserType;
 use App\Form\Type\NewPasswordType;
-use App\Form\Type\UserEmailType;
+use App\Form\Type\Field\UserEmailType;
 use App\Services\EmailerService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -86,7 +86,7 @@ class RegistrationController extends AbstractController
             return $this->redirectToRoute('home');
         }
 
-        return $this->render('Email/forgot.html.twig', [
+        return $this->render('Registration/forgot.html.twig', [
                     'form' => $form->createView(),
                     'headerText' => 'Request forgotten password form'
         ]);
@@ -291,7 +291,7 @@ class RegistrationController extends AbstractController
     /**
      * @Route("/confirm/{token}", name = "confirm")
      */
-    public function confirm(Request $request, EmailerService $mailer, $token = null)
+    public function confirm(EmailerService $mailer, $token = null)
     {
         $em = $this->getDoctrine()->getManager();
         if (null === $token) {

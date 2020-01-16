@@ -13,6 +13,7 @@ namespace App\Form\Type;
 
 use App\Form\Type\Field\FocusFieldType;
 use App\Form\Type\Field\SkillFieldType;
+use App\Validator\Constraints\GloballyUnique;
 use App\Entity\Volunteer;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
@@ -48,15 +49,18 @@ class NewUserType extends AbstractType
                     'constraints' => [new NotBlank(['message' => "First name is required"])],
                 ])
                 ->add('email', null, [
-                    'attr' => [
-                        'class' => 'mb-2',
-                        'size' => '15',
-                        'required' => true,
-                    ],
-                    'label' => 'Email: ',
-                    'label_attr' => ['class' => 'mr-2'],
-                    'constraints' => [new NotBlank(['message' => "Email is required"])],
-                ])
+                            'attr' => [
+                                'class' => 'mb-2',
+                                'size' => '15',
+                                'required' => true,
+                            ],
+                            'label' => 'Email: ',
+                            'label_attr' => ['class' => 'mr-2'],
+                            'constraints' => [
+                                new NotBlank(['message' => "Email is required"]),
+                                new GloballyUnique(),
+                                ]
+                        ])
                 ->add('plainPassword', RepeatedType::class, array(
                     'type' => PasswordType::class,
                     'mapped' => false,

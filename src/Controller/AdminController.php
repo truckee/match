@@ -12,6 +12,7 @@
 namespace App\Controller;
 
 use App\Entity\Admin;
+use App\Entity\Invitation;
 use App\Entity\Nonprofit;
 use App\Entity\Staff;
 use App\Entity\User;
@@ -230,16 +231,31 @@ class AdminController extends EasyAdminController
      */
     public function invite(Request $request, EmailerService $mailer)
     {
-        $user = new Admin();
-        $form = $this->createForm(UserType::class, $user, [
-            'data_class' => Admin::class
+        $admin = new Admin();
+        $form = $this->createForm(UserType::class, $admin, [
+            'data_class' => User::class
         ]);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            $user = $request->request->get('user');
-            $userEmail = $em->getRepository('App:User')->findOneBy(['email' => $email]);
-            
-            dd($user);
+            $em = $this->getDoctrine()->getManager();
+//            $user = $request->request->get('user');
+//            $userEmail = $em->getRepository('App:User')->findOneBy(['email' => $email]);
+//            if (null !== $userEmail) {
+//                $this->addFlash(
+//                    'warning',
+//                    'Email already registered'
+//                );
+//
+//                return $this->redirectToRoute('admin_invite');
+//            }
+            $invite = new Invitation();
+            $invite->setConfirmationToken(md5(uniqid(rand(), true)));
+            $invite->setEmail($admin->getEmail());
+            $invite->setFname($admin->getFname());
+            $invite->setSname($admin->getSname());
+            $expiresAt = new \DateTime();
+            $invite->setTokenExpiresAt($expiresAt->add(new \DateInterval('PT3H')));
+            dd($invite);
         }
         $templates = [
             'Default/_empty.html.twig',

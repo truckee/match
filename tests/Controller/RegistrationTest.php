@@ -117,7 +117,7 @@ class RegistrationTest extends WebTestCase
     {
         $this->client->followRedirects(false);
         $this->client->request('GET', '/register/forgot');
-        $this->client->submitForm('Submit request', [
+        $this->client->submitForm('Submit', [
             'user_email[email]' => 'swimming@pool.com',
         ]);
         
@@ -134,7 +134,7 @@ class RegistrationTest extends WebTestCase
     {
         $this->client->followRedirects(false);
         $this->client->request('GET', '/register/forgot');
-        $this->client->submitForm('Submit request', [
+        $this->client->submitForm('Submit', [
             'user_email[email]' => 'random@bogus.info',
         ]);
         

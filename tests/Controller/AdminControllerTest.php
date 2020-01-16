@@ -118,14 +118,16 @@ class AdminControllerTest extends WebTestCase
         $this->assertStringContainsString('Replacement email sent', $this->client->getResponse()->getContent());
     }
     
-// this test creates spooled messages regardless of the disable_delivery setting
-// use it sparingly    
-//    public function testSpoolEmail()
-//    {
-//        $this->client->followRedirects(false);
-//        $this->client->request('GET', '/admin/spool');
-//        $mailCollector = $this->client->getProfile()->getCollector('swiftmailer');
-//
-//        $this->assertSame(1, $mailCollector->getMessageCount());      
-//    }
+    public function testInviteExistingEmail()
+    {
+        $this->client->request('GET', '/admin/invite');
+        $this->client->submitForm('Save', [
+            'user[fname]' => 'Useless',
+            'user[sname]' => 'Garbage',
+            'user[email]' => 'staff@bogus.info'
+        ]);
+        
+        $this->assertStringContainsString('Email already registered', $this->client->getResponse()->getContent());
+    }
+    
 }
