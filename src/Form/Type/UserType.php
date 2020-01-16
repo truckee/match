@@ -74,11 +74,13 @@ class UserType extends AbstractType
                             'label_attr' => ['class' => 'mr-2'],
                             'constraints' => [new NotBlank(['message' => "Email is required"])],
                         ])
-                        ->add('npoid', HiddenType::class, [
+                ;
+                if (null !== $form->getConfig()->getOption('npo_id')) {
+                        $form->add('npoid', HiddenType::class, [
                             'mapped' => false,
                             'data' => $form->getConfig()->getOption('npo_id')
-                        ])
-                ;
+                        ]);
+                }
             }
         });
     }

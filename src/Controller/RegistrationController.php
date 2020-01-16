@@ -135,8 +135,8 @@ class RegistrationController extends AbstractController
             }
         }
         $templates = [
-            'Default/empty.html.twig',
-            'Registration/password.html.twig',
+            'Default/_empty.html.twig',
+            'Registration/_password.html.twig',
         ];
         $form = $this->createForm(NewPasswordType::class, $user);
         $form->handleRequest($request);
@@ -235,9 +235,9 @@ class RegistrationController extends AbstractController
         $org = new Nonprofit();
         $form = $this->createForm(NonprofitType::class, $org, ['register' => true,]);
         $templates = [
-            'Nonprofit/nonprofit_form.html.twig',
-            'Registration/new_user.html.twig',
-            'Default/focuses.html.twig',
+            'Nonprofit/_nonprofit_form.html.twig',
+            'Registration/_new_user.html.twig',
+            'Default/_focuses.html.twig',
         ];
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
@@ -402,81 +402,81 @@ class RegistrationController extends AbstractController
     }
 
     //  Note that User cannot be instantiated as it is now an abstract class!!!
-//    /**
-//     * @Route("/invite/{token}", name="complete_registration")
-//     */
-//    public function register(Request $request, UserPasswordEncoderInterface $passwordEncoder, $token = null)
-//    {
-//        $em = $this->getDoctrine()->getManager();
-//        $invited = $em->getRepository('App:Invitation')->findOneBy(['confirmationToken' => $token]);
-//
-//        // if bogus token data is presented
-//        if (null === $invited) {
-//            $this->addFlash(
-//                'danger',
-//                'Invalid registration data'
-//            );
-//
-//            return $this->redirectToRoute('home');
-//        }
-//
-//        $email = $invited->getEmail();
-//        $existingUser = $em->getRepository('App:User')->findOneBy(['email' => $email]);
-//
-//        //if $invited has already registered
-//        if (null !== $existingUser) {
-//            $this->addFlash(
-//                'danger',
-//                'User has already registered'
-//            );
-//
-//            return $this->redirectToRoute('home');
-//        }
-//
-//        $user = new User();
-//        $user->setEmail($email);
-//        $user->setFname($invited->getFname());
-//        $user->setSname($invited->getSname());
-//        $user->setUsername($invited->getUsername());
-//        $form = $this->createForm(NewUserType::class, $user);
-//
-//
-//        // 2) handle the submit (will only happen on POST)
-//        $form->handleRequest($request);
-//        if ($form->isSubmitted() && $form->isValid()) {
-//
-//            // 3) Encode the password (you could also do this via Doctrine listener)
-//            $user->setPassword(
-//                $passwordEncoder->encodePassword(
-//                        $user,
-//                        $form->get('plainPassword')->getData()
-//                    )
-//            );
-//            $user->setEnabled(true);
-//            $user->setRoles(['ROLE_USER']);
-//            $em->persist($user);
-//
-//            // remove new user from invitation table
-//            $invitee = $em->getRepository('App:Invitation')->findOneBy(['email' => $user->getEmail()]);
-//            $em->remove($invitee);
-//
-//            $em->flush();
-//
-//            // ... do any other work - like sending them an email, etc
-//            // maybe set a "flash" success message for the user
-//            $this->addFlash(
-//                'success',
-//                'You are now registered and may log in'
-//            );
-//
-//            return $this->redirectToRoute('home');
-//        }
-//
-//        return $this->render(
-//            'Registration/register.html.twig',
-//            array('form' => $form->createView(),
-//                            'headerText' => 'Create new user',
-//                        )
-//        );
-//    }
+    /**
+     * @Route("/invite/{token}", name="complete_registration")
+     */
+    public function register(Request $request, UserPasswordEncoderInterface $passwordEncoder, $token = null)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $invited = $em->getRepository('App:Invitation')->findOneBy(['confirmationToken' => $token]);
+
+        // if bogus token data is presented
+        if (null === $invited) {
+            $this->addFlash(
+                'danger',
+                'Invalid registration data'
+            );
+
+            return $this->redirectToRoute('home');
+        }
+
+        $email = $invited->getEmail();
+        $existingUser = $em->getRepository('App:User')->findOneBy(['email' => $email]);
+
+        //if $invited has already registered
+        if (null !== $existingUser) {
+            $this->addFlash(
+                'danger',
+                'User has already registered'
+            );
+
+            return $this->redirectToRoute('home');
+        }
+
+        $user = new User();
+        $user->setEmail($email);
+        $user->setFname($invited->getFname());
+        $user->setSname($invited->getSname());
+        $user->setUsername($invited->getUsername());
+        $form = $this->createForm(NewUserType::class, $user);
+
+
+        // 2) handle the submit (will only happen on POST)
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+
+            // 3) Encode the password (you could also do this via Doctrine listener)
+            $user->setPassword(
+                $passwordEncoder->encodePassword(
+                        $user,
+                        $form->get('plainPassword')->getData()
+                    )
+            );
+            $user->setEnabled(true);
+            $user->setRoles(['ROLE_USER']);
+            $em->persist($user);
+
+            // remove new user from invitation table
+            $invitee = $em->getRepository('App:Invitation')->findOneBy(['email' => $user->getEmail()]);
+            $em->remove($invitee);
+
+            $em->flush();
+
+            // ... do any other work - like sending them an email, etc
+            // maybe set a "flash" success message for the user
+            $this->addFlash(
+                'success',
+                'You are now registered and may log in'
+            );
+
+            return $this->redirectToRoute('home');
+        }
+
+        return $this->render(
+            'Registration/register.html.twig',
+            array('form' => $form->createView(),
+                            'headerText' => 'Create new user',
+                        )
+        );
+    }
 }

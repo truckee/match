@@ -13,12 +13,10 @@ namespace App\Entity;
 
 use App\Entity\User;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Table(name="admin")
  * @ORM\Entity
- * @UniqueEntity(fields = "email", message="Email already registered")
  */
 class Admin extends User
 {
@@ -30,5 +28,23 @@ class Admin extends User
             'ROLE_STAFF',
             'ROLE_ADMIN',
         ];
+    }
+    
+    /**
+     *
+     * @ORM\Column(type="boolean")
+     */
+    private $activater;
+    
+    public function isActivater()
+    {
+        return $this->activater;
+    }
+    
+    public function setActivater($activater)
+    {
+        $this->activater = $activater;
+        
+        return $this;
     }
 }

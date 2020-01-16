@@ -1,0 +1,7 @@
+<p>Hi {{ fname }},</p>
+<p>You are invited to be an admin user at the ConnectionsReno website.</p>
+<p>Click on this <a href="{{ absolute_url(path('confirm', {'token':token})) }}">link</a> to create
+your account.</p> 
+<p>This link will expire in 3 hours [@ {{ expires|date('g:i A, l, F j') }}].</p>
+<p>Thanks.</p>
+<p>The ConnectionsReno Team</p>

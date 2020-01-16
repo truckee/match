@@ -30,9 +30,9 @@ class OpportunityController extends AbstractController
     public function __construct()
     {
         $this->templates = [
-            'Opportunity/suggestions.html.twig',
-            'Opportunity/opportunity.html.twig',
-            'Default/skills.html.twig'
+            'Opportunity/_suggestions.html.twig',
+            'Opportunity/_opportunity.html.twig',
+            'Default/_skills.html.twig'
         ];
     }
 
@@ -117,9 +117,9 @@ class OpportunityController extends AbstractController
     public function search(Request $request)
     {
         $templates = [
-            'Opportunity/searchInstructions.html.twig',
-            'Default/focuses.html.twig',
-            'Default/skills.html.twig',
+            'Opportunity/_search_instructions.html.twig',
+            'Default/_focuses.html.twig',
+            'Default/_skills.html.twig',
         ];
         $form = $this->createForm(OpportunitySearchType::class);
         $form->handleRequest($request);

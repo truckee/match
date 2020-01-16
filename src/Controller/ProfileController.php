@@ -39,9 +39,9 @@ class ProfileController extends AbstractController
         $npo = $user->getNonprofit();
         $opps = $em->getRepository(Opportunity::class)->findBy(['nonprofit' => $npo], ['oppname' => 'ASC']);
         $templates = [
-            'Nonprofit/nonprofit_form.html.twig',
-            'Default/focuses.html.twig',
-            'Nonprofit/opportunities.html.twig',
+            'Nonprofit/_nonprofit_form.html.twig',
+            'Default/_focuses.html.twig',
+            'Nonprofit/_opportunities.html.twig',
         ];
         $headerText = $npo->getOrgname() . ' profile';
         $form = $this->createForm(NonprofitType::class, $npo);
@@ -80,10 +80,10 @@ class ProfileController extends AbstractController
         if (Staff::class === get_class($user)) {
             $templates[] = 'Default/empty.html.twig';
         }
-        $templates[] = 'Profile/user.html.twig';
+        $templates[] = 'Profile/_user.html.twig';
         if (Volunteer::class === get_class($user)) {
-            $templates[] = 'Default/focuses.html.twig';
-            $templates[] = 'Default/skills.html.twig';
+            $templates[] = 'Default/_focuses.html.twig';
+            $templates[] = 'Default/_skills.html.twig';
         }
         $headerText = $user->getFname() . ' ' . $user->getSname() . ' profile';
         $form = $this->createForm(UserType::class, $user, [

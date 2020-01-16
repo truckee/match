@@ -6,5 +6,7 @@
 {{ form_row(user.fname) }}
 {{ form_row(user.sname) }}
 {{ form_row(user.email) }}
-{{ form_row(user.plainPassword.first) }}
-{{ form_row(user.plainPassword.second) }}
+{% if invite is not defined %}
+    {{ form_row(user.plainPassword.first) }}
+    {{ form_row(user.plainPassword.second) }}
+{% endif %}

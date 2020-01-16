@@ -11,6 +11,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Admin;
 use App\Entity\Nonprofit;
 use App\Entity\Staff;
 use App\Entity\User;
@@ -46,8 +47,9 @@ class AdminController extends EasyAdminController
     }
 
     /**
+     * Activates or deactivates a nonprofit
+     * 
      * @Route("/status/{id}", name="status")
-     *
      */
     public function statusChange(Request $request, EmailerService $mailer, $id = null)
     {
@@ -134,6 +136,7 @@ class AdminController extends EasyAdminController
         return $this->redirectToRoute('easyadmin', ['entity' => $entity]);
     }
 
+    // provides sort ordering for entity display
     protected function createListQueryBuilder($entityClass, $sortDirection, $sortField = null, $dqlFilter = null)
     {
         /* @var EntityManager */
@@ -211,8 +214,8 @@ class AdminController extends EasyAdminController
         return $this->render('Default/form_templates.html.twig', [
                     'form' => $form->createView(),
                     'templates' => [
-                        'Default/empty.html.twig',
-                        'Profile/user.html.twig'],
+                        'Default/_empty.html.twig',
+                        'Profile/_user.html.twig'],
                     'staff' => $staff,
                     'headerText' => 'Replacement for ' . $staff->getFullName() . '<br />' .
                     $staff->getNonprofit()->getOrgname(),
@@ -220,23 +223,35 @@ class AdminController extends EasyAdminController
         ;
     }
 
-//    /**
-//     * Use only for testing spooling of email
-//     *
-//     * @Route("/spool", name = "spool_test")
-//     */
-//    public function spool(EmailerService $mailer)
-////    {
-//        $mailParams = [
-//            'view' => $this->renderView('Email/nonprofit_activated.html.twig', [
-//                'orgname' => 'Vader Enterprises',
-//            ]),
-//            'recipient' => 'developer@bogus.info',
-//            'subject' => 'Spool test',
-//            'spool' => true,
-//        ];
-//        $mailer->appMailer($mailParams);
-//
-//        return $this->redirectToRoute('dashboard');
-//    }
+    /**
+     * Invitation creates a new admin without a password
+     *
+     * @Route("/invite", name="admin_invite")
+     */
+    public function invite(Request $request, EmailerService $mailer)
+    {
+        $user = new Admin();
+        $form = $this->createForm(UserType::class, $user, [
+            'data_class' => Admin::class
+        ]);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $user = $request->request->get('user');
+            $userEmail = $em->getRepository('App:User')->findOneBy(['email' => $email]);
+            
+            dd($user);
+        }
+        $templates = [
+            'Default/_empty.html.twig',
+            'Registration/_new_user.html.twig',
+        ];
+        
+        return $this->render('Default/form_templates.html.twig', [
+            'form' => $form->createView(),
+            'headerText' => 'Invite new admin user',
+            'userHeader' => '',
+            'templates' => $templates,
+            'invite' => true,
+        ]);
+    }
 }
