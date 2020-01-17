@@ -40,7 +40,7 @@ class UserManager
             $admin,
             $user['password']
         ));
-        $admin->setActivater(false);
+        $admin->setActivator(false);
         $admin->setRoles([
             'ROLE_VOLUNTEER',
             'ROLE_STAFF',

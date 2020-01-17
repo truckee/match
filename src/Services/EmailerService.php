@@ -20,21 +20,21 @@ class EmailerService
     private $spoolMailer;
     private $sender;
     private $projectDir;
-    private $activater;
+    private $activator;
 
-    public function __construct($defaultMailer, $spoolMailer, $senderAddress, $projectDir, $npoActivater)
+    public function __construct($defaultMailer, $spoolMailer, $senderAddress, $projectDir, $npoActivator)
     {
         $this->defaultMailer = $defaultMailer;
         $this->spoolMailer = $spoolMailer;
         $this->sender = $senderAddress;
         $this->projectDir = $projectDir;
-        $this->activater = $npoActivater;
+        $this->activator = $npoActivator;
     }
 
     public function appMailer($mailParams)
     {
         if (null === $mailParams['recipient']) {
-            $mailParams['recipient'] = $this->activater;
+            $mailParams['recipient'] = $this->activator;
         }
 
         $message = (new \Swift_Message($mailParams['subject']))

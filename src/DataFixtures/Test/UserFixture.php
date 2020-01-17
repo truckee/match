@@ -122,7 +122,7 @@ class UserFixture extends AbstractFixture implements OrderedFixtureInterface, OR
             $admin = new Admin();
             $admin->setEmail('admin@bogus.info');
             $admin->setEnabled(true);
-            $admin->setActivater(false);
+            $admin->setActivator(false);
             $admin->setFname('Benny');
             $admin->setSname('Borko');
             $admin->setRoles([

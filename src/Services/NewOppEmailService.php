@@ -22,12 +22,12 @@ use Doctrine\ORM\EntityManagerInterface;
 class NewOppEmailService
 {
     private $em;
-    private $activater;
+    private $activator;
 
-    public function __construct(EntityManagerInterface $em, $npoActivater)
+    public function __construct(EntityManagerInterface $em, $npoActivator)
     {
         $this->em = $em;
-        $this->activater = $npoActivater;
+        $this->activator = $npoActivator;
     }
 
     /**
@@ -53,7 +53,7 @@ class NewOppEmailService
         $mailParams = [
             'view'=>'Email/opportunity_email_report.html.twig',
             'context' => ['nVolunteers' => $nVolunteers, 'opportunity' => $opp,],
-            'recipient'=> $this->activater,
+            'recipient'=> $this->activator,
             'subject'=>'Volunteer opportunities email report',
         ];
         $mailer->appMailer($mailParams);

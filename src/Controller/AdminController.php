@@ -22,6 +22,7 @@ use App\Services\EmailerService;
 use App\Services\ChartService;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\EasyAdminController;
 
 /**
@@ -269,5 +270,27 @@ class AdminController extends EasyAdminController
             'templates' => $templates,
             'invite' => true,
         ]);
+    }
+    
+    /**
+     * @Route("/assign/{id}", name="assign_activator")
+     */
+    public function assign($id)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $entities = $em->getRepository(Admin::class)->findAll();
+        foreach ($entities as $admin) {
+            if ((int) $id === $admin->getId()) {
+                $admin->setActivator(true);
+                $em->persist($admin);
+            } else {
+                $admin->setActivator(false);
+                $em->persist($admin);
+            }
+        }
+        $em->flush();
+       
+        $response = new JsonResponse(json_encode($id));
+        return $response;
     }
 }

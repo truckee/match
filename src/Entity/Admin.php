@@ -18,7 +18,6 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 /**
  * @ORM\Table(name="admin")
  * @ORM\Entity
- * @UniqueEntity(fields="email", message="Email already registered")
  */
 class Admin extends User
 {
@@ -36,17 +35,24 @@ class Admin extends User
      *
      * @ORM\Column(type="boolean")
      */
-    private $activater;
+    private $activator;
     
-    public function isActivater()
+    public function isActivator()
     {
-        return $this->activater;
+        return $this->activator;
     }
     
-    public function setActivater($activater)
+    public function setActivator($activator)
     {
-        $this->activater = $activater;
+        $this->activator = $activator;
         
         return $this;
+    }
+    
+    public function getDisplayedActivator()
+    {
+        $email = $this->getEmail();
+        $value = $this->isActivator();
+        return "$email" . ':' . $value;
     }
 }

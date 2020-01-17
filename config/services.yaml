@@ -5,7 +5,7 @@
 # https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
     app.sender_address: 'admin@bogus.info'  # From address for all outgoing email
-    app.npo_activater: 'admin@bogus.info'   # To address for person who accepts new nonprofits
+    app.npo_activator: 'admin@bogus.info'   # To address for person who accepts new nonprofits
 
 services:
     # default configuration for services in *this* file
@@ -34,8 +34,8 @@ services:
         $defaultMailer: '@swiftmailer.mailer'
         $senderAddress: '%app.sender_address%'
         $projectDir:    '%kernel.project_dir%'
-        $npoActivater:  '%app.npo_activater%'
+        $npoActivator:  '%app.npo_activator%'
 
     App\Services\NewOppEmailService:
-        $npoActivater:  '%app.npo_activater%'
+        $npoActivator:  '%app.npo_activator%'
         

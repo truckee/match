@@ -4,12 +4,16 @@ easy_admin:
         name_property_path: 'fullName'
         display_avatar: false
     design:
+        assets:
+            js: 
+              - 'build/activator.js'
         menu:
             - Nonprofit
             - Focus
             - Skill
             - Staff
             - Volunteer
+            - Admin
             - { label: 'Home', route: 'home' }
     edit:
         actions: ['-show', '-delete']
@@ -71,3 +75,16 @@ easy_admin:
                     - { property: 'fullName', label: 'Name'}
                     - email
                     - { property: 'orgname', label: 'Nonprofit'}
+        Admin:
+            class: App\Entity\Admin
+            disabled_actions: ['new', 'edit']
+            list:
+                fields: 
+                    - enabled
+                    - { property: 'fullName', label: 'Name'}
+                    - 'email' 
+                    -
+                        property: 'activator'
+                        label: 'Nonprofit activator'
+                        template: 'Admin/activator.html.twig'
+

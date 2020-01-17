@@ -348,7 +348,7 @@ class RegistrationController extends AbstractController
             $view = $this->renderView('Email/new_nonprofit_notice.html.twig', ['npo' => $org,]);
             $mailParams = [
                 'view' => $view,
-                'recipient' => $this->getParameter('app.npo_activater'),
+                'recipient' => $this->getParameter('app.npo_activator'),
                 'subject' => 'New Nonprofit Registration',
             ];
 
