@@ -21,6 +21,9 @@
                     </a>
                     <div class="dropdown-menu" aria-labelledby="navbarAdmin">
                         <a class="dropdown-item" href="/admin">Options</a>
+                        {% if is_granted('ROLE_SUPER_ADMIN') %}
+                            <a class="dropdown-item" href="{{ path('admin_invite') }}">Invite new admin</a>
+                        {% endif %}
                     </div>
                 </li>
             {% endif %}
@@ -31,7 +34,7 @@
                     </a>
                     <div class="dropdown-menu" aria-labelledby="navbarAccount">
                         <a class="dropdown-item" href="{{ path('reset_password') }}">Change password</a>
-                            <a class="dropdown-item" href="{{ path('profile_person') }}">Edit personal profile</a>
+                        <a class="dropdown-item" href="{{ path('profile_person') }}">Edit personal profile</a>
                         {% if is_granted("ROLE_STAFF") and not is_granted('ROLE_ADMIN')%}
                             <a class="dropdown-item" href="{{ path('profile_nonprofit') }}">Edit nonprofit profile</a>
                         {% endif %}

@@ -239,16 +239,6 @@ class AdminController extends EasyAdminController
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $em = $this->getDoctrine()->getManager();
-//            $user = $request->request->get('user');
-//            $userEmail = $em->getRepository('App:User')->findOneBy(['email' => $email]);
-//            if (null !== $userEmail) {
-//                $this->addFlash(
-//                    'warning',
-//                    'Email already registered'
-//                );
-//
-//                return $this->redirectToRoute('admin_invite');
-//            }
             $invite = new Invitation();
             $invite->setConfirmationToken(md5(uniqid(rand(), true)));
             $invite->setEmail($admin->getEmail());
@@ -256,7 +246,9 @@ class AdminController extends EasyAdminController
             $invite->setSname($admin->getSname());
             $expiresAt = new \DateTime();
             $invite->setTokenExpiresAt($expiresAt->add(new \DateInterval('PT3H')));
-            dd($invite);
+            
+            
+            
         }
         $templates = [
             'Default/_empty.html.twig',
