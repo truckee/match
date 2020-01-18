@@ -11,7 +11,6 @@
 
 namespace App\Form\Type;
 
-use Rollerworks\Component\PasswordStrength\Validator\Constraints\PasswordStrength;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
@@ -32,13 +31,7 @@ class NewPasswordType extends AbstractType
                 ->add('plainPassword', RepeatedType::class, array(
                     'type' => PasswordType::class,
                     'mapped' => false,
-                    'constraints' => [
-                        new NotBlank(['message' => "Password may not empty"]),
-                        new PasswordStrength([
-                            'minLength' => 6,
-                            'minStrength' => 4,
-                            'message' => 'At least 6 characters. Upper & lower case & number'])
-                    ],
+                    'constraints' => [new NotBlank(['message' => "Password may not empty"])],
                     'invalid_message' => 'Passwords do not match',
                     'first_options' => [
                         'attr' => [

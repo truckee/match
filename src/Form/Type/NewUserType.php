@@ -15,7 +15,6 @@ use App\Form\Type\Field\FocusFieldType;
 use App\Form\Type\Field\SkillFieldType;
 use App\Validator\Constraints\GloballyUnique;
 use App\Entity\Volunteer;
-use Rollerworks\Component\PasswordStrength\Validator\Constraints\PasswordStrength;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
@@ -25,7 +24,6 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 
 class NewUserType extends AbstractType
 {
-
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
@@ -51,28 +49,22 @@ class NewUserType extends AbstractType
                     'constraints' => [new NotBlank(['message' => "First name is required"])],
                 ])
                 ->add('email', null, [
-                    'attr' => [
-                        'class' => 'mb-2',
-                        'size' => '15',
-                        'required' => true,
-                    ],
-                    'label' => 'Email: ',
-                    'label_attr' => ['class' => 'mr-2'],
-                    'constraints' => [
-                        new NotBlank(['message' => "Email is required"]),
-                        new GloballyUnique(),
-                    ]
-                ])
+                            'attr' => [
+                                'class' => 'mb-2',
+                                'size' => '15',
+                                'required' => true,
+                            ],
+                            'label' => 'Email: ',
+                            'label_attr' => ['class' => 'mr-2'],
+                            'constraints' => [
+                                new NotBlank(['message' => "Email is required"]),
+                                new GloballyUnique(),
+                                ]
+                        ])
                 ->add('plainPassword', RepeatedType::class, array(
                     'type' => PasswordType::class,
                     'mapped' => false,
-                    'constraints' => [
-                        new NotBlank(['message' => "Password may not empty"]),
-                        new PasswordStrength([
-                            'minLength' => 6,
-                            'minStrength' => 4,
-                            'message' => 'At least 6 characters. Upper & lower case & number'])
-                    ],
+                    'constraints' => [new NotBlank(['message' => "Password may not empty"])],
                     'invalid_message' => 'Passwords do not match',
                     'first_options' => [
                         'attr' => [
@@ -115,5 +107,4 @@ class NewUserType extends AbstractType
             'register' => false,
         ]);
     }
-
 }

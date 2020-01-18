@@ -247,6 +247,8 @@ class AdminController extends EasyAdminController
             $expiresAt = new \DateTime();
             $invite->setTokenExpiresAt($expiresAt->add(new \DateInterval('PT3H')));
             
+            
+            
         }
         $templates = [
             'Default/_empty.html.twig',
