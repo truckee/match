@@ -11,6 +11,7 @@
 
 namespace App\Form\Type;
 
+use App\Validator\Constraints\PasswordRequirements;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
@@ -31,7 +32,10 @@ class NewPasswordType extends AbstractType
                 ->add('plainPassword', RepeatedType::class, array(
                     'type' => PasswordType::class,
                     'mapped' => false,
-                    'constraints' => [new NotBlank(['message' => "Password may not empty"])],
+                    'constraints' => [
+                        new NotBlank(['message' => "Password may not empty"]),
+                        new PasswordRequirements()
+                        ],
                     'invalid_message' => 'Passwords do not match',
                     'first_options' => [
                         'attr' => [

@@ -8,5 +8,6 @@
 {{ form_row(user.email) }}
 {% if invite is not defined %}
     {{ form_row(user.plainPassword.first) }}
+    {{ form_help(user.plainPassword) }}
     {{ form_row(user.plainPassword.second) }}
 {% endif %}

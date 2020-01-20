@@ -14,6 +14,7 @@ namespace App\Form\Type;
 use App\Form\Type\Field\FocusFieldType;
 use App\Form\Type\Field\SkillFieldType;
 use App\Validator\Constraints\GloballyUnique;
+use App\Validator\Constraints\PasswordRequirements;
 use App\Entity\Volunteer;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
@@ -63,8 +64,12 @@ class NewUserType extends AbstractType
                         ])
                 ->add('plainPassword', RepeatedType::class, array(
                     'type' => PasswordType::class,
+                    'help' => '(At least 6 characters, incl. upper & lower case letters and at least one number)',
                     'mapped' => false,
-                    'constraints' => [new NotBlank(['message' => "Password may not empty"])],
+                    'constraints' => [
+                        new NotBlank(['message' => "Password may not empty"]),
+                        new PasswordRequirements()
+                        ],
                     'invalid_message' => 'Passwords do not match',
                     'first_options' => [
                         'attr' => [
