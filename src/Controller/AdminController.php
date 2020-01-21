@@ -12,7 +12,6 @@
 namespace App\Controller;
 
 use App\Entity\Admin;
-use App\Entity\Invitation;
 use App\Entity\Nonprofit;
 use App\Entity\Staff;
 use App\Entity\User;
@@ -239,16 +238,26 @@ class AdminController extends EasyAdminController
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $em = $this->getDoctrine()->getManager();
-            $invite = new Invitation();
-            $invite->setConfirmationToken(md5(uniqid(rand(), true)));
-            $invite->setEmail($admin->getEmail());
-            $invite->setFname($admin->getFname());
-            $invite->setSname($admin->getSname());
+//            $invite = new Invitation();
+            $admin->setConfirmationToken(md5(uniqid(rand(), true)));
+            $admin->setEmail($admin->getEmail());
+            $admin->setFname($admin->getFname());
+            $admin->setSname($admin->getSname());
             $expiresAt = new \DateTime();
-            $invite->setTokenExpiresAt($expiresAt->add(new \DateInterval('PT3H')));
+            $admin->setTokenExpiresAt($expiresAt->add(new \DateInterval('PT3H')));
             
-            
-            
+            $view = $this->renderView('Email/staff_replacement.html.twig', [
+                'replacement' => $replacement,
+                'nonprofit' => $nonprofit,
+                'token' => $token,
+                'expires' => $expiresAt,
+            ]);
+            $mailParams = [
+                'view' => $view,
+                'recipient' => $email,
+                'subject' => $nonprofit->getOrgname() . ' staff replacement',
+            ];
+            $mailer->appMailer($mailParams);
         }
         $templates = [
             'Default/_empty.html.twig',

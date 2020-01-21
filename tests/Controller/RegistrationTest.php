@@ -19,7 +19,7 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
  */
 class RegistrationTest extends WebTestCase
 {
-    use FixturesTrait;
+//    use FixturesTrait;
 
     public function setup(): void
     {
@@ -32,7 +32,7 @@ class RegistrationTest extends WebTestCase
     {
         $this->client->request('GET', '/register/confirm');
 
-        $this->assertStringContainsString('Confirmation status cannot be determined', $this->client->getResponse()->getContent());
+        $this->assertStringContainsString('Registration status cannot be determined', $this->client->getResponse()->getContent());
 
         $this->client->request('GET', '/register/confirm/blahblah');
 
@@ -74,14 +74,14 @@ class RegistrationTest extends WebTestCase
     {
         $this->client->request('GET', '/register/reset');
 
-        $this->assertStringContainsString('User not found', $this->client->getResponse()->getContent());
+        $this->assertStringContainsString('Registration status cannot be determined', $this->client->getResponse()->getContent());
     }
 
     public function testResetPasswordWrongToken()
     {
         $this->client->request('GET', '/register/reset/wassup');
 
-        $this->assertStringContainsString('User not found', $this->client->getResponse()->getContent());
+        $this->assertStringContainsString('Invalid registration data', $this->client->getResponse()->getContent());
     }
 
     public function testResetPasswordExpiredToken()
