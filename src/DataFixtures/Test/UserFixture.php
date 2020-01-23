@@ -65,8 +65,7 @@ class UserFixture extends AbstractFixture implements OrderedFixtureInterface, OR
         {
             $volunteer1 = new Volunteer();
             $volunteer1->setConfirmationToken('ghijkl');
-            $expires1 = new \DateTime();
-            $volunteer1->setTokenExpiresAt($expires1->add(new \DateInterval('P10Y')));
+            $volunteer1->setTokenExpiresAt($expires);
             $volunteer1->setEnabled(true);
 
             $volunteer1->setEmail('pseudo@bogus.info');
@@ -126,13 +125,43 @@ class UserFixture extends AbstractFixture implements OrderedFixtureInterface, OR
             $admin->setFname('Benny');
             $admin->setSname('Borko');
             $admin->setRoles([
-                'ROLE_VOLUNTEER',
-                'ROLE_STAFF',
-                'ROLE_ADMIN',
+                'ROLE_SUPER_ADMIN',
             ]);
             $password4 = $this->encoder->encodePassword($admin, '123Abc');
             $admin->setPassword($password4);
             $manager->persist($admin);
+        }
+        
+        {
+            $admin1 = new Admin();
+            $admin1->setConfirmationToken('mynameis');
+            $admin1->setTokenExpiresAt($expires);
+            $admin1->setEmail('obvious@bogus.info');
+            $admin1->setEnabled(true);
+            $admin1->setActivator(false);
+            $admin1->setFname('Benny');
+            $admin1->setSname('Borko');
+            $admin1->setRoles([
+                'ROLE_ADMIN',
+            ]);
+            $admin1->setPassword('mynameis');
+            $manager->persist($admin1);
+        }
+        
+        {
+            $admin2 = new Admin();
+            $admin2->setConfirmationToken('whoami');
+            $admin2->setTokenExpiresAt($expires2);
+            $admin2->setEmail('nothere@bogus.info');
+            $admin2->setEnabled(true);
+            $admin2->setActivator(false);
+            $admin2->setFname('Benny');
+            $admin2->setSname('Borko');
+            $admin2->setRoles([
+                'ROLE_ADMIN',
+            ]);
+            $admin2->setPassword('mynameis');
+            $manager->persist($admin2);
         }
 
         $manager->flush();

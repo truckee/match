@@ -16,12 +16,15 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class ProfileControllerTest extends WebTestCase
 {
-
     use FixturesTrait;
 
     public function setup(): void
     {
-//        $this->loadFixtures();
+        $this->fixtures = $this->loadFixtures([
+                    'App\DataFixtures\Test\OptionsFixture',
+                    'App\DataFixtures\Test\NonprofitFixture',
+                    'App\DataFixtures\Test\UserFixture',
+                ]);
         $this->client = static::createClient();
         $this->client->followRedirects();
     }
@@ -36,7 +39,7 @@ class ProfileControllerTest extends WebTestCase
         $this->client->request('GET', '/profile/person');
 
         $this->assertStringContainsString('Exceptionally Bogus profile', $this->client->getResponse()->getContent());
-
+file_put_contents("G:\\Documents\\response.html", $this->client->getResponse()->getContent());
         $this->client->submitForm('Save', [
             'user[fname]' => 'Unchained',
         ]);

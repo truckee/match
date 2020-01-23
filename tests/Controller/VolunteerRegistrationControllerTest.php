@@ -11,14 +11,16 @@
 
 namespace App\Tests\Controller;
 
-//use Liip\TestFixturesBundle\Test\FixturesTrait;
+use Liip\TestFixturesBundle\Test\FixturesTrait;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class VolunteerRegistrationControllerTest extends WebTestCase
 {
+    use FixturesTrait;
 
     public function setup(): void
     {
+//        $this->loadFixtures();
         $this->client = static::createClient();
         $this->client->followRedirects();
     }

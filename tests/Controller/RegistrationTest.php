@@ -19,11 +19,9 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
  */
 class RegistrationTest extends WebTestCase
 {
-//    use FixturesTrait;
-
+    use FixturesTrait;
     public function setup(): void
     {
-//        $this->loadFixtures();
         $this->client = static::createClient();
         $this->client->followRedirects();
     }

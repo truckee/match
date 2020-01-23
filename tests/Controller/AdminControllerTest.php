@@ -121,6 +121,7 @@ class AdminControllerTest extends WebTestCase
     public function testInviteExistingEmail()
     {
         $this->client->request('GET', '/admin/invite');
+        $this->client->followRedirects(false);
         $this->client->submitForm('Save', [
             'user[fname]' => 'Useless',
             'user[sname]' => 'Garbage',
@@ -128,6 +129,57 @@ class AdminControllerTest extends WebTestCase
         ]);
         
         $this->assertStringContainsString('Email already registered', $this->client->getResponse()->getContent());
+    }
+    
+    public function testInviteNewAdminEmail()
+    {
+        $this->client->request('GET', '/admin/invite');
+        $this->client->followRedirects(false);
+        $this->client->submitForm('Save', [
+            'user[fname]' => 'Useless',
+            'user[sname]' => 'Garbage',
+            'user[email]' => 'startrek@bogus.info'
+        ]);
+        
+        $mailCollector = $this->client->getProfile()->getCollector('swiftmailer');
+
+        $this->assertSame(1, $mailCollector->getMessageCount());
+        $collectedMessages = $mailCollector->getMessages();
+        $message = $collectedMessages[0];
+        
+        $this->assertStringContainsString('You are invited to be an admin user', $message->getBody());        
+    }
+    
+    public function testNonAdminValidToken()
+    {
+        $this->client->request('GET', '/register/invite/abcdef');
+        
+        $this->assertStringContainsString('Invalid registration data', $this->client->getResponse()->getContent());
+    }
+    
+    public function testExpiredToken()
+    {
+        $this->client->followRedirects(false);
+        $this->client->request('GET', '/register/invite/whoami');
+        $mailCollector = $this->client->getProfile()->getCollector('swiftmailer');
+
+        $this->assertSame(1, $mailCollector->getMessageCount());
+        $collectedMessages = $mailCollector->getMessages();
+        $message = $collectedMessages[0];
+        
+        $this->assertStringContainsString('has just failed due to it having expired', $message->getBody());        
+    }
+    
+    public function testRegisterNewAdmin() //mynameis
+    {
+        $this->client->request('GET', '/register/invite/mynameis');
+            $this->client->submitForm('Save', [
+            'new_password[plainPassword][first]' => 'Abc123',
+            'new_password[plainPassword][second]' => 'Abc123',
+        ]);
+    
+        $this->assertStringContainsString('Your admin account is created', $this->client->getResponse()->getContent());
+        
     }
     
 }

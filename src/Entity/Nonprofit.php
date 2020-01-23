@@ -124,7 +124,7 @@ class Nonprofit
     protected $opportunities;
 
     /**
-     * @ORM\OneToOne(targetEntity="Staff", inversedBy="nonprofit", cascade={"persist", "remove"})
+     * @ORM\OneToOne(targetEntity="Staff", inversedBy="nonprofit", cascade={"persist", "remove"}, fetch="EAGER")
      * @ORM\JoinColumn(name="staff_id", referencedColumnName="id")
      * @Assert\Valid
      */

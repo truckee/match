@@ -33,7 +33,7 @@ class EmailerService
 
     public function appMailer($mailParams)
     {
-        if (null === $mailParams['recipient']) {
+        if (!array_key_exists('recipient', $mailParams)) {
             $mailParams['recipient'] = $this->activator;
         }
 

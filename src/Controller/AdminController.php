@@ -233,32 +233,38 @@ class AdminController extends EasyAdminController
     {
         $admin = new Admin();
         $form = $this->createForm(UserType::class, $admin, [
-            'data_class' => User::class
+            'data_class' => Admin::class
         ]);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $em = $this->getDoctrine()->getManager();
-//            $invite = new Invitation();
-            $admin->setConfirmationToken(md5(uniqid(rand(), true)));
+            $admin->setActivator(false);
+            $token = md5(uniqid(rand(), true));
+            $admin->setConfirmationToken($token);
             $admin->setEmail($admin->getEmail());
+            $admin->setEnabled(false);
             $admin->setFname($admin->getFname());
             $admin->setSname($admin->getSname());
             $expiresAt = new \DateTime();
             $admin->setTokenExpiresAt($expiresAt->add(new \DateInterval('PT3H')));
-            
-            $view = $this->renderView('Email/staff_replacement.html.twig', [
-                'replacement' => $replacement,
-                'nonprofit' => $nonprofit,
+            // mandatory password never validated
+            $admin->setPassword('new_admin');
+            $em->persist($admin);
+            $em->flush();
+
+            $view = $this->renderView('Email/invitation.html.twig', [
+                'fname' => $admin->getFname(),
                 'token' => $token,
                 'expires' => $expiresAt,
             ]);
             $mailParams = [
                 'view' => $view,
-                'recipient' => $email,
-                'subject' => $nonprofit->getOrgname() . ' staff replacement',
+                'recipient' => $admin->getEmail(),
+                'subject' => 'Invitation from ConnectionsReno',
             ];
             $mailer->appMailer($mailParams);
         }
+        
         $templates = [
             'Default/_empty.html.twig',
             'Registration/_new_user.html.twig',
