@@ -103,7 +103,7 @@ class Opportunity
 
 
     /**
-     * @ORM\ManyToOne(targetEntity="Nonprofit", inversedBy="opportunities")
+     * @ORM\ManyToOne(targetEntity="Nonprofit", inversedBy="opportunities", fetch="EAGER")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="orgId", referencedColumnName="id")
      * })
