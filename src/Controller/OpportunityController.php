@@ -39,7 +39,7 @@ class OpportunityController extends AbstractController
     /**
      * @Route("/add", name = "opp_add")
      */
-    public function addOpp(Request $request, EmailerService $mailer, NewOppEmailService $oppMail)
+    public function addOpp(Request $request, EmailerService $mailer)
     {
         $user = $this->getUser();
         if (null === $user || !$user->hasRole('ROLE_STAFF')) {
@@ -57,6 +57,7 @@ class OpportunityController extends AbstractController
             $em->flush();
 
             $volunteers = $em->getRepository(Volunteer::class)->opportunityEmails($opportunity);
+            $oppMail = new NewOppEmailService($em);
             $oppMail->newOppEmail($mailer, $volunteers, $opportunity);
             $this->addFlash(
                     'success',

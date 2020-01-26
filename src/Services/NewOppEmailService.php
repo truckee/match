@@ -11,6 +11,7 @@
 
 namespace App\Services;
 
+use App\Entity\Admin;
 use App\Entity\NewOppEmail;
 use App\Entity\Volunteer;
 use App\Services\EmailerService;
@@ -22,12 +23,10 @@ use Doctrine\ORM\EntityManagerInterface;
 class NewOppEmailService
 {
     private $em;
-    private $activator;
 
-    public function __construct(EntityManagerInterface $em, $npoActivator)
+    public function __construct(EntityManagerInterface $em)
     {
         $this->em = $em;
-        $this->activator = $npoActivator;
     }
 
     /**
@@ -50,10 +49,11 @@ class NewOppEmailService
         
         // send report to admin
         $nVolunteers = count($volunteers);
+        $activator = $this->em->getRepository(Admin::class)->findOneBy(['activator' => true]);
         $mailParams = [
             'view'=>'Email/opportunity_email_report.html.twig',
             'context' => ['nVolunteers' => $nVolunteers, 'opportunity' => $opp,],
-            'recipient'=> $this->activator,
+            'recipient'=> $activator,
             'subject'=>'Volunteer opportunities email report',
         ];
         $mailer->appMailer($mailParams);

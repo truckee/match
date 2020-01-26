@@ -11,45 +11,46 @@
 
 namespace App\Services;
 
-/**
- *
- */
+use App\Entity\Admin;
+use Doctrine\ORM\EntityManagerInterface;
+
 class EmailerService
 {
-    private $defaultMailer;
-    private $spoolMailer;
-    private $sender;
-    private $projectDir;
-    private $activator;
 
-    public function __construct($defaultMailer, $spoolMailer, $senderAddress, $projectDir, $npoActivator)
+    private $defaultMailer;
+    private $em;
+
+    public function __construct(EntityManagerInterface $em, $defaultMailer)
     {
         $this->defaultMailer = $defaultMailer;
-        $this->spoolMailer = $spoolMailer;
-        $this->sender = $senderAddress;
-        $this->projectDir = $projectDir;
-        $this->activator = $npoActivator;
+        $this->em = $em;
     }
 
     public function appMailer($mailParams)
     {
+        $activator = $this->em->getRepository(Admin::class)->findOneBy(['activator' => true]);
+        // used by new nonprofit notice, expired invitation, opportunities email report
         if (!array_key_exists('recipient', $mailParams)) {
-            $mailParams['recipient'] = $this->activator;
+            $mailParams['recipient'] = $activator;
         }
 
         $message = (new \Swift_Message($mailParams['subject']))
-                ->setFrom($this->sender)
+                ->setFrom($activator)
                 ->setTo($mailParams['recipient'])
                 ->setBody(
-                    $mailParams['view'],
-                    'text/html'
+                $mailParams['view'],
+                'text/html'
                 )
         ;
 
-        if (!array_key_exists('spool', $mailParams)) {
-            $this->defaultMailer->send($message);
-        } else {
-            $this->spoolMailer->send($message);
-        }
+        $this->defaultMailer->send($message);
+
+        return true;
+//        if (!array_key_exists('spool', $mailParams)) {
+//            $this->defaultMailer->send($message);
+//        } else {
+//            $this->spoolMailer->send($message);
+//        }
     }
+
 }
