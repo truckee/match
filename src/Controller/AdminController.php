@@ -74,9 +74,9 @@ class AdminController extends EasyAdminController
             $staff->setLocked(false);
             $staff->setEnabled(true);
             $view = $this->renderView('Email/nonprofit_activated.html.twig', [
-                'npo' => $npo, 
+                'npo' => $npo,
                 'staff' => $npo->getStaff(),
-                ]);
+            ]);
             $mailParams = [
                 'view' => $view,
                 'recipient' => $npo->getStaff()->getEmail(),
@@ -264,21 +264,21 @@ class AdminController extends EasyAdminController
             ];
             $mailer->appMailer($mailParams);
         }
-        
+
         $templates = [
             'Default/_empty.html.twig',
             'Registration/_new_user.html.twig',
         ];
-        
+
         return $this->render('Default/form_templates.html.twig', [
-            'form' => $form->createView(),
-            'headerText' => 'Invite new admin user',
-            'userHeader' => '',
-            'templates' => $templates,
-            'invite' => true,
+                    'form' => $form->createView(),
+                    'headerText' => 'Invite new admin user',
+                    'userHeader' => '',
+                    'templates' => $templates,
+                    'invite' => true,
         ]);
     }
-    
+
     /**
      * @Route("/assign/{id}", name="assign_activator")
      */
@@ -296,8 +296,31 @@ class AdminController extends EasyAdminController
             }
         }
         $em->flush();
-       
+
         $response = new JsonResponse(json_encode($id));
         return $response;
     }
+    
+    /**
+     * @Route("/enabler", name = "admin_enabler")
+     */
+    public function enabler(Request $request)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $id = $request->query->get('id');
+        $admin = $em->getRepository(Admin::class)->find($id);
+        $enabled = $admin->isEnabled();
+        if (!$admin->isActivator() && !$admin->hasRole('ROLE_SUPER_ADMIN')) {
+            $admin->setEnabled(!$enabled);
+            $em->persist($admin);
+            $em->flush();
+        } else {
+            $this->addFlash('danger', 'Selected admin cannot be disabled');
+        }
+
+        return $this->redirectToRoute('easyadmin', array(
+            'action' => 'list',
+            'entity' => $request->query->get('entity'),
+        ));    }
+
 }

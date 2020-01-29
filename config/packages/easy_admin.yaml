@@ -79,12 +79,19 @@ easy_admin:
             class: App\Entity\Admin
             disabled_actions: ['new', 'edit']
             list:
+                help: "Nonprofit activator's email receives new nonproft email. Address is also sender address for all email."
+                actions:
+                    -
+                        name: 'admin_enabler'
+                        type: 'route'
+                        label: 'Enable/Disable'
+                        css_class: 'btn btn-info'
                 fields: 
-                    - enabled
+                    - { property: 'adminEnabled', label: 'Enabled', template: 'Admin/admin_enabled.html.twig' }
                     - { property: 'fullName', label: 'Name'}
                     - 'email' 
                     -
                         property: 'activator'
                         label: 'Nonprofit activator'
                         template: 'Admin/activator.html.twig'
-
+                    

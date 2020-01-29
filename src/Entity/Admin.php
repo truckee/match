@@ -25,8 +25,6 @@ class Admin extends User
     {
         // allow admin to modify volunteers & staff & nonprofits
         $this->roles = [
-            'ROLE_VOLUNTEER',
-            'ROLE_STAFF',
             'ROLE_ADMIN',
         ];
     }
@@ -36,6 +34,8 @@ class Admin extends User
      * @ORM\Column(type="boolean")
      */
     private $activator;
+    
+    private $admin_enabled;
     
     public function isActivator()
     {
@@ -49,10 +49,12 @@ class Admin extends User
         return $this;
     }
     
-    public function getDisplayedActivator()
+    public function getAdminEnabled()
     {
-        $email = $this->getEmail();
-        $value = $this->isActivator();
-        return "$email" . ':' . $value;
+        if (!$this->hasRole('ROLE_SUPER_ADMIN')) {
+            return $this->isEnabled();
+        } else {
+            return null;
+        }
     }
 }
