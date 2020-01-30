@@ -29,6 +29,7 @@ easy_admin:
                 fields: 
                     - {property: 'active', template: 'Nonprofit/activate_button.html.twig'}
                     - {property: 'orgname', label: 'Name'}
+                    - {property: 'ein', label: 'EIN', template: 'Nonprofit/ein.html.twig'}
                     - {property: 'staff.fullName', label: 'Staff'}
                     - {property: 'staff.email', label: 'Email', template: 'Nonprofit/staff_email.html.twig'}
             edit: 

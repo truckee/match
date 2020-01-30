@@ -2,7 +2,7 @@
     will not be able to post any volunteer opportunities until it is verified and activated.</p>
 <p>Nonprofit: {{ npo.orgname }}</p>
 <p>EIN: {{ npo.ein }}</p>
-<p>The <a href="https://apps.irs.gov/app/eos/">IRS Tax Exempt Organization Search </a>
+<p>The <a href="https://apps.irs.gov/app/eos/allSearch.do?ein1={{ npo.ein }}&names=&resultsPerPage=25&indexOfFirstRow=0&dispatchMethod=searchAll&city=&state=All+States&country=US&postDateFrom=&postDateTo=&exemptTypeCode=al&deductibility=all&sortColumn=orgName&isDescending=false&submitName=Search">IRS Tax Exempt Organization Search </a>
     can be used to verify {{ npo.orgname }}. Its EIN is {{ npo.ein }}.</p>
 <p>Activation requires an admin login at the ConnectionsReno web site. 
     Activation can be done by clicking <a href="{{ absolute_url('activate_nonprofit', {"id":npo.id}) }}">here</a>. 

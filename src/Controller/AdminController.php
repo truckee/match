@@ -315,7 +315,7 @@ class AdminController extends EasyAdminController
             $em->persist($admin);
             $em->flush();
         } else {
-            $this->addFlash('danger', 'Selected admin cannot be disabled');
+            $this->addFlash('danger', $admin->getFullName() . ' cannot be disabled');
         }
 
         return $this->redirectToRoute('easyadmin', array(

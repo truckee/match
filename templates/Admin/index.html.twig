@@ -1,6 +1,21 @@
 {% extends 'base.html.twig' %}
 {% block body %}
-    <p>Admin dashboard graphics will appear here - when there is meaningful data! Here are examples of possibilities</p>
+    <div class="border border-dark m-2">
+        <p class="pl-2 pr-2">
+            <span class="font-weight-bold">Nonprofit verification</span>: Verifying  helps insure that volunteers do not receive spam.
+        </p>
+        <p class="pl-2 pr-2">
+            Click on <a href="/admin/?entity=Nonprofit&action=list&menuIndex=0&submenuIndex=-1">Nonprofits</a>
+            to see the list of nonprofits. Click on the EIN of a nonprofit to 
+            search the IRS Tax Exempt Organization Search website to 
+            check the authenticity of the organization. If the nonprofit is authentic 
+            click on <button class="btn btn-sm btn-success">Activate</button> which will automatically send an email to 
+            let them know they may now post opportunities.           
+        </p>
+    </div>
+    <div class="m-2">
+        <p class="pl-2 pr-2">Admin dashboard graphics can appear here - when there is meaningful data! Here are examples of possibilities</p>
+    </div>
     <div class="row">
         <div class="col-4" id="div_vol">
         </div>
