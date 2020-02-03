@@ -23,7 +23,6 @@ use Symfony\Component\Validator\Constraints\NotBlank;
  */
 class UserEmailType extends AbstractType
 {
-
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
@@ -49,5 +48,4 @@ class UserEmailType extends AbstractType
             'validation_groups'
         ));
     }
-
 }

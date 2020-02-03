@@ -22,7 +22,6 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class NonprofitType extends AbstractType
 {
-
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
@@ -140,5 +139,4 @@ class NonprofitType extends AbstractType
     {
         return 'org';
     }
-
 }

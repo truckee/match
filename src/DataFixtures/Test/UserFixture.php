@@ -30,7 +30,6 @@ use Doctrine\Bundle\FixturesBundle\ORMFixtureInterface;
  */
 class UserFixture extends AbstractFixture implements OrderedFixtureInterface, ORMFixtureInterface
 {
-
     private $encoder;
 
     public function __construct(UserPasswordEncoderInterface $encoder)
@@ -60,7 +59,7 @@ class UserFixture extends AbstractFixture implements OrderedFixtureInterface, OR
             $manager->persist($volunteer);
         }
 
-        // user pseudo@bogus.info enabled = true: 
+        // user pseudo@bogus.info enabled = true:
         // for reset password, profile check
         {
             $volunteer1 = new Volunteer();
@@ -171,5 +170,4 @@ class UserFixture extends AbstractFixture implements OrderedFixtureInterface, OR
     {
         return 2; // the order in which fixtures will be loaded
     }
-
 }

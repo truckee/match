@@ -29,7 +29,6 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  */
 class Nonprofit
 {
-
     public function __construct()
     {
         $this->opportunities = new ArrayCollection();
@@ -321,5 +320,4 @@ class Nonprofit
 
         return $this;
     }
-
 }

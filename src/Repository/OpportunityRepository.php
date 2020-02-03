@@ -21,7 +21,6 @@ use Doctrine\ORM\QueryBuilder;
  */
 class OpportunityRepository extends ServiceEntityRepository
 {
-
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Opportunity::class);
@@ -52,7 +51,7 @@ class OpportunityRepository extends ServiceEntityRepository
 
     /**
      * Return opportunities, selected by focus and/or skill criteria
-     * 
+     *
      * $focuses, $skills are arrays of ids
      */
     public function getOppsByFocusOrSkill($focuses, $skills)
@@ -69,8 +68,11 @@ class OpportunityRepository extends ServiceEntityRepository
                     . 'WHERE n.active = true '
                     . 'AND o.expiredate > ' . $now . ' '
                     . 'AND os.skillId IN (?)';
-            $skillStmt = $conn->executeQuery($skillSQL, 
-                    [$skills], [\Doctrine\DBAL\Connection::PARAM_INT_ARRAY]);
+            $skillStmt = $conn->executeQuery(
+                $skillSQL,
+                [$skills],
+                [\Doctrine\DBAL\Connection::PARAM_INT_ARRAY]
+            );
             $skillOpps = $skillStmt->fetchAll();
             foreach ($skillOpps as $item) {
                 $opps[] = $this->getEntityManager()->getRepository(Opportunity::class)->find($item['id']);
@@ -86,8 +88,11 @@ class OpportunityRepository extends ServiceEntityRepository
                     . 'AND o.expiredate > ' . $now . ' '
                     . 'AND of.focusId IN (?)'
             ;
-            $focusStmt = $conn->executeQuery($focusSQL, 
-                    [$focuses], [\Doctrine\DBAL\Connection::PARAM_INT_ARRAY]);
+            $focusStmt = $conn->executeQuery(
+                $focusSQL,
+                [$focuses],
+                [\Doctrine\DBAL\Connection::PARAM_INT_ARRAY]
+            );
             $focusOpps = $focusStmt->fetchAll();
             foreach ($focusOpps as $item) {
                 if (!in_array($item['id'], $focusOpps)) {

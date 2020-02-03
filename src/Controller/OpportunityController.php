@@ -26,7 +26,6 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class OpportunityController extends AbstractController
 {
-
     public function __construct()
     {
         $this->templates = [
@@ -60,8 +59,8 @@ class OpportunityController extends AbstractController
             $oppMail = new NewOppEmailService($em);
             $oppMail->newOppEmail($mailer, $volunteers, $opportunity);
             $this->addFlash(
-                    'success',
-                    'Opportunity added; ' . count($volunteers) . ' volunteer(s) will be notified'
+                'success',
+                'Opportunity added; ' . count($volunteers) . ' volunteer(s) will be notified'
             );
 
             return $this->redirectToRoute('profile_nonprofit');
@@ -96,8 +95,8 @@ class OpportunityController extends AbstractController
             $em->persist($opportunity);
             $em->flush();
             $this->addFlash(
-                    'success',
-                    'Opportunity updated'
+                'success',
+                'Opportunity updated'
             );
 
             return $this->redirectToRoute('profile_nonprofit');
@@ -152,5 +151,4 @@ class OpportunityController extends AbstractController
                     'submitValue' => 'Search',
         ]);
     }
-
 }

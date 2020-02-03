@@ -16,7 +16,7 @@ use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
 
 /**
- * 
+ *
  */
 class FocusRepository extends ServiceEntityRepository
 {
@@ -24,5 +24,4 @@ class FocusRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Focus::class);
     }
-
 }

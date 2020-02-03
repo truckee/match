@@ -179,7 +179,64 @@ class AdminControllerTest extends WebTestCase
         ]);
     
         $this->assertStringContainsString('Your admin account is created', $this->client->getResponse()->getContent());
-        
     }
     
-}
+    public function testAdminScreen()
+    {
+        $this->client->request('GET', '/admin');
+        $this->client->clickLink('Admin');
+    
+        $this->assertStringContainsString('Enable/Disable', $this->client->getResponse()->getContent());
+    }
+    
+    public function testEnableDisableFails()
+    {
+        $this->client->request('GET', '/admin');
+        $crawler = $this->client->clickLink('Admin');
+        $link = $crawler->filter('.action-admin_enabler')->eq(0)->link();
+        $this->client->click($link);
+        
+        $this->assertStringContainsString('Benny Borko cannot be disabled', $this->client->getResponse()->getContent());
+    }
+    
+    public function testEnableDisableSucceeds()
+    {
+        $this->client->request('GET', '/admin');
+        $crawler = $this->client->clickLink('Admin');
+        $link = $crawler->filter('.action-admin_enabler')->eq(1)->link();
+        $this->client->click($link);
+        $this->client->request('GET', '/admin');
+        $crawler2 = $this->client->clickLink('Admin');
+        $badge = $crawler2->filter('*[data-id="2"]');
+        
+        $this->assertStringContainsString('No', $badge->text());
+    }
+    
+    public function testFocusAdd()
+    {
+        $this->client->request('GET', '/admin');
+        $this->client->clickLink('Focus');
+        $crawler = $this->client->clickLink('Add Focus');
+        $form = $crawler->selectButton('Save changes')->form();
+        $form['focus[focus]'] = 'Another focus';
+        $form['focus[enabled]']->tick();
+        $this->client->submit($form);
+        file_put_contents('g:\\documents\\response.html', $this->client->getResponse()->getContent());
+        
+        $this->assertStringContainsString('<strong>4</strong> results', $this->client->getResponse()->getContent());
+    }
+    
+    public function testSkillAdd()
+    {
+        $this->client->request('GET', '/admin');
+        $this->client->clickLink('Skill');
+        $crawler = $this->client->clickLink('Add Skill');
+        $form = $crawler->selectButton('Save changes')->form();
+        $form['skill[skill]'] = 'Another skill';
+        $form['skill[enabled]']->tick();
+        $this->client->submit($form);
+        file_put_contents('g:\\documents\\response.html', $this->client->getResponse()->getContent());
+        
+        $this->assertStringContainsString('<strong>4</strong> results', $this->client->getResponse()->getContent());
+    }
+ }

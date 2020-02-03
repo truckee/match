@@ -99,6 +99,12 @@ class NonprofitRegistrationControllerTest extends WebTestCase
         $form = $buttonCrawlerNode->form();
         $form['org[orgname]'] = 'Glenshire Fund';
         $form['org[ein]'] = $params['ein'];
+        $form['org[address]'] = '123 Some Street';
+        $form['org[city]'] = 'SomeTown';
+        $form['org[state]'] = 'ST';
+        $form['org[zip]'] = '11111';
+        $form['org[phone]'] = '5555551212';
+        $form['org[website]'] = 'www.somesite.org';
         $form['org[staff][fname]'] = 'Benny';
         $form['org[staff][sname]'] = 'Borko';
         $form['org[staff][email]'] = $params['email'];

@@ -18,11 +18,10 @@ use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\Bundle\FixturesBundle\ORMFixtureInterface;
 
 /**
- * 
+ *
  */
 class NewOppEmailFixture extends AbstractFixture implements OrderedFixtureInterface, ORMFixtureInterface
 {
-    
     public function load(ObjectManager $manager)
     {
         $new = new NewOppEmail();
@@ -35,7 +34,7 @@ class NewOppEmailFixture extends AbstractFixture implements OrderedFixtureInterf
         $manager->persist($new);
         
         $manager->flush();
-    }    
+    }
 
     public function getOrder()
     {

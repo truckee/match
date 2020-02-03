@@ -17,7 +17,7 @@ use Symfony\Component\Validator\ConstraintValidator;
 use Doctrine\ORM\EntityManagerInterface;
 
 /**
- * 
+ *
  */
 class GloballyUniqueValidator extends ConstraintValidator
 {
@@ -35,5 +35,4 @@ class GloballyUniqueValidator extends ConstraintValidator
                     ->addViolation();
         }
     }
-
 }

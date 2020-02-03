@@ -50,8 +50,8 @@ class ProfileController extends AbstractController
             $em->persist($npo);
             $em->flush();
             $this->addFlash(
-                    'success',
-                    'Profile updated'
+                'success',
+                'Profile updated'
             );
 
             return $this->redirectToRoute('home');
@@ -94,8 +94,8 @@ class ProfileController extends AbstractController
             $em->persist($user);
             $em->flush();
             $this->addFlash(
-                    'success',
-                    'Profile updated'
+                'success',
+                'Profile updated'
             );
 
             return $this->redirectToRoute('home');
@@ -112,5 +112,4 @@ class ProfileController extends AbstractController
          
         return $this->render('Default/form_templates.html.twig', $options);
     }
-
 }

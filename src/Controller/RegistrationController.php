@@ -32,7 +32,6 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
  */
 class RegistrationController extends AbstractController
 {
-
     private $encoder;
 
     public function __construct(UserPasswordEncoderInterface $encoder)
@@ -55,8 +54,8 @@ class RegistrationController extends AbstractController
             $sender = $this->getParameter('app.sender_address');
             $user = $em->getRepository('App:User')->findOneBy(['email' => $email]);
             $this->addFlash(
-                    'success',
-                    'Email sent to address provided'
+                'success',
+                'Email sent to address provided'
             );
 
             // if nonUser
@@ -111,8 +110,8 @@ class RegistrationController extends AbstractController
         // has token expired?
         if ($now > $expiresAt) {
             $this->addFlash(
-                    'danger',
-                    'Password forgotten link has expired'
+                'danger',
+                'Password forgotten link has expired'
             );
 
             return $this->redirectToRoute('home');
@@ -125,11 +124,10 @@ class RegistrationController extends AbstractController
         $form = $this->createForm(NewPasswordType::class, $user);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-
             $user->setPassword(
-                    $passwordEncoder->encodePassword(
-                            $user,
-                            $form->get('plainPassword')->getData()
+                $passwordEncoder->encodePassword(
+                        $user,
+                        $form->get('plainPassword')->getData()
                     )
             );
             if (Staff::class === get_class($user) && null !== $user->getReplacementOrg()) {
@@ -145,8 +143,8 @@ class RegistrationController extends AbstractController
             $em->flush();
 
             $this->addFlash(
-                    'success',
-                    'Your password has been updated'
+                'success',
+                'Your password has been updated'
             );
 
             return $this->redirectToRoute('home');
@@ -191,8 +189,8 @@ class RegistrationController extends AbstractController
             $em->persist($volunteer);
             $em->flush();
             $this->addFlash(
-                    'success',
-                    'A volunteer registration confirmation has been sent to your email address'
+                'success',
+                'A volunteer registration confirmation has been sent to your email address'
             );
 
             return $this->redirectToRoute('home');
@@ -247,12 +245,12 @@ class RegistrationController extends AbstractController
             $em->flush();
 
             $this->addFlash(
-                    'success',
-                    'Nonprofit ' . $org->getOrgname() . ' is created but not yet activated'
+                'success',
+                'Nonprofit ' . $org->getOrgname() . ' is created but not yet activated'
             );
             $this->addFlash(
-                    'success',
-                    'Look for the confirmation email that has been sent to the address provided'
+                'success',
+                'Look for the confirmation email that has been sent to the address provided'
             );
 
 
@@ -286,8 +284,8 @@ class RegistrationController extends AbstractController
         $now = new \DateTime();
         if ($now > $user->getTokenExpiresAt()) {
             $this->addFlash(
-                    'danger',
-                    'Registration has expired. Please register again.'
+                'danger',
+                'Registration has expired. Please register again.'
             );
             switch ($class) {
                 case Staff::class:
@@ -300,6 +298,7 @@ class RegistrationController extends AbstractController
                     $path = 'register_volunteer';
                     $em->remove($user);
 
+                    // no break
                 default:
                     break;
             }
@@ -341,8 +340,8 @@ class RegistrationController extends AbstractController
         $em->flush();
 
         $this->addFlash(
-                'success',
-                $flashMessage
+            'success',
+            $flashMessage
         );
 
         return $this->redirectToRoute('app_login');
@@ -361,8 +360,8 @@ class RegistrationController extends AbstractController
         $class = get_class($user);
         if (Admin::class !== $class) {
             $this->addFlash(
-                    'danger',
-                    'Invalid registration data',
+                'danger',
+                'Invalid registration data',
             );
 
             return $this->redirectToRoute('home');
@@ -371,8 +370,8 @@ class RegistrationController extends AbstractController
         $now = new \DateTime();
         if ($now > $user->getTokenExpiresAt()) {
             $this->addFlash(
-                    'danger',
-                    'Invitation has expired'
+                'danger',
+                'Invitation has expired'
             );
             $view = $this->renderView('Email/expired_invite.html.twig', [
                 'user' => $user,
@@ -394,9 +393,9 @@ class RegistrationController extends AbstractController
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $user->setPassword(
-                    $passwordEncoder->encodePassword(
-                            $user,
-                            $form->get('plainPassword')->getData()
+                $passwordEncoder->encodePassword(
+                        $user,
+                        $form->get('plainPassword')->getData()
                     )
             );
             $em = $this->getDoctrine()->getManager();
@@ -404,8 +403,8 @@ class RegistrationController extends AbstractController
             $em->flush();
 
             $this->addFlash(
-                    'success',
-                    'Your admin account is created!'
+                'success',
+                'Your admin account is created!'
             );
 
             return $this->redirectToRoute('home');
@@ -444,5 +443,4 @@ class RegistrationController extends AbstractController
         $expiresAt = new \DateTime();
         $volunteer->setTokenExpiresAt($expiresAt->add(new \DateInterval('PT3H')));
     }
-
 }

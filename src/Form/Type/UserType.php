@@ -28,7 +28,6 @@ use Symfony\Component\Form\FormEvents;
  */
 class UserType extends AbstractType
 {
-
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
@@ -97,5 +96,4 @@ class UserType extends AbstractType
             'npo_id' => null,
         ]);
     }
-
 }

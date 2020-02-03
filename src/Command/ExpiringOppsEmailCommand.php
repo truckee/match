@@ -19,11 +19,10 @@ use App\Services\ExpirationNoticeService;
 use Twig\Environment;
 
 /**
- * 
+ *
  */
 class ExpiringOppsEmailCommand extends Command
 {
-
     private $mailer;
     private $sender;
     private $twig;
@@ -50,5 +49,4 @@ class ExpiringOppsEmailCommand extends Command
 
         return 0;
     }
-
 }

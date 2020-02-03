@@ -28,20 +28,8 @@ class DefaultController extends AbstractController
     public function index()
     {
         if (null !== $this->getUser() && ($this->getUser()->hasRole('ROLE_ADMIN') || $this->getUser()->hasRole('ROLE_SUPER_ADMIN'))) {
-            
             return $this->redirectToRoute('dashboard');
         }
         return $this->render('Default/home.html.twig');
     }
-    
-    /**
-     * @Route("/sender", name = "opp_sender")
-     */
-    public function sendStuff(NewOppEmailService $sender, Environment $templating, EmailerService $mailer)
-    {
-        $sender->sendList($mailer, $templating);
-        
-        return $this->redirectToRoute('home');
-    }
-
 }

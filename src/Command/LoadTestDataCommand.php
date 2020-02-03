@@ -17,11 +17,10 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\ArrayInput;
 
 /**
- * 
+ * @codeCoverageIgnore
  */
 class LoadTestDataCommand extends Command
 {
-
     protected static $defaultName = 'app:load:test';
 
     protected function configure()
@@ -56,5 +55,4 @@ class LoadTestDataCommand extends Command
         
         return 0;
     }
-
 }

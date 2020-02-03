@@ -80,7 +80,7 @@ easy_admin:
             class: App\Entity\Admin
             disabled_actions: ['new', 'edit']
             list:
-                help: "Nonprofit activator's email receives new nonproft email. Address is also sender address for all email."
+                help: "Mailer is designated recipient and sender for all automated email"
                 actions:
                     -
                         name: 'admin_enabler'
@@ -93,6 +93,6 @@ easy_admin:
                     - 'email' 
                     -
                         property: 'activator'
-                        label: 'Nonprofit activator'
+                        label: 'Mailer'
                         template: 'Admin/activator.html.twig'
                     

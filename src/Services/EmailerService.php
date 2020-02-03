@@ -16,7 +16,6 @@ use Doctrine\ORM\EntityManagerInterface;
 
 class EmailerService
 {
-
     private $defaultMailer;
     private $em;
 
@@ -38,8 +37,8 @@ class EmailerService
                 ->setFrom($activator)
                 ->setTo($mailParams['recipient'])
                 ->setBody(
-                $mailParams['view'],
-                'text/html'
+                    $mailParams['view'],
+                    'text/html'
                 )
         ;
 
@@ -52,5 +51,4 @@ class EmailerService
 //            $this->spoolMailer->send($message);
 //        }
     }
-
 }

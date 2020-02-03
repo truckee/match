@@ -17,7 +17,6 @@ use Doctrine\ORM\EntityManagerInterface;
 
 class ExpirationNoticeService
 {
-
     private $em;
 
     public function __construct(EntityManagerInterface $em)
@@ -44,5 +43,4 @@ class ExpirationNoticeService
             $mailer->appMailer($mailParams);
         }
     }
-
 }

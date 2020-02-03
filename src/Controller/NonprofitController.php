@@ -44,5 +44,4 @@ class NonprofitController extends AbstractController
         
         return $this->render('Nonprofit/nonprofit_view.html.twig', ['npo'=>$npo]);
     }
-
 }

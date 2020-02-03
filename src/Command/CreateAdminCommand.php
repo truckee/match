@@ -23,7 +23,6 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class CreateAdminCommand extends Command
 {
-
     protected static $defaultName = 'app:create-admin';
     private $em;
     private $encoder;
@@ -51,12 +50,6 @@ class CreateAdminCommand extends Command
                     new InputOption('password', '', InputOption::VALUE_OPTIONAL, 'password'),
                 ])
         ;
-//        $this
-//                ->addArgument('fname', InputArgument::OPTIONAL, 'First name')
-//                ->addArgument('sname', InputArgument::OPTIONAL, 'Last name')
-//                ->addArgument('email', InputArgument::OPTIONAL, 'Email')
-//                ->addArgument('password', InputArgument::OPTIONAL, 'Password')
-//                ;
     }
 
     protected function interact(InputInterface $input, OutputInterface $output)
@@ -70,10 +63,7 @@ class CreateAdminCommand extends Command
                 throw new \Exception('First name may not be empty');
             }
             $input->setOption('fname', $fname);
-        } 
-//        else {
-//            $input->setOption('fname', $input->getArgument('fname'));
-//        }
+        }
 
         if (!$input->getOption('sname')) {
             $question = new Question('Last name: ', '');
@@ -82,10 +72,7 @@ class CreateAdminCommand extends Command
                 throw new \Exception('Last name may not be empty');
             }
             $input->setOption('sname', $sname);
-        } 
-//        else {
-//            $input->setOption('sname', $input->getArgument('sname'));
-//        }
+        }
 
         if (!$input->getOption('email')) {
             $question = new Question('Email: ', '');
@@ -97,10 +84,7 @@ class CreateAdminCommand extends Command
                 throw new \Exception('Not a valid email address');
             }
             $input->setOption('email', $email);
-        } 
-//        else {
-//            $input->setOption('email', $input->getArgument('email'));
-//        }
+        }
 
         if (!$input->getOption('password')) {
             $question = new Question('Password: ', '');
@@ -109,10 +93,7 @@ class CreateAdminCommand extends Command
                 throw new \Exception('Password may not be empty');
             }
             $input->setOption('password', $password);
-        } 
-//        else {
-//            $input->setOption('password', $input->getArgument('password'));
-//        }
+        }
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -120,12 +101,11 @@ class CreateAdminCommand extends Command
         $manager = new AdminManager($this->em, $this->encoder);
         $admin = $manager->createAdmin($input->getOptions());
         if (is_object($admin)) {
-             $output->writeln('Admin user created');
+            $output->writeln('Admin user created');
         } else {
             $output->writeln('Something went wrong!');
         }
         
         return 0;
     }
-
 }

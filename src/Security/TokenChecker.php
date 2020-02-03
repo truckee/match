@@ -15,7 +15,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 /**
- * 
+ *
  */
 class TokenChecker
 {
@@ -30,7 +30,7 @@ class TokenChecker
         $this->token = $token;
     }
     
-    public function checkToken($token) 
+    public function checkToken($token)
     {
         if (null === $token) {
             $this->session->getFlashBag()->add('danger', 'Registration status cannot be determined');
