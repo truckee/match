@@ -30,6 +30,7 @@ use Doctrine\Bundle\FixturesBundle\ORMFixtureInterface;
  */
 class UserFixture extends AbstractFixture implements OrderedFixtureInterface, ORMFixtureInterface
 {
+
     private $encoder;
 
     public function __construct(UserPasswordEncoderInterface $encoder)
@@ -59,7 +60,7 @@ class UserFixture extends AbstractFixture implements OrderedFixtureInterface, OR
             $manager->persist($volunteer);
         }
 
-        // user pseudo@bogus.info enabled = true:
+        // user pseudo@bogus.info enabled = true: 
         // for reset password, profile check
         {
             $volunteer1 = new Volunteer();
@@ -120,7 +121,7 @@ class UserFixture extends AbstractFixture implements OrderedFixtureInterface, OR
             $admin = new Admin();
             $admin->setEmail('admin@bogus.info');
             $admin->setEnabled(true);
-            $admin->setActivator(true);
+            $admin->setActivator(false);
             $admin->setFname('Benny');
             $admin->setSname('Borko');
             $admin->setRoles([
@@ -138,12 +139,12 @@ class UserFixture extends AbstractFixture implements OrderedFixtureInterface, OR
             $admin1->setEmail('obvious@bogus.info');
             $admin1->setEnabled(true);
             $admin1->setActivator(false);
-            $admin1->setFname('Obvious');
+            $admin1->setFname('Benny');
             $admin1->setSname('Borko');
             $admin1->setRoles([
                 'ROLE_ADMIN',
             ]);
-            $admin1->setPassword('mynameis');
+            $admin1->setPassword($this->encoder->encodePassword($admin, '123Abc'));
             $manager->persist($admin1);
         }
         
@@ -154,7 +155,7 @@ class UserFixture extends AbstractFixture implements OrderedFixtureInterface, OR
             $admin2->setEmail('nothere@bogus.info');
             $admin2->setEnabled(true);
             $admin2->setActivator(false);
-            $admin2->setFname('Nothere');
+            $admin2->setFname('Benny');
             $admin2->setSname('Borko');
             $admin2->setRoles([
                 'ROLE_ADMIN',
@@ -170,4 +171,5 @@ class UserFixture extends AbstractFixture implements OrderedFixtureInterface, OR
     {
         return 2; // the order in which fixtures will be loaded
     }
+
 }

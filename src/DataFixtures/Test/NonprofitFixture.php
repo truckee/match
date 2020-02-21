@@ -117,7 +117,9 @@ class NonprofitFixture extends AbstractFixture implements OrderedFixtureInterfac
         $manager->persist($opp1);
         $npo1->setStaff($staff1);
         $npo3->setStaff($staff2);
+        $manager->persist($staff);
         $manager->persist($staff1);
+        $manager->persist($npo);
         $manager->persist($npo1);
         $manager->persist($npo3);
         
@@ -128,4 +130,5 @@ class NonprofitFixture extends AbstractFixture implements OrderedFixtureInterfac
     {
         return 3; // the order in which fixtures will be loaded
     }
+
 }

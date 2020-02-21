@@ -18,7 +18,7 @@
                     that best match them, along with selecting from a  
                     set of possible skills you offer. That's all we do with the information 
                     you provide. Your information will never be shared.</p>
-                    {% if not is_granted('IS_AUTHENTICATED_FULLY') or is_granted('ROLE_ADMIN') %}
+                    {% if not is_granted('IS_AUTHENTICATED_FULLY') %}
                     <div class='text-center'>
                         <p><a href='{{ path('register_volunteer') }}' class='btn btn-sm btn-info'>Become a volunteer</a>
                     </div>
