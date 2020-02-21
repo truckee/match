@@ -144,7 +144,7 @@ class UserFixture extends AbstractFixture implements OrderedFixtureInterface, OR
             $admin1->setRoles([
                 'ROLE_ADMIN',
             ]);
-            $admin1->setPassword('mynameis');
+            $admin1->setPassword($this->encoder->encodePassword($admin, '123Abc'));
             $manager->persist($admin1);
         }
         
