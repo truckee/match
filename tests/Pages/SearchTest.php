@@ -23,11 +23,11 @@ class SearchTest extends WebTestCase
 
     public function setup(): void
     {
+        $this->client = $this->createClient();
         $this->loadFixtures([
             'App\DataFixtures\Test\OptionsFixture',
             'App\DataFixtures\Test\NonprofitFixture',
             ]);
-        $this->client = static::createClient();
         $this->client->followRedirects();
     }
     

@@ -11,7 +11,6 @@
 
 namespace App\Tests\Validator;
 
-use Liip\TestFixturesBundle\Test\FixturesTrait;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 /**
@@ -19,11 +18,10 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
  */
 class PasswordValidationTest extends WebTestCase
 {
-    use FixturesTrait;
 
     public function setup(): void
     {
-        $this->client = static::createClient();
+        $this->client = $this->createClient();
         $this->client->followRedirects();
     }
 

@@ -20,12 +20,14 @@ class ProfileControllerTest extends WebTestCase
 
     public function setup(): void
     {
+        $this->client = $this->createClient();
+
         $this->fixtures = $this->loadFixtures([
                     'App\DataFixtures\Test\OptionsFixture',
                     'App\DataFixtures\Test\NonprofitFixture',
                     'App\DataFixtures\Test\UserFixture',
                 ]);
-        $this->client = static::createClient();
+        
         $this->client->followRedirects();
     }
 

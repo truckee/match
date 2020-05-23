@@ -23,12 +23,14 @@ class OpportunityTest extends WebTestCase
 
     public function setup(): void
     {
+        $this->client = $this->createClient();
+        
         $this->fixtures = $this->loadFixtures([
             'App\DataFixtures\Test\OptionsFixture',
             'App\DataFixtures\Test\NonprofitFixture',
             ])
                 ->getReferenceRepository();
-        $this->client = static::createClient();
+
         $this->client->followRedirects();
         $this->client->request('GET', '/login');
         $this->client->submitForm('Sign in', [
