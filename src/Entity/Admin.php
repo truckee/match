@@ -13,7 +13,6 @@ namespace App\Entity;
 
 use App\Entity\User;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Table(name="admin")
@@ -34,8 +33,6 @@ class Admin extends User
      * @ORM\Column(type="boolean")
      */
     private $activator;
-    
-    private $admin_enabled;
     
     public function isActivator()
     {

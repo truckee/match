@@ -16,7 +16,6 @@ use App\Entity\Nonprofit;
 use App\Entity\Staff;
 use App\Form\Type\NewUserType;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\CallbackTransformer;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -104,26 +103,6 @@ class NonprofitType extends AbstractType
             ]);
         }
 
-//        $builder->get('website')
-//                ->addModelTransformer(new CallbackTransformer(
-//                                function ($withProtocol) {
-////                            dump($withProtocol);
-//                            // transform for rendering
-//                            return $withProtocol;
-//                        },
-//                                function ($unknownProtocol) {
-//                            // transform for storage
-////                            dump($unknownProtocol, preg_match("^(http|https)://^", $unknownProtocol));
-//                            if (preg_match("^(http|https)://^", $unknownProtocol)) {
-//                                return;
-//                            } elseif (strlen($unknownProtocol) > 0) {
-//                                return 'http://' . $unknownProtocol;
-//                            }
-//
-//                            return $unknownProtocol;
-//                        }
-//                ))
-//        ;
     }
 
     public function configureOptions(OptionsResolver $resolver)

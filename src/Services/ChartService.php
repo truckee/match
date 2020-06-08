@@ -11,8 +11,6 @@
 
 namespace App\Services;
 
-//use CMEN\GoogleChartsBundle\GoogleCharts\Charts\ColumnChart;
-
 /**
  *
  */

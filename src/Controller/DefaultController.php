@@ -13,9 +13,6 @@ namespace App\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
-use App\Services\NewOppEmailService;
-use App\Services\EmailerService;
-use Twig\Environment;
 
 /**
  * @Route("/")
