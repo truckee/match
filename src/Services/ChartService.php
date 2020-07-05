@@ -11,9 +11,6 @@
 
 namespace App\Services;
 
-/**
- *
- */
 class ChartService
 {
     public function volunteerChart()

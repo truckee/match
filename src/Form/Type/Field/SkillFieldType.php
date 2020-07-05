@@ -19,9 +19,6 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\Count;
 
-/**
- *
- */
 class SkillFieldType extends AbstractType
 {
     private $repo;

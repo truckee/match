@@ -90,14 +90,14 @@ class LoginFormAuthenticator extends AbstractFormLoginAuthenticator
         $user = $token->getUser();
         if ($user->hasRole('ROLE_ADMIN') || $user->hasRole('ROLE_SUPER_ADMIN')) {
             $url = $this->router->generate('dashboard');
-            
+
             return new RedirectResponse($url);
         }
-        
+
         if ($targetPath = $this->getTargetPath($request->getSession(), $providerKey)) {
             return new RedirectResponse($targetPath);
         }
-        
+
         return new RedirectResponse($this->router->generate('home'));
 
         // For example : return new RedirectResponse($this->router->generate('some_route'));

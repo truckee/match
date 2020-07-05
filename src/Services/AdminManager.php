@@ -15,9 +15,6 @@ use App\Entity\Admin;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
-/**
- *
- */
 class AdminManager
 {
     private $em;

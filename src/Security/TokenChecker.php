@@ -14,9 +14,6 @@ namespace App\Security;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
-/**
- *
- */
 class TokenChecker
 {
     private $em;

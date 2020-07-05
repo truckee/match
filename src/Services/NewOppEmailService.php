@@ -17,9 +17,6 @@ use App\Entity\Volunteer;
 use App\Services\EmailerService;
 use Doctrine\ORM\EntityManagerInterface;
 
-/**
- *
- */
 class NewOppEmailService
 {
     private $em;
