@@ -36,7 +36,7 @@ class OpportunityController extends AbstractController
     }
 
     /**
-     * @Route("/add", name="opp_add")
+     * @Route("/add", name = "opp_add")
      */
     public function addOpp(Request $request, EmailerService $mailer)
     {
@@ -76,7 +76,7 @@ class OpportunityController extends AbstractController
     }
 
     /**
-     * @Route("/edit/{id}", name="opp_edit")
+     * @Route("/edit/{id}", name = "opp_edit")
      */
     public function editOpp(Request $request, $id = null)
     {
@@ -112,7 +112,7 @@ class OpportunityController extends AbstractController
     }
 
     /**
-     * @Route("/search", name="opp_search")
+     * @Route("/search", name = "opp_search")
      */
     public function search(Request $request)
     {

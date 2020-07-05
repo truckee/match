@@ -110,7 +110,7 @@ class AdminController extends EasyAdminController
     }
 
     /**
-     * @Route("/lock/{id}", name="lock_user")
+     * @Route("/lock/{id}", name = "lock_user")
      */
     public function lockUser($id)
     {
@@ -302,7 +302,7 @@ class AdminController extends EasyAdminController
     }
     
     /**
-     * @Route("/enabler", name="admin_enabler")
+     * @Route("/enabler", name = "admin_enabler")
      */
     public function enabler(Request $request)
     {

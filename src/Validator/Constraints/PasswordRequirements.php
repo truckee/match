@@ -13,6 +13,9 @@ namespace App\Validator\Constraints;
 
 use Symfony\Component\Validator\Constraint;
 
+/**
+ *
+ */
 class PasswordRequirements extends Constraint
 {
     public $tooShortMessage = 'At least {{length}} characters long.';

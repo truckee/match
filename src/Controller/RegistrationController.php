@@ -267,7 +267,7 @@ class RegistrationController extends AbstractController
     }
 
     /**
-     * @Route("/confirm/{token}", name="confirm")
+     * @Route("/confirm/{token}", name = "confirm")
      */
     public function confirm(TokenChecker $checker, EmailerService $mailer, $token = null)
     {
@@ -347,7 +347,7 @@ class RegistrationController extends AbstractController
     }
 
     /**
-     * @Route("/invite/{token}", name="register_invite")
+     * @Route("/invite/{token}", name = "register_invite")
      */
     public function invitation(Request $request, TokenChecker $checker, UserPasswordEncoderInterface $passwordEncoder, EmailerService $mailer, $token = null)
     {

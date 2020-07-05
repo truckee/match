@@ -13,6 +13,9 @@ namespace App\Validator\Constraints;
 
 use Symfony\Component\Validator\Constraint;
 
+/**
+ *
+ */
 class GloballyUnique extends Constraint
 {
     public $message = 'Email already registered';

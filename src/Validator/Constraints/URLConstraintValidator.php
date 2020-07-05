@@ -14,6 +14,9 @@ namespace App\Validator\Constraints;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 
+/**
+ *
+ */
 class URLConstraintValidator extends ConstraintValidator
 {
     public function validate($url, Constraint $constraint)

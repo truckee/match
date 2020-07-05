@@ -30,7 +30,7 @@ class NonprofitController extends AbstractController
     }
 
     /**
-     * @Route("/view/{id}", name="npo_view")
+     * @Route("/view/{id}", name = "npo_view")
      */
     public function view($id)
     {

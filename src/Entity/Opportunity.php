@@ -20,7 +20,7 @@ use App\Validator\Constraints as CustomAssert;
  * Opportunity
  *
  * @ORM\Table(name="opportunity", indexes={@ORM\Index(name="IDX_8389C3D73A8AF33E", columns={"orgId"})})
- * @ORM\Entity(repositoryClass="App\Repository\OpportunityRepository")
+ * @ORM\Entity(repositoryClass = "App\Repository\OpportunityRepository")
  * @ORM\HasLifecycleCallbacks()
  */
 class Opportunity
