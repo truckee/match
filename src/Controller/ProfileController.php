@@ -78,7 +78,7 @@ class ProfileController extends AbstractController
         }
         $em = $this->getDoctrine()->getManager();
         if (Staff::class === get_class($user)) {
-            $templates[] = 'Default/empty.html.twig';
+            $templates[] = 'Default/_empty.html.twig';
         }
         $templates[] = 'Profile/_user.html.twig';
         if (Volunteer::class === get_class($user)) {
