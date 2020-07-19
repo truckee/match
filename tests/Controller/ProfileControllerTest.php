@@ -11,23 +11,16 @@
 
 namespace App\Tests\Controller;
 
-use Liip\TestFixturesBundle\Test\FixturesTrait;
+
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class ProfileControllerTest extends WebTestCase
 {
-    use FixturesTrait;
+
 
     public function setup(): void
     {
         $this->client = $this->createClient();
-
-        $this->fixtures = $this->loadFixtures([
-                    'App\DataFixtures\Test\OptionsFixture',
-                    'App\DataFixtures\Test\NonprofitFixture',
-                    'App\DataFixtures\Test\UserFixture',
-                ]);
-        
         $this->client->followRedirects();
     }
 
