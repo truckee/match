@@ -11,7 +11,7 @@
 
 namespace App\Tests\Pages;
 
-use Liip\TestFixturesBundle\Test\FixturesTrait;
+
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 /**
@@ -19,15 +19,11 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
  */
 class SearchTest extends WebTestCase
 {
-    use FixturesTrait;
+
 
     public function setup(): void
     {
         $this->client = $this->createClient();
-        $this->loadFixtures([
-            'App\DataFixtures\Test\OptionsFixture',
-            'App\DataFixtures\Test\NonprofitFixture',
-            ]);
         $this->client->followRedirects();
     }
     

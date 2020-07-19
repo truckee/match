@@ -11,26 +11,14 @@
 
 namespace App\Tests\Controller;
 
-use Liip\TestFixturesBundle\Test\FixturesTrait;
+
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
-/**
- * 
- */
 class OpportunityTest extends WebTestCase
 {
-    use FixturesTrait;
-
     public function setup(): void
     {
         $this->client = $this->createClient();
-        
-        $this->fixtures = $this->loadFixtures([
-            'App\DataFixtures\Test\OptionsFixture',
-            'App\DataFixtures\Test\NonprofitFixture',
-            ])
-                ->getReferenceRepository();
-
         $this->client->followRedirects();
         $this->client->request('GET', '/login');
         $this->client->submitForm('Sign in', [
@@ -55,10 +43,10 @@ class OpportunityTest extends WebTestCase
 
     public function testEditButton()
     {
-        $this->client->request('GET', '/profile/nonprofit');
-        $oppId = $this->fixtures->getReference('opp')->getId();
-        $crawler = $this->client->request('GET', '/opportunity/edit/' . $oppId);
-        $node = $crawler->selectButton('submit');
+        $npoCrawler = $this->client->clickLink('Edit nonprofit profile');
+        $btn = $npoCrawler->filter(".btn:contains('Edit')")->link();
+        $oppCrawler = $this->client->click($btn);
+        $node = $oppCrawler->selectButton('Save');
         $form = $node->form();
         $form['opportunity[oppname]'] = 'Ranger';
         $form['opportunity[description]'] = 'Dorkify';

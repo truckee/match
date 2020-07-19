@@ -11,7 +11,7 @@
 
 namespace App\Tests\Controller;
 
-use Liip\TestFixturesBundle\Test\FixturesTrait;
+
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 /**
@@ -19,18 +19,9 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
  */
 class NonprofitControllerTest extends WebTestCase
 {
-    use FixturesTrait;
-
     public function setup(): void
     {
         $this->client = $this->createClient();
-        
-        $this->fixtures = $this->loadFixtures([
-                    'App\DataFixtures\Test\OptionsFixture',
-                    'App\DataFixtures\Test\NonprofitFixture',
-                ])
-                ->getReferenceRepository();
-        
         $this->client->followRedirects();
     }
 

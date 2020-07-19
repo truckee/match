@@ -11,57 +11,56 @@
 
 namespace App\Tests\Controller;
 
-use Liip\TestFixturesBundle\Test\FixturesTrait;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class AdminControllerTest extends WebTestCase
 {
-    use FixturesTrait;
-
     public function setup(): void
     {
         $this->client = $this->createClient();
-        
-        $this->fixtures = $this->loadFixtures([
-                    'App\DataFixtures\Test\OptionsFixture',
-                    'App\DataFixtures\Test\NonprofitFixture',
-                    'App\DataFixtures\Test\UserFixture',
-                ])
-                ->getReferenceRepository();
-        
         $this->client->followRedirects();
         $this->client->request('GET', '/login');
         $this->client->submitForm('Sign in', [
             'email' => 'admin@bogus.info',
             'password' => '123Abc',
         ]);
+        $this->crawler = $this->client->request('GET', '/admin');
+
     }
     
-    public function testLogin()
+    public function testDashboard()
     {
         $this->client->request('GET', '/admin/dashboard');
         
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+        $this->assertStringContainsString('Admin dashboard', $this->client->getResponse()->getContent());
+        
+        $this->client->request('GET', '/admin');
+        $this->assertStringContainsString('Nonprofit', $this->client->getResponse()->getContent());
+        $this->assertStringContainsString('Activate', $this->client->getResponse()->getContent());
     }
     
     public function testActivateNonprofit()
     {
-        $id = $this->fixtures->getReference('marmot')->getId();
-        
-        $this->client->request('GET', '/admin/status/3456789');
-        
-        $this->assertStringContainsString('Nonprofit not found', $this->client->getResponse()->getContent());
-
-        $this->client->request('GET', '/admin/status/' . $id);
+//        $crawler = $this->client->request('GET', '/admin');
+        $this->client->clickLink('Activate');
         
         $this->assertStringContainsString('Nonprofit activated!', $this->client->getResponse()->getContent());
+
+        }
+    
+    public function testDeactivateNonprofit()
+    {
+        $btn = $this->crawler->filter(".btn:contains('Deactivate')")->link();
+        $this->client->click($btn);
+        
+        $this->assertStringContainsString('Nonprofit deactivated', $this->client->getResponse()->getContent());
     }
     
     public function testActivationEmail()
     {
-        $id = $this->fixtures->getReference('marmot')->getId();
         $this->client->followRedirects(false);
-        $this->client->request('GET', '/admin/status/' . $id);
+        $this->client->clickLink('Activate');
         $mailCollector = $this->client->getProfile()->getCollector('swiftmailer');
 
         $this->assertSame(1, $mailCollector->getMessageCount());
@@ -71,46 +70,30 @@ class AdminControllerTest extends WebTestCase
         $this->assertStringContainsString('You will now be able post opportunities', $message->getBody());        
     }
     
-    public function testDeactivateNonprofit()
+    public function testLockAndUnlockUser()
     {
-        $id = $this->fixtures->getReference('marmot')->getId();
-        $this->client->request('GET', '/admin/status/' . $id);
-        $this->client->request('GET', '/admin/status/' . $id);
+        $this->client->clickLink('Volunteer');
         
-        $this->assertStringContainsString('Nonprofit deactivated', $this->client->getResponse()->getContent()); 
-        
-        $this->client->request('GET', '/login');
-        $this->client->submitForm('Sign in', [
-            'email'=>'unknown@bogus.info',
-            'password'=>'123Abc',
-        ]);
-        
-        $this->assertStringContainsString('Account is locked', $this->client->getResponse()->getContent()); 
-    }
-    
-    public function testEasyAdminPage()
-    {
-        $this->client->request('GET', '/admin');
-        
-        $this->assertStringContainsString('Benny Borko', $this->client->getResponse()->getContent());
-    }
-    
-    public function testLockUser()
-    {
-        $id = $this->fixtures->getReference('volunteer')->getId();
-        $this->client->request('GET', '/admin/lock/' . $id);
+        $this->assertStringContainsString('Locked?', $this->client->getResponse()->getContent());
+
+        $this->client->clickLink('Lock');
         
         $this->assertStringContainsString('is now locked', $this->client->getResponse()->getContent());
-        
-        $this->client->request('GET', '/admin/lock/' . $id);
+
+        $this->client->clickLink('Unlock');
         
         $this->assertStringContainsString('is now unlocked', $this->client->getResponse()->getContent());
     }
     
     public function testReplaceStaff()
     {
-        $id = $this->fixtures->getReference('staff')->getId();
-        $this->client->request('GET', '/admin/replaceStaff/' . $id);
+        $this->client->clickLink('Staff');
+        
+        $this->assertStringContainsString('Locking staff deactivates nonprofit', $this->client->getResponse()->getContent());
+
+        $this->client->clickLink('Replace');
+
+        $this->assertStringContainsString('Replacement for', $this->client->getResponse()->getContent());
         $this->client->submitForm('Save', [
             'user[fname]' => 'Useless',
             'user[sname]' => 'Garbage',
