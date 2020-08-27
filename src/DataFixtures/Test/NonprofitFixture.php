@@ -31,19 +31,19 @@ class NonprofitFixture extends AbstractFixture implements OrderedFixtureInterfac
 
     public function load(ObjectManager $manager)
     {
-        $npo = new Nonprofit();
-        $npo->setOrgname('Marmot Fund');
-        $npo->setEin('123456789');
-        $npo->setActive(false);
-        $this->setReference('marmot', $npo);
-
         $npo1 = new Nonprofit();
-        $npo1->setOrgname('Turkey Fund');
-        $npo1->setEin('321654978');
-        $npo1->setActive(true);
-        $npo1->setWebsite('http://turkeysRUs.bogus.info');
-        $npo1->addFocus($this->getReference('focus_health'));
-        $this->setReference('nonprofit', $npo1);
+        $npo1->setOrgname('Marmot Fund');
+        $npo1->setEin('123456789');
+        $npo1->setActive(false);
+        $this->setReference('marmot', $npo1);
+
+        $npo2 = new Nonprofit();
+        $npo2->setOrgname('Turkey Fund');
+        $npo2->setEin('321654978');
+        $npo2->setActive(true);
+        $npo2->setWebsite('http://turkeysRUs.bogus.info');
+        $npo2->addFocus($this->getReference('focus_health'));
+        $this->setReference('nonprofit', $npo2);
 
         $npo3 = new Nonprofit();
         $npo3->setOrgname('Talk Trash Fund');
@@ -51,43 +51,46 @@ class NonprofitFixture extends AbstractFixture implements OrderedFixtureInterfac
         $npo3->setActive(true);
         $npo3->setWebsite('http://ttrash.bogus.info');
 
-        $staff = new Staff();
-        $staff->setConfirmationToken('tuvxyz');
-        $staff->setEmail('unknown@bogus.info');
-        $staff->setEnabled(false);
-        $staff->setFname('Unknown');
-        $staff->setSname('Bogus');
-        $password = $this->encoder->encodePassword($staff, '123Abc');
-        $staff->setPassword($password);
-        $staff->setRoles(['ROLE_STAFF']);
-        $expires = new \DateTime();
-        $staff->setTokenExpiresAt($expires->add(new \DateInterval('P10Y')));
-
         $staff1 = new Staff();
-        $staff1->setEmail('staff@bogus.info');
-        $staff1->setEnabled(true);
-        $staff1->setFname('Misfit');
+        $staff1->setConfirmationToken('tuvxyz');
+        $staff1->setEmail('unknown@bogus.info');
+        $staff1->setEnabled(false);
+        $staff1->setFname('Unknown');
         $staff1->setSname('Bogus');
-        $password2 = $this->encoder->encodePassword($staff1, '123Abc');
-        $staff1->setPassword($password2);
+        $password = $this->encoder->encodePassword($staff1, '123Abc');
+        $staff1->setPassword($password);
         $staff1->setRoles(['ROLE_STAFF']);
-        $this->setReference('staff', $staff1);
+        $expires = new \DateTime();
+        $staff1->setTokenExpiresAt($expires->add(new \DateInterval('P10Y')));
+        $staff1->setNonprofit($npo1);
 
         $staff2 = new Staff();
-        $staff2->setEmail('rather@bogus.info');
+        $staff2->setEmail('staff@bogus.info');
         $staff2->setEnabled(true);
-        $staff2->setFname('Rather');
+        $staff2->setFname('Misfit');
         $staff2->setSname('Bogus');
-        $password1 = $this->encoder->encodePassword($staff2, '123Abc');
-        $staff2->setPassword($password1);
+        $password2 = $this->encoder->encodePassword($staff2, '123Abc');
+        $staff2->setPassword($password2);
         $staff2->setRoles(['ROLE_STAFF']);
+        $this->setReference('staff', $staff2);
+        $staff2->setNonprofit($npo2);
 
-        $npo->setStaff($staff);
-        $manager->persist($staff);
-        $manager->persist($npo);
+        $staff3 = new Staff();
+        $staff3->setEmail('rather@bogus.info');
+        $staff3->setEnabled(true);
+        $staff3->setFname('Rather');
+        $staff3->setSname('Bogus');
+        $password1 = $this->encoder->encodePassword($staff3, '123Abc');
+        $staff3->setPassword($password1);
+        $staff3->setRoles(['ROLE_STAFF']);
+        $staff3->setNonprofit($npo3);
+
+//        $npo1->setStaff($staff1);
+        $manager->persist($staff1);
+        $manager->persist($npo1);
 
         $opp = new Opportunity();
-        $opp->setNonprofit($npo1);
+        $opp->setNonprofit($npo2);
         $opp->setActive(true);
         $opp->setOppname('Feeder');
         $opp->setDescription('Lorem ipsum dolor sit amet, consectetuer adipiscing '
@@ -110,17 +113,17 @@ class NonprofitFixture extends AbstractFixture implements OrderedFixtureInterfac
                 . 'purus ipsum pretium metus, in lacinia nulla nisl eget sapien.');
         $opp1->addSkill($this->getReference('skill_admin'));
         
-        $npo1->addOpportunity($opp);
+        $npo2->addOpportunity($opp);
         $npo3->addOpportunity($opp1);
         
         $manager->persist($opp);
         $manager->persist($opp1);
-        $npo1->setStaff($staff1);
-        $npo3->setStaff($staff2);
-        $manager->persist($staff);
-        $manager->persist($staff1);
-        $manager->persist($npo);
+//        $npo2->setStaff($staff2);
+//        $npo3->setStaff($staff3);
+        $manager->persist($staff2);
+        $manager->persist($staff3);
         $manager->persist($npo1);
+        $manager->persist($npo2);
         $manager->persist($npo3);
         
         $manager->flush();
