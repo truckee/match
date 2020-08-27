@@ -7,7 +7,7 @@
  * file that was distributed with this source code.
  */
 
-//src/insert_path_here/TokenChecker.php
+//src/Security/TokenChecker.php
 
 namespace App\Security;
 
