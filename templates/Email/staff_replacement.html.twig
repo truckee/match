@@ -1,10 +1,11 @@
 <p>Hi {{ replacement.fname }}</p>
+{#{{ 'register/reset/'~token }}#}
 <p>ConnectionsReno has been asked to designate you as the person
     who will manage the {{ nonprofit.orgname }} account. In order for
     this transition to be completed you need to complete your 
     registration by creating a password. This is easily done by simply
     clicking on this <a href="{{ absolute_url(path('reset_password', {'token':token})) }}">link
     </a>.</p>
-    <p>This link will expire in 3 hours [@ {{ expires|date('g:i A, l, F j') }}].</p>
+    <p>This link will expire in 7 days [@ {{ expires|date('g:i A, l, F j') }}].</p>
 <p>Welcome aboard!</p>
 <p>The ConnectionsReno team</p>
