@@ -14,7 +14,7 @@ namespace App\Tests\Validator;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 /**
- * 
+ * @group Validator
  */
 class UniquePasswordTest extends WebTestCase
 {

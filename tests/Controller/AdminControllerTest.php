@@ -13,6 +13,9 @@ namespace App\Tests\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
+/**
+ * @group Admin
+ */
 class AdminControllerTest extends WebTestCase
 {
     public function setup(): void
@@ -42,7 +45,7 @@ class AdminControllerTest extends WebTestCase
     
     public function testActivateNonprofit()
     {
-//        $crawler = $this->client->request('GET', '/admin');
+        $crawler = $this->client->request('GET', '/admin');
         $this->client->clickLink('Activate');
         
         $this->assertStringContainsString('Nonprofit activated!', $this->client->getResponse()->getContent());

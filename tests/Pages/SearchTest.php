@@ -15,7 +15,7 @@ namespace App\Tests\Pages;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 /**
- * 
+ * @group Pages
  */
 class SearchTest extends WebTestCase
 {

@@ -14,7 +14,7 @@ namespace App\Tests\Controller;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 /**
- *
+ * @group Security
  */
 class SecurityTest extends WebTestCase
 {

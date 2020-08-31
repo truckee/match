@@ -14,7 +14,7 @@ namespace App\Tests\Controller;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 /**
- *
+ * @group Registration
  */
 class RegistrationTest extends WebTestCase
 {

@@ -13,6 +13,9 @@ namespace App\Tests\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
+/**
+ * @group Volunteer
+ */
 class VolunteerRegistrationControllerTest extends WebTestCase
 {
 

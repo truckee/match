@@ -19,9 +19,8 @@ use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Common\Persistence\ObjectRepository;
 use PHPUnit\Framework\TestCase;
 
-
 /**
- * 
+ * @group Services
  */
 class OppEmailTest extends TestCase
 {
