@@ -14,7 +14,7 @@ namespace App\Tests\Controller;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 /**
- *
+ * @group NonprofitReg
  */
 class NonprofitRegistrationControllerTest extends WebTestCase
 {
@@ -109,7 +109,8 @@ class NonprofitRegistrationControllerTest extends WebTestCase
         $form['org[staff][plainPassword][second]'] = '123Abc';
         $form['org[focuses]'][0]->tick();
         $this->client->submit($form);
-
+        file_put_contents('g:\\documents\\response.html', $this->client->getResponse()->getContent());
+        die;
         return $this->client->getResponse()->getContent();
     }
 }

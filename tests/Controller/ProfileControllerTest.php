@@ -14,6 +14,9 @@ namespace App\Tests\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
+/**
+ * @group Profile
+ */
 class ProfileControllerTest extends WebTestCase
 {
 

@@ -15,7 +15,7 @@ namespace App\Tests\Controller;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 /**
- * 
+ * @group Nonprofit
  */
 class NonprofitControllerTest extends WebTestCase
 {

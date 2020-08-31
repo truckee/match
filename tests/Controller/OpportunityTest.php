@@ -14,6 +14,9 @@ namespace App\Tests\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
+/**
+ * @group Opportunity
+ */
 class OpportunityTest extends WebTestCase
 {
     public function setup(): void
