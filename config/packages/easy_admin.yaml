@@ -11,7 +11,7 @@ easy_admin:
             - Nonprofit
             - Focus
             - Skill
-            - Staff
+            - { entity: 'Representative', label: 'Staff' }
             - Volunteer
             - Admin
             - { label: 'Home', route: 'home' }
@@ -30,8 +30,8 @@ easy_admin:
                     - {property: 'active', template: 'Nonprofit/activate_button.html.twig'}
                     - {property: 'orgname', label: 'Name'}
                     - {property: 'ein', label: 'EIN', template: 'Nonprofit/ein.html.twig'}
-                    - {property: 'staff.fullName', label: 'Staff'}
-                    - {property: 'staff.email', label: 'Email', template: 'Nonprofit/staff_email.html.twig'}
+                    - {property: 'reps', label: 'Staff', type: array}
+#                    - {property: 'staff', label: 'Email', template: 'Nonprofit/staff_email.html.twig'}
             edit: 
                 fields: 
                     - {property: 'orgname', label: 'Name'}
@@ -65,13 +65,14 @@ easy_admin:
                     - { property: 'fullName', label: 'Name'}
                     - email
                     - 'receiveEmail'
-        Staff:
-            class: App\Entity\Staff
+        Representative:
+            class: App\Entity\Representative
+            label: 'Staff'
             disabled_actions: ['new', 'edit']
             list:
                 help: 'Locking staff deactivates nonprofit and blocks staff log in. Replacing also removes current staff.'
                 fields: 
-                    - { property: 'locked', label: 'Locked?', template: 'Admin/locked_badge.html.twig'}
+#                    - { property: 'locked', label: 'Locked?', template: 'Admin/locked_badge.html.twig'}
                     - { property: 'replace', template: 'Admin/replace_staff.html.twig'}
                     - { property: 'fullName', label: 'Name'}
                     - email

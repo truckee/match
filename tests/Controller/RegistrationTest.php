@@ -85,7 +85,7 @@ class RegistrationTest extends WebTestCase
     {
         $this->client->request('GET', '/register/reset/fedcba');
 
-        $this->assertStringContainsString('Password forgotten link has expired', $this->client->getResponse()->getContent());
+        $this->assertStringContainsString('Password link has expired', $this->client->getResponse()->getContent());
     }
 
     public function testResetPasswordValidTokenAndLogIn()

@@ -7,15 +7,12 @@
  * file that was distributed with this source code.
  */
 
-//src/insert_path_here/GloballyUnique.php
+//src/Validator/GloballyUnique.php
 
 namespace App\Validator\Constraints;
 
 use Symfony\Component\Validator\Constraint;
 
-/**
- *
- */
 class GloballyUnique extends Constraint
 {
     public $message = 'Email already registered';

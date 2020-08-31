@@ -12,7 +12,7 @@
 namespace App\Controller;
 
 use App\Entity\Opportunity;
-use App\Entity\Staff;
+use App\Entity\Representative;
 use App\Entity\Volunteer;
 use App\Form\Type\NonprofitType;
 use App\Form\Type\UserType;
@@ -32,7 +32,7 @@ class ProfileController extends AbstractController
     public function nonprofit(Request $request)
     {
         $user = $this->getUser();
-        if (!$user || !$user->hasRole('ROLE_STAFF')) {
+        if (!$user || !$user->hasRole('ROLE_REP')) {
             return $this->redirectToRoute('home');
         }
         $em = $this->getDoctrine()->getManager();
@@ -62,6 +62,7 @@ class ProfileController extends AbstractController
                     'templates' => $templates,
                     'headerText' => $headerText,
                     'npo' => $npo,
+                    'rep' => $user,
                     'focusHeader' => $npo->getOrgname() . "'s Focus(es)",
                     'opportunities' => $opps,
         ]);
@@ -77,7 +78,7 @@ class ProfileController extends AbstractController
             return $this->redirectToRoute('home');
         }
         $em = $this->getDoctrine()->getManager();
-        if (Staff::class === get_class($user)) {
+        if (Representative::class === get_class($user)) {
             $templates[] = 'Default/_empty.html.twig';
         }
         $templates[] = 'Profile/_user.html.twig';

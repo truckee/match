@@ -37,7 +37,7 @@ class ProfileControllerTest extends WebTestCase
         $this->client->request('GET', '/profile/person');
 
         $this->assertStringContainsString('Exceptionally Bogus profile', $this->client->getResponse()->getContent());
-file_put_contents("G:\\Documents\\response.html", $this->client->getResponse()->getContent());
+        
         $this->client->submitForm('Save', [
             'user[fname]' => 'Unchained',
         ]);

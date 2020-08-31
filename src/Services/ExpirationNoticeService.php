@@ -12,35 +12,40 @@
 namespace App\Services;
 
 use App\Entity\Opportunity;
+use App\Entity\Representative;
 use App\Services\EmailerService;
 use Doctrine\ORM\EntityManagerInterface;
 
 class ExpirationNoticeService
 {
+
     private $em;
 
-    public function __construct(EntityManagerInterface $em)
-    {
+    public function __construct(EntityManagerInterface $em) {
         $this->em = $em;
     }
 
-    public function expirationNotices(EmailerService $mailer)
-    {
+    public function expirationNotices(EmailerService $mailer) {
         $opps = $this->em->getRepository(Opportunity::class)->getExpiringOpps();
         if (empty($opps)) {
             return;
         }
         foreach ($opps as $item) {
-            $staff = $item->getNonprofit()->getStaff();
+            $npo = $item->getNonprofit();
+            $rep = $this->em->getRepository(Representative::class)->findOneBy([
+                'nonprofit' => $npo,
+                'replacementStatus' => 'Replace',
+            ]);
             $view = 'Email/expiration_notice.html.twig';
-            $context = ['opp' => $item, 'staff' => $staff,];
+            $context = ['opp' => $item, 'staff' => $rep,];
             $mailParams = [
                 'view' => $view,
                 'context' => $context,
-                'recipient' => $staff->getEmail(),
+                'recipient' => $rep->getEmail(),
                 'subject' => 'Expiring opportunity',
             ];
             $mailer->appMailer($mailParams);
         }
     }
+
 }

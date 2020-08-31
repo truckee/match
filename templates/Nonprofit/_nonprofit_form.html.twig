@@ -2,7 +2,7 @@
     Nonprofit organization
 </div>{% if npo is defined %}
     <div class="text-center mb-2">
-        Staff: {{ npo.staff.fname }} {{ npo.staff.sname }};  {{ npo.staff.email }}
+        Staff: {{ rep.fname }} {{ rep.sname }};  {{ rep.email }}
     </div>
 {% endif %}
 {{ form_row(form.orgname) }}
