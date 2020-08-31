@@ -102,15 +102,14 @@ class NonprofitRegistrationControllerTest extends WebTestCase
         $form['org[zip]'] = '11111';
         $form['org[phone]'] = '5555551212';
         $form['org[website]'] = 'www.somesite.org';
-        $form['org[staff][fname]'] = 'Benny';
-        $form['org[staff][sname]'] = 'Borko';
-        $form['org[staff][email]'] = $params['email'];
-        $form['org[staff][plainPassword][first]'] = '123Abc';
-        $form['org[staff][plainPassword][second]'] = '123Abc';
+        $form['org[rep][fname]'] = 'Benny';
+        $form['org[rep][sname]'] = 'Borko';
+        $form['org[rep][email]'] = $params['email'];
+        $form['org[rep][plainPassword][first]'] = '123Abc';
+        $form['org[rep][plainPassword][second]'] = '123Abc';
         $form['org[focuses]'][0]->tick();
         $this->client->submit($form);
-        file_put_contents('g:\\documents\\response.html', $this->client->getResponse()->getContent());
-        die;
+
         return $this->client->getResponse()->getContent();
     }
 }

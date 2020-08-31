@@ -209,7 +209,6 @@ class AdminControllerTest extends WebTestCase
         $form['focus[focus]'] = 'Another focus';
         $form['focus[enabled]']->tick();
         $this->client->submit($form);
-        file_put_contents('g:\\documents\\response.html', $this->client->getResponse()->getContent());
         
         $this->assertStringContainsString('<strong>4</strong> results', $this->client->getResponse()->getContent());
     }
@@ -223,7 +222,6 @@ class AdminControllerTest extends WebTestCase
         $form['skill[skill]'] = 'Another skill';
         $form['skill[enabled]']->tick();
         $this->client->submit($form);
-        file_put_contents('g:\\documents\\response.html', $this->client->getResponse()->getContent());
         
         $this->assertStringContainsString('<strong>4</strong> results', $this->client->getResponse()->getContent());
     }

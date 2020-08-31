@@ -20,7 +20,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
  * @ORM\InheritanceType("JOINED")
  * @ORM\DiscriminatorColumn(name="type", type="string")
- * @ORM\DiscriminatorMap({"staff" = "Staff", "volunteer" = "Volunteer", "admin" = "Admin"})
+ * @ORM\DiscriminatorMap({"rep" = "Representative", "volunteer" = "Volunteer", "admin" = "Admin"})
  */
 abstract class User implements UserInterface
 {

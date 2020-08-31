@@ -41,7 +41,7 @@ class OpportunityController extends AbstractController
     public function addOpp(Request $request, EmailerService $mailer)
     {
         $user = $this->getUser();
-        if (null === $user || !$user->hasRole('ROLE_STAFF')) {
+        if (null === $user || !$user->hasRole('ROLE_REP')) {
             return $this->redirectToRoute('home');
         }
         $nonprofit = $user->getNonprofit();
@@ -81,7 +81,7 @@ class OpportunityController extends AbstractController
     public function editOpp(Request $request, $id = null)
     {
         $user = $this->getUser();
-        if (null === $user || !$user->hasRole('ROLE_STAFF') || null === $id) {
+        if (null === $user || !$user->hasRole('ROLE_REP') || null === $id) {
             return $this->redirectToRoute('home');
         }
 

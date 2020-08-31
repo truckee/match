@@ -13,6 +13,7 @@ namespace App\Entity;
 
 use App\Entity\Focus;
 use App\Entity\Opportunity;
+use App\Entity\Representative;
 use App\Validator\Constraints as CustomAssert;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -32,6 +33,7 @@ class Nonprofit
     public function __construct()
     {
         $this->opportunities = new ArrayCollection();
+        $this->reps = new ArrayCollection();
         $this->focuses = new ArrayCollection();
         // nonprofits must be activated manually
         $this->addDate = new \DateTime();
@@ -123,11 +125,9 @@ class Nonprofit
     protected $opportunities;
 
     /**
-     * @ORM\OneToOne(targetEntity="Staff", inversedBy="nonprofit", cascade={"persist", "remove"}, fetch="EAGER")
-     * @ORM\JoinColumn(name="staff_id", referencedColumnName="id")
-     * @Assert\Valid
+     * @ORM\OneToMany(targetEntity="App\Entity\Representative", mappedBy="nonprofit", cascade={"persist", "remove"})
      */
-    protected $staff;
+    protected $reps;
 
     /**
      * @ORM\ManyToMany(targetEntity="Focus", inversedBy="nonprofits", cascade={"persist"}, fetch="EAGER")
@@ -179,18 +179,22 @@ class Nonprofit
         return $this;
     }
 
-    public function getStaff()
+    public function getReps()
     {
-        return $this->staff;
+        return $this->reps;
     }
 
-    public function setStaff($staff): self
+    public function addRep($rep): self
     {
-        $this->staff = $staff;
+        $this->reps[] = $rep;
 
         return $this;
     }
 
+    public function removeRep(Representative $rep) {
+        $this->reps->removeElement($rep);
+    }
+    
     public function getState(): ?string
     {
         return $this->state;
@@ -319,5 +323,16 @@ class Nonprofit
         $this->ein = $ein;
 
         return $this;
+    }
+    
+    public function getRepresentative() {
+        $reps = $this->reps;
+        foreach ($reps as $person) {
+            if ($person->getReplacementStatus() === 'Replace') {
+                $rep = $person;
+            }
+        }
+        
+        return $rep;
     }
 }

@@ -13,7 +13,7 @@ namespace App\Controller;
 
 use App\Entity\Admin;
 use App\Entity\Nonprofit;
-use App\Entity\Staff;
+use App\Entity\Representative;
 use App\Entity\User;
 use App\Entity\Volunteer;
 use App\Form\Type\UserType;
@@ -67,19 +67,19 @@ class AdminController extends EasyAdminController
 
         $status = $npo->isActive();
         $npo->setActive(!$status);
-        $staff = $npo->getStaff();
-
-// activate if $status is false
+        $rep = $em->getRepository(Representative::class)->findOneBy(['nonprofit' => $npo, 'replacementStatus' => 'Replace']);
+        
+        // activate staff if $status is false
         if (false === $status) {
-            $staff->setLocked(false);
-            $staff->setEnabled(true);
+            $rep->setLocked(false);
+            $rep->setEnabled(true);
             $view = $this->renderView('Email/nonprofit_activated.html.twig', [
                 'npo' => $npo,
-                'staff' => $npo->getStaff(),
+                'staff' => $rep,
             ]);
             $mailParams = [
                 'view' => $view,
-                'recipient' => $npo->getStaff()->getEmail(),
+                'recipient' => $rep->getEmail(),
                 'subject' => 'Nonprofit activated!',
             ];
             $mailer->appMailer($mailParams);
@@ -90,14 +90,14 @@ class AdminController extends EasyAdminController
             );
         } else {
             $npo->setActive(false);
-            $staff->setLocked(true);
+            $rep->setLocked(true);
             $this->addFlash(
                     'success',
                     'Nonprofit deactivated; staff account locked'
             );
         }
         $em->persist($npo);
-        $em->persist($staff);
+        $em->persist($rep);
         $em->flush();
 
 
@@ -153,7 +153,14 @@ class AdminController extends EasyAdminController
             $queryBuilder->andWhere($dqlFilter);
         }
 
-        if (Volunteer::class === $entityClass || Staff::class === $entityClass) {
+        if (Volunteer::class === $entityClass) {
+            $queryBuilder->addOrderBy('entity.sname', 'ASC');
+            $queryBuilder->addOrderBy('entity.fname', 'ASC');
+            $queryBuilder->addOrderBy('entity.email', 'ASC');
+        }
+
+        if (Representative::class === $entityClass) {
+            $queryBuilder->addOrderBy('entity.nonprofit', 'ASC');
             $queryBuilder->addOrderBy('entity.sname', 'ASC');
             $queryBuilder->addOrderBy('entity.fname', 'ASC');
             $queryBuilder->addOrderBy('entity.email', 'ASC');
@@ -171,20 +178,29 @@ class AdminController extends EasyAdminController
             return;
         }
 
-        $replacement = new Staff();
+        $replacement = new Representative();
         $em = $this->getDoctrine()->getManager();
-        $staff = $em->getRepository(Staff::class)->find($id);
-        $nonprofit = $staff->getNonprofit();
+        $rep = $em->getRepository(Representative::class)->find($id);
+        $nonprofit = $rep->getNonprofit();
         $form = $this->createForm(UserType::class, $replacement, [
-            'data_class' => Staff::class,
-            'npo_id' => $nonprofit->getId(),
+            'data_class' => Representative::class,
         ]);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $email = $request->request->get('user')['email'];
-            $id = $request->request->get('user')['npoid'];
             $token = md5(uniqid(rand(), true));
-            $expiresAt = new \DateTime();
+            $expiresAt = date_add(new \DateTime(), new \DateInterval('P7D'));
+
+            $replacement->setTokenExpiresAt($expiresAt);
+            $replacement->setConfirmationToken($token);
+            $replacement->setPassword('hailhail');
+            $replacement->setEnabled(false);
+            $replacement->setNonprofit($nonprofit);
+            $replacement->setReplacementStatus('Replacement');
+            $replacement->setInitiated(new \DateTime());
+            
+            $rep->setReplacementStatus('Pending');
+            
             $view = $this->renderView('Email/staff_replacement.html.twig', [
                 'replacement' => $replacement,
                 'nonprofit' => $nonprofit,
@@ -198,12 +214,7 @@ class AdminController extends EasyAdminController
             ];
             $mailer->appMailer($mailParams);
 
-            $replacement->setConfirmationToken($token);
-            $replacement->setTokenExpiresAt($expiresAt->add(new \DateInterval('PT3H')));
-            $replacement->setReplacementOrg($id);
-            // password is required but never used
-            $replacement->setPassword('hailhail');
-            $replacement->setEnabled(false);
+            $em->persist($rep);
             $em->persist($replacement);
             $em->flush();
 
@@ -217,9 +228,9 @@ class AdminController extends EasyAdminController
                     'templates' => [
                         'Default/_empty.html.twig',
                         'Profile/_user.html.twig'],
-                    'staff' => $staff,
-                    'headerText' => 'Replacement for ' . $staff->getFullName() . '<br />' .
-                    $staff->getNonprofit()->getOrgname(),
+                    'staff' => $rep,
+                    'headerText' => 'Replacement for ' . $rep->getFullName() . '<br />' .
+                    $rep->getNonprofit()->getOrgname(),
                 ])
         ;
     }

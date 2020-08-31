@@ -13,7 +13,7 @@ namespace App\Form\Type;
 
 use App\Form\Type\Field\FocusFieldType;
 use App\Entity\Nonprofit;
-use App\Entity\Staff;
+use App\Entity\Representative;
 use App\Form\Type\NewUserType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -97,9 +97,10 @@ class NonprofitType extends AbstractType
         ;
 
         if (true === $options['register']) {
-            $builder->add('staff', NewUserType::class, [
+            $builder->add('rep', NewUserType::class, [
                 'label' => false,
-                'data_class' => Staff::class,
+                'data_class' => Representative::class,
+                'mapped' => false,
             ]);
         }
 
