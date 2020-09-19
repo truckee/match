@@ -130,7 +130,7 @@ class RegistrationController extends AbstractController
             // if user is a staff replacement accept user
             if (Representative::class === get_class($user) && 'Replacement' === $user->getReplacementStatus()) {
                 $nonprofit = $user->getNonprofit();
-                $replacedStaff = $em->getRepository(Representative::class)->findOneBy(['replacementStatus' => 'pending']);
+                $replacedStaff = $em->getRepository(Representative::class)->findOneBy(['replacementStatus' => 'Pending']);
                 $replacedStaff->setReplacementStatus("Replaced");
                 $replacedStaff->setEnabled(false);
                 $user->setReplacementStatus('Replace');
