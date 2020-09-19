@@ -88,7 +88,7 @@ class AdminControllerTest extends WebTestCase
         $this->assertStringContainsString('is now unlocked', $this->client->getResponse()->getContent());
     }
     
-    public function testReplaceStaff()
+    public function testStaffReplacementEmailSent()
     {
         $this->client->clickLink('Staff');
         
@@ -104,6 +104,36 @@ class AdminControllerTest extends WebTestCase
         ]);
         
         $this->assertStringContainsString('Replacement email sent', $this->client->getResponse()->getContent());
+    }
+    
+    public function testStaffReplacementEmailToken()
+    {
+        $this->client->clickLink('Staff');
+        $this->client->followRedirects(false);
+        $this->client->clickLink('Replace');
+        $this->client->submitForm('Save', [
+            'user[fname]' => 'Useless',
+            'user[sname]' => 'Garbage',
+            'user[email]' => 'ugar@bogus.info'
+        ]);
+        
+        $mailCollector = $this->client->getProfile()->getCollector('swiftmailer');
+
+        $this->assertSame(1, $mailCollector->getMessageCount());
+        $collectedMessages = $mailCollector->getMessages();
+        $message = $collectedMessages[0];
+        $body = $message->getBody();
+        $pos = strpos($body, '">link') - 32;
+        $token = substr($body, $pos, 32);
+        
+        $this->client->followRedirects(true);
+        $this->client->request('GET', '/register/reset/' . $token);
+        $this->client->submitForm('Save', [
+            'new_password[plainPassword][first]' => 'Abc123',
+            'new_password[plainPassword][second]' => 'Abc123',
+        ]);
+        
+        $this->assertStringContainsString('You are now the registered representative', $this->client->getResponse()->getContent());
     }
     
     public function testInviteExistingEmail()
