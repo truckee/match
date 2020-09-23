@@ -29,24 +29,6 @@ use EasyCorp\Bundle\EasyAdminBundle\Controller\EasyAdminController;
  */
 class AdminController extends EasyAdminController
 {
-
-    /**
-     * @Route("/dashboard", name="dashboard")
-     *
-     */
-    public function index(ChartService $charter)
-    {
-        $volChart = $charter->volunteerChart();
-        $searchGauge = $charter->searchGauge();
-        $focus = $charter->sankeyFocus();
-
-        return $this->render('Admin/index.html.twig', [
-                    'vol_chart' => $volChart,
-                    'search_gauge' => $searchGauge,
-                    'focus' => $focus
-        ]);
-    }
-
     /**
      * Activates or deactivates a nonprofit
      * 
@@ -103,7 +85,7 @@ class AdminController extends EasyAdminController
 
         $route = $request->query->get('route');
         if (null !== $route) {
-            return $this->redirectToRoute('easyadmin', ['entity' => 'Nonprofit']);
+            return $this->redirect($route);
         }
 
         return $this->redirectToRoute('dashboard');

@@ -83,7 +83,7 @@ class RegistrationController extends AbstractController
             ];
             $mailer->appMailer($mailParams);
 
-            return $this->redirectToRoute('home');
+            return $this->redirectToRoute('home_page');
         }
 
         return $this->render('Registration/forgot.html.twig', [
@@ -98,7 +98,7 @@ class RegistrationController extends AbstractController
     public function resetPassword(Request $request, TokenChecker $checker, UserPasswordEncoderInterface $passwordEncoder, $token = null) {
         $user = $checker->checkToken($token);
         if (null === $user) {
-            return $this->redirectToRoute('home');
+            return $this->redirectToRoute('home_page');
         }
 
         $em = $this->getDoctrine()->getManager();
@@ -111,7 +111,7 @@ class RegistrationController extends AbstractController
                     'Password link has expired'
             );
 
-            return $this->redirectToRoute('home');
+            return $this->redirectToRoute('home_page');
         }
 
         $templates = [
@@ -152,7 +152,7 @@ class RegistrationController extends AbstractController
             $em->persist($user);
             $em->flush();
 
-            return $this->redirectToRoute('home');
+            return $this->redirectToRoute('home_page');
         }
 
         return $this->render('Default/form_templates.html.twig', [
@@ -197,7 +197,7 @@ class RegistrationController extends AbstractController
                     'A volunteer registration confirmation has been sent to your email address'
             );
 
-            return $this->redirectToRoute('home');
+            return $this->redirectToRoute('home_page');
         }
 
         return $this->render('Volunteer/volunteer_form.html.twig', [
@@ -257,7 +257,7 @@ class RegistrationController extends AbstractController
             );
 
 
-            return $this->redirectToRoute('home');
+            return $this->redirectToRoute('home_page');
         }
 
         return $this->render('Default/form_templates.html.twig', [
@@ -276,7 +276,7 @@ class RegistrationController extends AbstractController
     public function confirm(TokenChecker $checker, EmailerService $mailer, $token = null) {
         $user = $checker->checkToken($token);
         if (null === $user) {
-            return $this->redirectToRoute('home');
+            return $this->redirectToRoute('home_page');
         }
 
         $class = get_class($user);
@@ -355,7 +355,7 @@ class RegistrationController extends AbstractController
     public function invitation(Request $request, TokenChecker $checker, UserPasswordEncoderInterface $passwordEncoder, EmailerService $mailer, $token = null) {
         $user = $checker->checkToken($token);
         if (null === $user) {
-            return $this->redirectToRoute('home');
+            return $this->redirectToRoute('home_page');
         }
 
         $class = get_class($user);
@@ -365,7 +365,7 @@ class RegistrationController extends AbstractController
                     'Invalid registration data',
             );
 
-            return $this->redirectToRoute('home');
+            return $this->redirectToRoute('home_page');
         }
 
         $now = new \DateTime();
@@ -383,7 +383,7 @@ class RegistrationController extends AbstractController
             ];
             $mailer->appMailer($mailParams);
 
-            return $this->redirectToRoute('home');
+            return $this->redirectToRoute('home_page');
         }
         // now set a password
         $templates = [
@@ -408,7 +408,7 @@ class RegistrationController extends AbstractController
                     'Your admin account is created!'
             );
 
-            return $this->redirectToRoute('home');
+            return $this->redirectToRoute('home_page');
         }
 
         return $this->render('Default/form_templates.html.twig', [

@@ -40,7 +40,7 @@ class NonprofitController extends AbstractController
         if (null === $npo) {
             $this->addFlash('warning', 'Nonprofit not found');
 
-            return $this->redirectToRoute('home');
+            return $this->redirectToRoute('home_page');
         }
         $rep = $em->getRepository(Representative::class)->findOneBy(['nonprofit' => $npo, 'replacementStatus' => 'Replace']);
         

@@ -33,7 +33,7 @@ class ProfileController extends AbstractController
     {
         $user = $this->getUser();
         if (!$user || !$user->hasRole('ROLE_REP')) {
-            return $this->redirectToRoute('home');
+            return $this->redirectToRoute('home_page');
         }
         $em = $this->getDoctrine()->getManager();
         $npo = $user->getNonprofit();
@@ -54,7 +54,7 @@ class ProfileController extends AbstractController
                 'Profile updated'
             );
 
-            return $this->redirectToRoute('home');
+            return $this->redirectToRoute('home_page');
         }
 
         return $this->render('Default/form_templates.html.twig', [
@@ -75,7 +75,7 @@ class ProfileController extends AbstractController
     {
         $user = $this->getUser();
         if (!$user) {
-            return $this->redirectToRoute('home');
+            return $this->redirectToRoute('home_page');
         }
         $em = $this->getDoctrine()->getManager();
         if (Representative::class === get_class($user)) {
@@ -99,7 +99,7 @@ class ProfileController extends AbstractController
                 'Profile updated'
             );
 
-            return $this->redirectToRoute('home');
+            return $this->redirectToRoute('home_page');
         }
         $options = [
             'form' => $form->createView(),

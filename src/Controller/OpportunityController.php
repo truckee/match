@@ -42,7 +42,7 @@ class OpportunityController extends AbstractController
     {
         $user = $this->getUser();
         if (null === $user || !$user->hasRole('ROLE_REP')) {
-            return $this->redirectToRoute('home');
+            return $this->redirectToRoute('home_page');
         }
         $nonprofit = $user->getNonprofit();
         $opportunity = new Opportunity();
@@ -82,7 +82,7 @@ class OpportunityController extends AbstractController
     {
         $user = $this->getUser();
         if (null === $user || !$user->hasRole('ROLE_REP') || null === $id) {
-            return $this->redirectToRoute('home');
+            return $this->redirectToRoute('home_page');
         }
 
         $em = $this->getDoctrine()->getManager();
