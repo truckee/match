@@ -18,7 +18,6 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
  */
 class NonprofitRegistrationControllerTest extends WebTestCase
 {
-
     public function setup(): void
     {
         $this->client = static::createClient();

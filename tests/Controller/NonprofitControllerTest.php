@@ -11,7 +11,6 @@
 
 namespace App\Tests\Controller;
 
-
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 /**
@@ -43,5 +42,4 @@ class NonprofitControllerTest extends WebTestCase
 
         $this->assertStringContainsString('Nonprofit not found', $this->client->getResponse()->getContent());
     }
-
 }

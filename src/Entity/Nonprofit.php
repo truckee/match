@@ -191,7 +191,8 @@ class Nonprofit
         return $this;
     }
 
-    public function removeRep(Representative $rep) {
+    public function removeRep(Representative $rep)
+    {
         $this->reps->removeElement($rep);
     }
     
@@ -325,7 +326,8 @@ class Nonprofit
         return $this;
     }
     
-    public function getRepresentative() {
+    public function getRepresentative()
+    {
         $reps = $this->reps;
         foreach ($reps as $person) {
             if ($person->getReplacementStatus() === 'Replace') {

@@ -18,7 +18,6 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
  */
 class VolunteerRegistrationControllerTest extends WebTestCase
 {
-
     public function setup(): void
     {
         $this->client = static::createClient();
@@ -97,5 +96,4 @@ class VolunteerRegistrationControllerTest extends WebTestCase
 
         return $this->client->getResponse()->getContent();
     }
-
 }

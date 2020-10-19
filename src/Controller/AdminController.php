@@ -12,16 +12,18 @@
 namespace App\Controller;
 
 use App\Entity\Admin;
+use App\Entity\Focus;
 use App\Entity\Nonprofit;
 use App\Entity\Representative;
+use App\Entity\Skill;
 use App\Entity\User;
 use App\Entity\Volunteer;
 use App\Form\Type\UserType;
 use App\Services\EmailerService;
-use App\Services\ChartService;
+//use App\Services\ChartService;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\JsonResponse;
+//use Symfony\Component\HttpFoundation\JsonResponse;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\EasyAdminController;
 
 /**
@@ -29,9 +31,10 @@ use EasyCorp\Bundle\EasyAdminBundle\Controller\EasyAdminController;
  */
 class AdminController extends EasyAdminController
 {
+
     /**
      * Activates or deactivates a nonprofit
-     * 
+     *
      * @Route("/status/{id}", name="status")
      */
     public function statusChange(Request $request, EmailerService $mailer, $id = null)
@@ -40,8 +43,8 @@ class AdminController extends EasyAdminController
         $npo = $em->getRepository(Nonprofit::class)->find($id);
         if (null === $npo) {
             $this->addFlash(
-                    'warning',
-                    'Nonprofit not found'
+                'warning',
+                'Nonprofit not found'
             );
 
             return $this->redirectToRoute('dashboard');
@@ -50,7 +53,7 @@ class AdminController extends EasyAdminController
         $status = $npo->isActive();
         $npo->setActive(!$status);
         $rep = $em->getRepository(Representative::class)->findOneBy(['nonprofit' => $npo, 'replacementStatus' => 'Replace']);
-        
+
         // activate staff if $status is false
         if (false === $status) {
             $rep->setLocked(false);
@@ -67,15 +70,15 @@ class AdminController extends EasyAdminController
             $mailer->appMailer($mailParams);
 
             $this->addFlash(
-                    'success',
-                    'Nonprofit activated!'
+                'success',
+                'Nonprofit activated!'
             );
         } else {
             $npo->setActive(false);
             $rep->setLocked(true);
             $this->addFlash(
-                    'success',
-                    'Nonprofit deactivated; staff account locked'
+                'success',
+                'Nonprofit deactivated; staff account locked'
             );
         }
         $em->persist($npo);
@@ -94,7 +97,7 @@ class AdminController extends EasyAdminController
     /**
      * @Route("/lock/{id}", name = "lock_user")
      */
-    public function lockUser($id)
+    public function lockUser(Request $request, $id)
     {
         if (null === $id) {
             return;
@@ -116,7 +119,7 @@ class AdminController extends EasyAdminController
         $lockState = $user->isLocked() ? ' is now locked' : ' is now unlocked';
         $this->addFlash('success', $user->getFullName() . $lockState);
 
-        return $this->redirectToRoute('easyadmin', ['entity' => $entity]);
+        return $this->redirect($request->headers->get('referer'));
     }
 
     // provides sort ordering for entity display
@@ -180,9 +183,9 @@ class AdminController extends EasyAdminController
             $replacement->setNonprofit($nonprofit);
             $replacement->setReplacementStatus('Replacement');
             $replacement->setInitiated(new \DateTime());
-            
+
             $rep->setReplacementStatus('Pending');
-            
+
             $view = $this->renderView('Email/staff_replacement.html.twig', [
                 'replacement' => $replacement,
                 'nonprofit' => $nonprofit,
@@ -202,7 +205,7 @@ class AdminController extends EasyAdminController
 
             $this->addFlash('success', 'Replacement email sent');
 
-            return $this->redirectToRoute('dashboard');
+            return $this->redirect($request->headers->get('referer'));
         }
 
         return $this->render('Default/form_templates.html.twig', [
@@ -231,7 +234,7 @@ class AdminController extends EasyAdminController
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $em = $this->getDoctrine()->getManager();
-            $admin->setActivator(false);
+            $admin->setMailer(false);
             $token = md5(uniqid(rand(), true));
             $admin->setConfirmationToken($token);
             $admin->setEmail($admin->getEmail());
@@ -273,47 +276,78 @@ class AdminController extends EasyAdminController
     }
 
     /**
-     * @Route("/assign/{id}", name="assign_activator")
+     * @Route("/switch/{class}/{id}/{field}", name="admin_switch")
      */
-    public function assign($id)
+    public function switch(Request $request, $class, $id, $field)
+    {
+        switch ($class):
+            case 'Admin':
+                if ('mailer' === $field) {
+                    $this->mailer($id);
+                }
+        if ('enabled' === $field) {
+            $this->adminEnabler($id);
+        }
+        break;
+        default:
+                $this->enabler($class, $field, $id);
+        break;
+        endswitch;
+
+        return $this->redirect($request->headers->get('referer'));
+    }
+
+    private function mailer($id)
     {
         $em = $this->getDoctrine()->getManager();
-        $entities = $em->getRepository(Admin::class)->findAll();
+        $mailer = $em->getRepository(Admin::class)->findOneBy(['mailer' => true]);
+        
+        if ((int) $id === $mailer->getId()) {
+            return;
+        }
+        
+        $selected = $em->getRepository(Admin::class)->find($id);
+        if (false === $selected->getEnabled()) {
+            $this->addFlash('warning', 'Disabled admins cannot be mailer');
+
+            return;
+        }
+        
+        $entities = $em->getRepository(Admin::class)->findBy(['enabled' => true]);
         foreach ($entities as $admin) {
             if ((int) $id === $admin->getId()) {
-                $admin->setActivator(true);
-                $em->persist($admin);
+                $admin->setMailer(true);
             } else {
-                $admin->setActivator(false);
-                $em->persist($admin);
+                $admin->setMailer(false);
             }
+            $em->persist($admin);
         }
         $em->flush();
-
-        $response = new JsonResponse(json_encode($id));
-        return $response;
     }
-    
-    /**
-     * @Route("/enabler", name = "admin_enabler")
-     */
-    public function enabler(Request $request)
+
+    private function enabler($class, $field, $id)
     {
         $em = $this->getDoctrine()->getManager();
-        $id = $request->query->get('id');
+        $vol = $em->getRepository('App\\Entity\\' . $class)->find($id);
+        $getter = 'get' . ucfirst($field);
+        $setter = 'set' . ucfirst($field);
+        $value = $vol->$getter();
+        $vol->$setter(!$value);
+        $em->persist($vol);
+        $em->flush();
+    }
+
+    private function adminEnabler($id)
+    {
+        $em = $this->getDoctrine()->getManager();
         $admin = $em->getRepository(Admin::class)->find($id);
-        $enabled = $admin->isEnabled();
-        if (!$admin->isActivator() && !$admin->hasRole('ROLE_SUPER_ADMIN')) {
+        $enabled = $admin->getEnabled();
+        if (!$admin->isMailer() && !$admin->hasRole('ROLE_SUPER_ADMIN')) {
             $admin->setEnabled(!$enabled);
             $em->persist($admin);
             $em->flush();
         } else {
             $this->addFlash('danger', $admin->getFullName() . ' cannot be disabled');
         }
-
-        return $this->redirectToRoute('easyadmin', array(
-            'action' => 'list',
-            'entity' => $request->query->get('entity'),
-        ));    }
-
+    }
 }

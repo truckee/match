@@ -11,7 +11,6 @@
 
 namespace App\Tests\Controller;
 
-
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 /**
@@ -19,8 +18,6 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
  */
 class ProfileControllerTest extends WebTestCase
 {
-
-
     public function setup(): void
     {
         $this->client = $this->createClient();
@@ -60,5 +57,4 @@ class ProfileControllerTest extends WebTestCase
 
         $this->assertStringContainsString('Profile updated', $this->client->getResponse()->getContent());
     }
-
 }

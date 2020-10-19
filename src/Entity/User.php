@@ -29,7 +29,8 @@ abstract class User implements UserInterface
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
      */
-    private $id;
+    protected $id;
+//    private $id;
 
     /**
      * @ORM\Column(type="array")
@@ -219,7 +220,7 @@ abstract class User implements UserInterface
         return $this;
     }
 
-    public function isEnabled()
+    public function getEnabled()
     {
         return $this->enabled;
     }

@@ -1,3 +1,17 @@
-<a class="badge badge-warning" 
-   href="{{ path('replace_staff', {'id':entity.instance.id}) }}">
-    {{ entity.instance.replacementStatus }}</a>
+{% set status = entity.instance.replacementStatus %}
+{% set class = 'badge badge-warning' %}
+{% if status == 'Replace' %}
+    <a class="{{ class }}" 
+       href="{{ path('replace_staff', {'id':entity.instance.id}) }}">
+        {{ status }}</a>
+    {% else %}
+        {% if status == 'Replacement' %}
+            {% set class = 'badge badge-info' %}
+        {% elseif status == 'Replaced' %}
+            {% set class = 'badge badge-dark' %}
+        {% elseif status == 'Pending' %}
+            {% set class = 'badge badge-light' %}
+        {% endif %}
+        <span class="{{class }}">{{ status }}</span>
+    {% endif %}    
+

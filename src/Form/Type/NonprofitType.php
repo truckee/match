@@ -103,7 +103,6 @@ class NonprofitType extends AbstractType
                 'mapped' => false,
             ]);
         }
-
     }
 
     public function configureOptions(OptionsResolver $resolver)

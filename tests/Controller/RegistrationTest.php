@@ -18,7 +18,6 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
  */
 class RegistrationTest extends WebTestCase
 {
-    
     public function setup(): void
     {
         $this->client = static::createClient();
@@ -157,5 +156,4 @@ class RegistrationTest extends WebTestCase
         
         $this->assertStringContainsString('new nonprofit has submitted registration', $message->getBody());
     }
-    
 }

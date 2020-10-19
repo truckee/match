@@ -24,7 +24,6 @@ use PHPUnit\Framework\TestCase;
  */
 class OppEmailTest extends TestCase
 {
-
     public function testOppEmail()
     {
         $vol1 = new Volunteer();
@@ -58,5 +57,4 @@ class OppEmailTest extends TestCase
         $keys = array_keys($oppVols);
         $this->assertEquals(3, count($oppVols[$keys[0]]));
     }
-
 }

@@ -42,7 +42,7 @@ class UserChecker implements UserCheckerInterface
             throw new CustomUserMessageAuthenticationException('Nonprofit has not yet been activated');
         }
         
-        if (!$user->isEnabled()) {
+        if (!$user->getEnabled()) {
             throw new CustomUserMessageAuthenticationException('Account has not been confirmed');
         }
     }

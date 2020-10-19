@@ -25,15 +25,15 @@ class RepresentativeCrudController extends AbstractCrudController
     public function configureCrud(Crud $crud): Crud
     {
         return $crud
-            ->setPageTitle(Crud::PAGE_EDIT, 'Edit %entity_name%')
-            ->setHelp('index', 'Locking staff deactivates nonprofit and blocks staff log in. Replacing also removes current staff.')
-            ->setSearchFields(['id', 'roles', 'email', 'fname', 'sname', 'confirmationToken', 'replacementStatus']);
+                        ->setPageTitle(Crud::PAGE_EDIT, 'Edit %entity_name%')
+                        ->setHelp('index', 'Locking staff deactivates nonprofit and blocks staff log in. Replacing also removes current staff.')
+                        ->setSearchFields(['id', 'roles', 'email', 'fname', 'sname', 'confirmationToken', 'replacementStatus']);
     }
 
     public function configureActions(Actions $actions): Actions
     {
         return $actions
-            ->disable('new', 'edit', 'delete');
+                        ->disable('new', 'edit', 'delete');
     }
 
     public function configureFields(string $pageName): iterable

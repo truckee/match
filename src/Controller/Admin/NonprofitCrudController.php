@@ -25,16 +25,17 @@ class NonprofitCrudController extends AbstractCrudController
     public function configureCrud(Crud $crud): Crud
     {
         return $crud
-            ->setEntityLabelInSingular('Nonprofit')
-            ->setEntityLabelInPlural('Nonprofit')
-            ->setPageTitle(Crud::PAGE_EDIT, 'Edit %entity_name%')
-            ->setHelp('index', 'Activate sends notice to staff; deactivate blocks staff log in, opportunities will not be found')->setSearchFields(['id', 'orgname', 'address', 'city', 'state', 'zip', 'phone', 'website', 'ein']);
+                        ->setEntityLabelInSingular('Nonprofit')
+                        ->setEntityLabelInPlural('Nonprofit')
+                        ->setPageTitle(Crud::PAGE_EDIT, 'Edit %entity_name%')
+                        ->setHelp('index', 'Activate sends notice to staff; deactivate blocks staff log in, opportunities will not be found')
+                        ->setSearchFields(['id', 'orgname', 'address', 'city', 'state', 'zip', 'phone', 'website', 'ein']);
     }
 
     public function configureActions(Actions $actions): Actions
     {
         return $actions
-            ->disable('new', 'edit', 'delete');
+                        ->disable('new', 'edit', 'delete');
     }
 
     public function configureFields(string $pageName): iterable

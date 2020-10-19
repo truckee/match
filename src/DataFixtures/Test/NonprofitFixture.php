@@ -133,5 +133,4 @@ class NonprofitFixture extends AbstractFixture implements OrderedFixtureInterfac
     {
         return 3; // the order in which fixtures will be loaded
     }
-
 }

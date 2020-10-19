@@ -1,0 +1,16 @@
+{% if field.value  %}
+    {% set check = 'checked="checked"' %}
+{% else %}
+    {% set check = '' %}
+{% endif %}
+{# slice parameters for fqcn = 'App\Entity\...' and entity name less than 11 chars #}
+{% set class = entity.fqcn|slice(11,10) %}
+{% set name = field.property %}
+{% set id = entity.primaryKeyValue %}
+<div class="custom-control custom-switch">
+    <a href="{{ path('admin_switch', 
+    {'class':class, 'field':name, 'id':id}) }}" id="{{class~name~id}}">
+        <input type="checkbox" class="custom-control-input" {{ check }}>
+        <label class="custom-control-label" for="customSwitch1"></label>
+    </a>
+</div>

@@ -3,6 +3,7 @@
 namespace App\Controller\Admin;
 
 use App\Entity\Volunteer;
+use App\Form\Type\Field\SwitchFieldType;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
@@ -33,7 +34,7 @@ class VolunteerCrudController extends AbstractCrudController
     public function configureActions(Actions $actions): Actions
     {
         return $actions
-            ->disable('new', 'edit');
+            ->disable('new', 'edit', 'delete');
     }
 
     public function configureFields(string $pageName): iterable
@@ -46,9 +47,9 @@ class VolunteerCrudController extends AbstractCrudController
         $lastLogin = DateTimeField::new('lastLogin');
         $confirmationToken = TextField::new('confirmationToken');
         $tokenExpiresAt = DateTimeField::new('tokenExpiresAt');
-        $locked = BooleanField::new('locked')->setTemplatePath('Admin/locked_badge.html.twig');
-        $enabled = BooleanField::new('enabled');
-        $receiveEmail = BooleanField::new('receiveEmail');
+        $locked = BooleanField::new('locked')->renderAsSwitch(false)->setTemplatePath('Admin/locked_badge.html.twig');
+        $enabled = SwitchFieldType::new('enabled');
+        $receiveEmail = SwitchFieldType::new('receiveEmail');
         $focuses = AssociationField::new('focuses');
         $skills = AssociationField::new('skills');
         $id = IntegerField::new('id', 'ID');

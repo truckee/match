@@ -19,7 +19,6 @@ use EasyCorp\Bundle\EasyAdminBundle\Router\CrudUrlGenerator;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-
 /**
  * @Route("/admin")
  */
@@ -29,7 +28,8 @@ class DashboardController extends AbstractDashboardController
     /**
      * @Route("/")
      */
-    public function index(): Response {
+    public function index(): Response
+    {
         $routeBuilder = $this->get(CrudUrlGenerator::class)->build();
 
         return $this->redirect($routeBuilder->setController(NonprofitCrudController::class)->generateUrl());//        return parent::index();
@@ -52,21 +52,25 @@ class DashboardController extends AbstractDashboardController
         ]);
     }
 
-    public function configureDashboard(): Dashboard {
+    public function configureDashboard(): Dashboard
+    {
         return Dashboard::new()
                         ->setTitle('ConnectionsReno');
     }
 
-    public function configureCrud(): Crud {
+    public function configureCrud(): Crud
+    {
         return Crud::new();
     }
 
-    public function configureUserMenu(UserInterface $user): UserMenu {
+    public function configureUserMenu(UserInterface $user): UserMenu
+    {
         return UserMenu::new()
                         ->displayUserAvatar(false);
     }
 
-    public function configureMenuItems(): iterable {
+    public function configureMenuItems(): iterable
+    {
         yield MenuItem::linkToCrud('Nonprofit', 'fas fa-folder-open', Nonprofit::class);
         yield MenuItem::linkToCrud('Focus', 'fas fa-folder-open', Focus::class);
         yield MenuItem::linkToCrud('Skill', 'fas fa-folder-open', Skill::class);
@@ -76,5 +80,4 @@ class DashboardController extends AbstractDashboardController
         yield MenuItem::linktoRoute('Dashboard', 'fas fa-folder-open', 'dashboard');
         yield MenuItem::linktoRoute('Home', 'fas fa-folder-open', 'home_page');
     }
-
 }

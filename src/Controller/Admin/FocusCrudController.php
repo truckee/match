@@ -3,10 +3,11 @@
 namespace App\Controller\Admin;
 
 use App\Entity\Focus;
+use App\Form\Type\Field\SwitchFieldType;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\Field;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IntegerField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 
@@ -26,10 +27,16 @@ class FocusCrudController extends AbstractCrudController
             ->setSearchFields(['id', 'focus']);
     }
 
+    public function configureActions(Actions $actions): Actions
+    {
+        return $actions
+            ->disable('delete');
+    }
+
     public function configureFields(string $pageName): iterable
     {
         $focus = TextField::new('focus');
-        $enabled = Field::new('enabled');
+        $enabled = SwitchFieldType::new('enabled');
         $id = IntegerField::new('id', 'ID');
         $nonprofits = AssociationField::new('nonprofits');
         $volunteers = AssociationField::new('volunteers');

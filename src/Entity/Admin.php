@@ -32,26 +32,26 @@ class Admin extends User
      *
      * @ORM\Column(type="boolean")
      */
-    private $activator;
+    protected $mailer;
     
-    public function isActivator()
+    public function isMailer()
     {
-        return $this->activator;
+        return $this->mailer;
     }
     
-    public function setActivator($activator)
+    public function setMailer($mailer)
     {
-        $this->activator = $activator;
+        $this->mailer = $mailer;
         
         return $this;
     }
     
-    public function getAdminEnabled()
-    {
-        if (!$this->hasRole('ROLE_SUPER_ADMIN')) {
-            return $this->isEnabled();
-        } else {
-            return null;
-        }
-    }
+//    public function getAdminEnabled()
+//    {
+//        if (!$this->hasRole('ROLE_SUPER_ADMIN')) {
+//            return $this->isEnabled();
+//        } else {
+//            return null;
+//        }
+//    }
 }

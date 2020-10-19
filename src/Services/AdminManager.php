@@ -40,7 +40,7 @@ class AdminManager
             $admin,
             $user['password']
         ));
-        $admin->setActivator(true);
+        $admin->setMailer($this->mailerNotExists());
         $admin->setRoles([
             'ROLE_SUPER_ADMIN',
         ]);
@@ -48,5 +48,12 @@ class AdminManager
         $this->em->flush();
         
         return $admin;
+    }
+    
+    private function mailerNotExists()
+    {
+        $mailer = $this->em->getRepository(Admin::class)->findOneBy(['mailer' => true]);
+        
+        return is_null($mailer);
     }
 }

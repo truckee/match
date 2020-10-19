@@ -85,7 +85,8 @@ class Representative extends User
         return $this->nonprofit->getOrgname();
     }
     
-    public function __toString() {
+    public function __toString()
+    {
         return $this->getFname() . ' ' . $this->getSname();
     }
 

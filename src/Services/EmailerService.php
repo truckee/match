@@ -27,14 +27,14 @@ class EmailerService
 
     public function appMailer($mailParams)
     {
-        $activator = $this->em->getRepository(Admin::class)->findOneBy(['activator' => true]);
+        $mailer = $this->getMailer();
         // used by new nonprofit notice, expired invitation, opportunities email report
         if (!array_key_exists('recipient', $mailParams)) {
-            $mailParams['recipient'] = $activator;
+            $mailParams['recipient'] = $mailer;
         }
 
         $message = (new \Swift_Message($mailParams['subject']))
-                ->setFrom($activator)
+                ->setFrom($mailer)
                 ->setTo($mailParams['recipient'])
                 ->setBody(
                     $mailParams['view'],
@@ -50,5 +50,10 @@ class EmailerService
 //        } else {
 //            $this->spoolMailer->send($message);
 //        }
+    }
+    
+    public function getMailer()
+    {
+        return $this->em->getRepository(Admin::class)->findOneBy(['mailer' => true]);
     }
 }

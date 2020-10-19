@@ -18,7 +18,6 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
  */
 class SecurityTest extends WebTestCase
 {
-
     public function setup() : void
     {
         $this->client = static::createClient();
