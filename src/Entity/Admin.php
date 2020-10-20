@@ -32,16 +32,16 @@ class Admin extends User
      *
      * @ORM\Column(type="boolean")
      */
-    private $activator;
+    private $mailer;
     
-    public function isActivator()
+    public function getMailer()
     {
-        return $this->activator;
+        return $this->mailer;
     }
     
-    public function setActivator($activator)
+    public function setMailer($mailer)
     {
-        $this->activator = $activator;
+        $this->mailer = $mailer;
         
         return $this;
     }

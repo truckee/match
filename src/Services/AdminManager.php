@@ -40,7 +40,7 @@ class AdminManager
             $admin,
             $user['password']
         ));
-        $admin->setActivator(true);
+        $admin->setMailer(true);
         $admin->setRoles([
             'ROLE_SUPER_ADMIN',
         ]);

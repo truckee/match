@@ -316,10 +316,11 @@ class RegistrationController extends AbstractController
                 $org->setActive(true);
                 $em->persist($org);
                 // notice to admin
+                $recipient = $em->getRepository(Admin::class)->findOneBy(['mailer' => true]);
                 $view = $this->renderView('Email/new_nonprofit_notice.html.twig', ['npo' => $org,]);
                 $mailParams = [
                     'view' => $view,
-                    'recipient' => $this->getParameter('app.npo_activator'),
+                    'recipient' => $recipient,
                     'subject' => 'New Nonprofit Registration',
                 ];
 

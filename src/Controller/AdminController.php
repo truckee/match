@@ -249,7 +249,7 @@ class AdminController extends EasyAdminController
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $em = $this->getDoctrine()->getManager();
-            $admin->setActivator(false);
+            $admin->setMailer(false);
             $token = md5(uniqid(rand(), true));
             $admin->setConfirmationToken($token);
             $admin->setEmail($admin->getEmail());
@@ -291,7 +291,7 @@ class AdminController extends EasyAdminController
     }
 
     /**
-     * @Route("/assign/{id}", name="assign_activator")
+     * @Route("/assign/{id}", name="assign_mailer")
      */
     public function assign($id)
     {
@@ -299,10 +299,10 @@ class AdminController extends EasyAdminController
         $entities = $em->getRepository(Admin::class)->findAll();
         foreach ($entities as $admin) {
             if ((int) $id === $admin->getId()) {
-                $admin->setActivator(true);
+                $admin->setMailer(true);
                 $em->persist($admin);
             } else {
-                $admin->setActivator(false);
+                $admin->setMailer(false);
                 $em->persist($admin);
             }
         }
@@ -321,7 +321,7 @@ class AdminController extends EasyAdminController
         $id = $request->query->get('id');
         $admin = $em->getRepository(Admin::class)->find($id);
         $enabled = $admin->isEnabled();
-        if (!$admin->isActivator() && !$admin->hasRole('ROLE_SUPER_ADMIN')) {
+        if (!$admin->getMailer() && !$admin->hasRole('ROLE_SUPER_ADMIN')) {
             $admin->setEnabled(!$enabled);
             $em->persist($admin);
             $em->flush();
