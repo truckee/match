@@ -48,11 +48,9 @@ class AdminCrudController extends AbstractCrudController
         $confirmationToken = TextField::new('confirmationToken');
         $tokenExpiresAt = DateTimeField::new('tokenExpiresAt');
         $locked = BooleanField::new('locked');
-//        $enabled = BooleanField::new('enabled');
         $mailer = SwitchFieldType::new('mailer');
         $id = IntegerField::new('id', 'ID');
         $enabled = SwitchFieldType::new('enabled');
-//        $enabled = TextareaField::new('adminEnabled')->setTemplatePath('Admin/admin_enabled.html.twig');
         $fullName = TextareaField::new('fullName');
 
         if (Crud::PAGE_INDEX === $pageName) {
