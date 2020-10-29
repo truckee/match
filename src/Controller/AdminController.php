@@ -12,10 +12,10 @@
 namespace App\Controller;
 
 use App\Entity\Admin;
-use App\Entity\Focus;
+//use App\Entity\Focus;
 use App\Entity\Nonprofit;
 use App\Entity\Representative;
-use App\Entity\Skill;
+//use App\Entity\Skill;
 use App\Entity\User;
 use App\Entity\Volunteer;
 use App\Form\Type\UserType;
@@ -25,12 +25,21 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 //use Symfony\Component\HttpFoundation\JsonResponse;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\EasyAdminController;
+use EasyCorp\Bundle\EasyAdminBundle\Router\CrudUrlGenerator;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
+use App\Controller\Admin\RepresentativeCrudController;
 
 /**
  * @Route("/admin")
  */
 class AdminController extends EasyAdminController
 {
+   private $crudUrlGenerator;
+
+    public function __construct(CrudUrlGenerator $crudUrlGenerator)
+    {
+        $this->crudUrlGenerator = $crudUrlGenerator;
+    }
 
     /**
      * Activates or deactivates a nonprofit
@@ -43,8 +52,8 @@ class AdminController extends EasyAdminController
         $npo = $em->getRepository(Nonprofit::class)->find($id);
         if (null === $npo) {
             $this->addFlash(
-                'warning',
-                'Nonprofit not found'
+                    'warning',
+                    'Nonprofit not found'
             );
 
             return $this->redirectToRoute('dashboard');
@@ -70,15 +79,15 @@ class AdminController extends EasyAdminController
             $mailer->appMailer($mailParams);
 
             $this->addFlash(
-                'success',
-                'Nonprofit activated!'
+                    'success',
+                    'Nonprofit activated!'
             );
         } else {
             $npo->setActive(false);
             $rep->setLocked(true);
             $this->addFlash(
-                'success',
-                'Nonprofit deactivated; staff account locked'
+                    'success',
+                    'Nonprofit deactivated; staff account locked'
             );
         }
         $em->persist($npo);
@@ -204,8 +213,12 @@ class AdminController extends EasyAdminController
             $em->flush();
 
             $this->addFlash('success', 'Replacement email sent');
+            $url = $this->crudUrlGenerator
+                    ->build()
+                    ->setController(RepresentativeCrudController::class)
+                    ->setAction(Action::INDEX);
 
-            return $this->redirect($request->headers->get('referer'));
+            return $this->redirect($url);
         }
 
         return $this->render('Default/form_templates.html.twig', [
@@ -285,13 +298,13 @@ class AdminController extends EasyAdminController
                 if ('mailer' === $field) {
                     $this->mailer($id);
                 }
-        if ('enabled' === $field) {
-            $this->adminEnabler($id);
-        }
-        break;
-        default:
+                if ('enabled' === $field) {
+                    $this->adminEnabler($id);
+                }
+                break;
+            default:
                 $this->enabler($class, $field, $id);
-        break;
+                break;
         endswitch;
 
         return $this->redirect($request->headers->get('referer'));
@@ -301,18 +314,18 @@ class AdminController extends EasyAdminController
     {
         $em = $this->getDoctrine()->getManager();
         $mailer = $em->getRepository(Admin::class)->findOneBy(['mailer' => true]);
-        
+
         if ((int) $id === $mailer->getId()) {
             return;
         }
-        
+
         $selected = $em->getRepository(Admin::class)->find($id);
         if (false === $selected->getEnabled()) {
             $this->addFlash('warning', 'Disabled admins cannot be mailer');
 
             return;
         }
-        
+
         $entities = $em->getRepository(Admin::class)->findBy(['enabled' => true]);
         foreach ($entities as $admin) {
             if ((int) $id === $admin->getId()) {
@@ -350,4 +363,5 @@ class AdminController extends EasyAdminController
             $this->addFlash('danger', $admin->getFullName() . ' cannot be disabled');
         }
     }
+
 }
