@@ -15,7 +15,7 @@ use App\Entity\Focus;
 use App\Entity\Skill;
 use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
-use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\Persistence\ObjectManager;
 use Doctrine\Bundle\FixturesBundle\ORMFixtureInterface;
 
 /**
@@ -26,7 +26,7 @@ class OptionsFixture extends AbstractFixture implements OrderedFixtureInterface,
     /**
      * Load fixtures.
      *
-     * @param \Doctrine\Common\Persistence\ObjectManager $manager
+     * @param \Doctrine\Persistence\ObjectManager $manager
      */
     public function load(ObjectManager $manager)
     {
