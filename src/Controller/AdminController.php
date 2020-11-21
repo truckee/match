@@ -34,7 +34,7 @@ use App\Controller\Admin\RepresentativeCrudController;
  */
 class AdminController extends EasyAdminController
 {
-   private $crudUrlGenerator;
+    private $crudUrlGenerator;
 
     public function __construct(CrudUrlGenerator $crudUrlGenerator)
     {
@@ -52,8 +52,8 @@ class AdminController extends EasyAdminController
         $npo = $em->getRepository(Nonprofit::class)->find($id);
         if (null === $npo) {
             $this->addFlash(
-                    'warning',
-                    'Nonprofit not found'
+                'warning',
+                'Nonprofit not found'
             );
 
             return $this->redirectToRoute('dashboard');
@@ -79,15 +79,15 @@ class AdminController extends EasyAdminController
             $mailer->appMailer($mailParams);
 
             $this->addFlash(
-                    'success',
-                    'Nonprofit activated!'
+                'success',
+                'Nonprofit activated!'
             );
         } else {
             $npo->setActive(false);
             $rep->setLocked(true);
             $this->addFlash(
-                    'success',
-                    'Nonprofit deactivated; staff account locked'
+                'success',
+                'Nonprofit deactivated; staff account locked'
             );
         }
         $em->persist($npo);
@@ -298,13 +298,13 @@ class AdminController extends EasyAdminController
                 if ('mailer' === $field) {
                     $this->mailer($id);
                 }
-                if ('enabled' === $field) {
-                    $this->adminEnabler($id);
-                }
-                break;
-            default:
+        if ('enabled' === $field) {
+            $this->adminEnabler($id);
+        }
+        break;
+        default:
                 $this->enabler($class, $field, $id);
-                break;
+        break;
         endswitch;
 
         return $this->redirect($request->headers->get('referer'));
@@ -363,5 +363,4 @@ class AdminController extends EasyAdminController
             $this->addFlash('danger', $admin->getFullName() . ' cannot be disabled');
         }
     }
-
 }

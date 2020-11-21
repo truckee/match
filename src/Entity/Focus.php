@@ -18,11 +18,12 @@ use Doctrine\ORM\Mapping as ORM;
  * Focus
  *
  * @ORM\Table(name="focus")
- * @ORM\Entity(repositoryClass="App\Repository\FocusRepository")
+ * @ORM\Entity
  * @UniqueEntity("focus", message="Focus has already been used")
  */
 class Focus
 {
+
     /**
      * @var int
      *
