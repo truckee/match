@@ -53,7 +53,7 @@ class Focus
     protected $nonprofits;
 
     /**
-     * @ORM\ManyToMany(targetEntity="Volunteer", mappedBy="focuses")
+     * @ORM\ManyToMany(targetEntity="Person", mappedBy="focuses")
      */
     protected $volunteers;
 
@@ -85,4 +85,5 @@ class Focus
 
         return $this;
     }
+
 }

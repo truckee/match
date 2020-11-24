@@ -11,16 +11,16 @@
 
 namespace App\Repository;
 
-use App\Entity\User;
+use App\Entity\Person;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\Security\User\UserLoaderInterface;
 use Doctrine\Persistence\ManagerRegistry;
 
-class UserRepository extends ServiceEntityRepository implements UserLoaderInterface
+class PersonRepository extends ServiceEntityRepository implements UserLoaderInterface
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, User::class);
+        parent::__construct($registry, Person::class);
     }
 
     public function loadUserByUsername(string $usernameOrEmail)
@@ -28,9 +28,9 @@ class UserRepository extends ServiceEntityRepository implements UserLoaderInterf
         $entityManager = $this->getEntityManager();
 
         return $entityManager->createQuery(
-            'SELECT u
-                FROM App\Entity\User u
-                WHERE u.email = :query'
+            'SELECT p
+                FROM App\Entity\Person p
+                WHERE p.email = :query'
         )
                         ->setParameter('query', $usernameOrEmail)
                         ->getOneOrNullResult();

@@ -11,26 +11,31 @@
 
 namespace App\Entity;
 
+use App\Entity\AdminTrait;
+use App\Entity\RepresentativeTrait;
+use App\Entity\VolunteerTrait;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * @ORM\Table(name="usertable")
+ * @ORM\Table(name="person")
  * @ORM\Entity
- * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
- * @ORM\InheritanceType("JOINED")
- * @ORM\DiscriminatorColumn(name="type", type="string")
- * @ORM\DiscriminatorMap({"rep" = "Representative", "volunteer" = "Volunteer", "admin" = "Admin"})
+ * @ORM\Entity(repositoryClass="App\Repository\PersonRepository")
  */
-abstract class User implements UserInterface
+class Person implements UserInterface
 {
+
+    use AdminTrait;
+    use RepresentativeTrait;
+    use VolunteerTrait;
+
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
      */
-    protected $id;
-//    private $id;
+    private $id;
 
     /**
      * @ORM\Column(type="array")
@@ -177,11 +182,11 @@ abstract class User implements UserInterface
 
     public function addRole($role)
     {
-        $role = strtoupper($role);
-        if (!in_array($role, $this->roles, true)) {
+        $ucRole = strtoupper($role);
+        if (!in_array($ucRole, $this->roles, true)) {
             $this->roles[] = $role;
         }
-        
+
         return $this;
     }
 
@@ -261,14 +266,6 @@ abstract class User implements UserInterface
         return $this;
     }
 
-//    public function unlock()
-//    {
-//        $this->locked = false;
-//
-//        return $this;
-//
-//    }
-
     /**
      * Used only on successful authentication
      */
@@ -290,13 +287,17 @@ abstract class User implements UserInterface
         return $this->fname . ' ' . $this->sname;
     }
 
+    // volunteer properties $ methods
     // required by interface, otherwise irrelevant
 
     public function eraseCredentials()
     {
+
     }
 
     public function getSalt()
     {
+
     }
+
 }

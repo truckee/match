@@ -9,7 +9,7 @@
 
 namespace App\Security;
 
-use App\Entity\User;
+use App\Entity\Person;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -28,6 +28,7 @@ use Symfony\Component\Security\Http\Util\TargetPathTrait;
 
 class LoginFormAuthenticator extends AbstractFormLoginAuthenticator
 {
+
     use TargetPathTrait;
 
     private $entityManager;
@@ -45,8 +46,7 @@ class LoginFormAuthenticator extends AbstractFormLoginAuthenticator
 
     public function supports(Request $request)
     {
-        return 'app_login' === $request->attributes->get('_route')
-            && $request->isMethod('POST');
+        return 'app_login' === $request->attributes->get('_route') && $request->isMethod('POST');
     }
 
     public function getCredentials(Request $request)
@@ -57,8 +57,8 @@ class LoginFormAuthenticator extends AbstractFormLoginAuthenticator
             'csrf_token' => $request->request->get('_csrf_token'),
         ];
         $request->getSession()->set(
-            Security::LAST_USERNAME,
-            $credentials['username']
+                Security::LAST_USERNAME,
+                $credentials['username']
         );
 
         return $credentials;
@@ -71,7 +71,7 @@ class LoginFormAuthenticator extends AbstractFormLoginAuthenticator
             throw new InvalidCsrfTokenException();
         }
 
-        $user = $this->entityManager->getRepository(User::class)->loadUserByUsername($credentials['username']);
+        $user = $this->entityManager->getRepository(Person::class)->loadUserByUsername($credentials['username']);
         if (!$user) {
             // fail authentication with a custom error
             throw new CustomUserMessageAuthenticationException('Credentials could not be found.');
@@ -90,14 +90,14 @@ class LoginFormAuthenticator extends AbstractFormLoginAuthenticator
         $user = $token->getUser();
         if ($user->hasRole('ROLE_ADMIN') || $user->hasRole('ROLE_SUPER_ADMIN')) {
             $url = $this->router->generate('dashboard');
-            
+
             return new RedirectResponse($url);
         }
-        
+
         if ($targetPath = $this->getTargetPath($request->getSession(), $providerKey)) {
             return new RedirectResponse($targetPath);
         }
-        
+
         return new RedirectResponse($this->router->generate('home_page'));
 
         // For example : return new RedirectResponse($this->router->generate('some_route'));
@@ -108,4 +108,5 @@ class LoginFormAuthenticator extends AbstractFormLoginAuthenticator
     {
         return $this->router->generate('app_login');
     }
+
 }

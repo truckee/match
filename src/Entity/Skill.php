@@ -55,7 +55,7 @@ class Skill
     protected $opportunities;
 
     /**
-     * @ORM\ManyToMany(targetEntity="Volunteer", mappedBy="skills")
+     * @ORM\ManyToMany(targetEntity="Person", mappedBy="skills")
      */
     protected $volunteers;
 
@@ -87,4 +87,5 @@ class Skill
 
         return $this;
     }
+
 }

@@ -2,38 +2,39 @@
     <div class="collapse navbar-collapse bg-secondary" id="navbarTopMenu">
         <div class="navbar-nav mr-auto ml-5 text-white">
             {% if is_granted('IS_AUTHENTICATED_FULLY') %}
-                {% if app.user.nonprofit is defined %}{{app.user.nonprofit.orgname }}{% else %}
-                    {{ app.user.fname }} {{ app.user.sname }}{% endif %}
+                {% if app.user.nonprofit is not null %}{{app.user.nonprofit.orgname }}{% else %}
+                    {{ app.user.fname }} {{ app.user.sname }}
                 {% endif %}
-            </div>
-            <ul class="navbar-nav ml-auto mr-2">
-                <li class="nav-item">
-                    <a target="_blank" title="Facebook" href="https://www.facebook.com/nevadafund?ref=hl"><i class="fab fa-facebook-f text-white mr-4 align-middle"></i></a>
-                </li>
-                <li class="nav-item">
-                    <a target="_blank" title="YouTube" href="https://www.youtube.com/channel/UCn_DnbBVQ6ueNQXsOnWT79Q"><i class="fab fa-youtube-square text-white mr-4 align-middle"></i></a>
-                </li>
-                <li class="nav-item">
-                    <a target="_blank" title="LinkedIn" href="https://www.linkedin.com/company/communityfoundationofwesternnevada/"><i class="fab fa-linkedin-in text-white mr-4 align-middle"></i></a>
-                </li>
-                {% if is_granted('ROLE_USER') %}
-                    <li class="nav-item">
-                        <a class="nav-link text-white mr-4 align-middle" style="font-size: 18px;" href="{{ path('app_logout') }}">Log out</a>
-                    </li>
-                    {#<li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarAdmin" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            Account
-                        </a>
-                        <div class="dropdown-menu" aria-labelledby="navbarAccount">
-                            <a class="dropdown-item" href="{{ path('home_page') }}">Change password</a>
-                            <a class="dropdown-item" href="{{ path('home_page') }}">Logout</a>
-                        </div>
-                    </li>#}
-                {% else %}
-                    <li class="nav-item">
-                        <a class="nav-link text-white mr-4 align-middle" style="font-size: 18px;" href="{{ path('app_login') }}">Log in</a>
-                    </li>
-                {% endif %}
-            </ul>
+            {% endif %}
         </div>
-    </nav>
+        <ul class="navbar-nav ml-auto mr-2">
+            <li class="nav-item">
+                <a target="_blank" title="Facebook" href="https://www.facebook.com/nevadafund?ref=hl"><i class="fab fa-facebook-f text-white mr-4 align-middle"></i></a>
+            </li>
+            <li class="nav-item">
+                <a target="_blank" title="YouTube" href="https://www.youtube.com/channel/UCn_DnbBVQ6ueNQXsOnWT79Q"><i class="fab fa-youtube-square text-white mr-4 align-middle"></i></a>
+            </li>
+            <li class="nav-item">
+                <a target="_blank" title="LinkedIn" href="https://www.linkedin.com/company/communityfoundationofwesternnevada/"><i class="fab fa-linkedin-in text-white mr-4 align-middle"></i></a>
+            </li>
+            {% if is_granted('ROLE_USER') %}
+                <li class="nav-item">
+                    <a class="nav-link text-white mr-4 align-middle" style="font-size: 18px;" href="{{ path('app_logout') }}">Log out</a>
+                </li>
+                {#<li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarAdmin" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Account
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarAccount">
+                        <a class="dropdown-item" href="{{ path('home_page') }}">Change password</a>
+                        <a class="dropdown-item" href="{{ path('home_page') }}">Logout</a>
+                    </div>
+                </li>#}
+            {% else %}
+                <li class="nav-item">
+                    <a class="nav-link text-white mr-4 align-middle" style="font-size: 18px;" href="{{ path('app_login') }}">Log in</a>
+                </li>
+            {% endif %}
+        </ul>
+    </div>
+</nav>

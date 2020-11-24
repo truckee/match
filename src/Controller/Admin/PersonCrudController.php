@@ -2,24 +2,15 @@
 
 namespace App\Controller\Admin;
 
-use App\Entity\Representative;
-use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
-use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
+use App\Entity\Person;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
-use EasyCorp\Bundle\EasyAdminBundle\Field\ArrayField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\DateField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\IntegerField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\TextareaField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 
-class RepresentativeCrudController extends AbstractCrudController
+class PersonCrudController extends AbstractCrudController
 {
+
     public static function getEntityFqcn(): string
     {
-        return Representative::class;
+        return Person::class;
     }
 
     public function configureCrud(Crud $crud): Crud
@@ -67,4 +58,15 @@ class RepresentativeCrudController extends AbstractCrudController
             return [$roles, $password, $email, $fname, $sname, $lastLogin, $confirmationToken, $tokenExpiresAt, $locked, $enabled, $replacementStatus, $initiated, $completed, $nonprofit];
         }
     }
+
+    /*
+      public function configureFields(string $pageName): iterable
+      {
+      return [
+      IdField::new('id'),
+      TextField::new('title'),
+      TextEditorField::new('description'),
+      ];
+      }
+     */
 }

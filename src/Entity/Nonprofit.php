@@ -13,7 +13,7 @@ namespace App\Entity;
 
 use App\Entity\Focus;
 use App\Entity\Opportunity;
-use App\Entity\Representative;
+use App\Entity\Person;
 use App\Validator\Constraints as CustomAssert;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -30,6 +30,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  */
 class Nonprofit
 {
+
     public function __construct()
     {
         $this->opportunities = new ArrayCollection();
@@ -125,7 +126,7 @@ class Nonprofit
     protected $opportunities;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Representative", mappedBy="nonprofit", cascade={"persist", "remove"})
+     * @ORM\OneToMany(targetEntity="App\Entity\Person", mappedBy="nonprofit", cascade={"persist", "remove"})
      */
     protected $reps;
 
@@ -191,11 +192,11 @@ class Nonprofit
         return $this;
     }
 
-    public function removeRep(Representative $rep)
+    public function removeRep(Person $rep)
     {
         $this->reps->removeElement($rep);
     }
-    
+
     public function getState(): ?string
     {
         return $this->state;
@@ -244,7 +245,7 @@ class Nonprofit
         } else {
             $this->website = $website;
         }
-        
+
         return $this;
     }
 
@@ -325,7 +326,7 @@ class Nonprofit
 
         return $this;
     }
-    
+
     public function getRepresentative()
     {
         $reps = $this->reps;
@@ -334,7 +335,8 @@ class Nonprofit
                 $rep = $person;
             }
         }
-        
+
         return $rep;
     }
+
 }
