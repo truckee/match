@@ -1,4 +1,4 @@
-{% if not field.value %}
+{#{% if not field.value %}
     <a class="badge badge-success" 
        href="{{ path('lock_user', {'id':entity.primaryKeyValue}) }}">
         <span style="text-transform:initial;">Lock</span></a>
@@ -6,4 +6,5 @@
     <a class="badge badge-danger" 
        href="{{ path('lock_user', {'id':entity.primaryKeyValue}) }}">
         <span style="text-transform:initial;">Unlock</span></a>
-{% endif %}
+{% endif %}#}
+{{ dump(entity.instance) }}

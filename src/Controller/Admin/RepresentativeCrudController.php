@@ -1,11 +1,39 @@
 <?php
 
+/*
+ * (c) GWB truckeesolutions@gmail.com
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+//src/Controller/Admin/RepresentativeCrudController.php
+
 namespace App\Controller\Admin;
 
 use App\Entity\Person;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Filters;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
+use EasyCorp\Bundle\EasyAdminBundle\Field\ArrayField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\DateField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\IntegerField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\TextareaField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
+use Doctrine\ORM\QueryBuilder;
+use EasyCorp\Bundle\EasyAdminBundle\Collection\FieldCollection;
+use EasyCorp\Bundle\EasyAdminBundle\Collection\FilterCollection;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
+use EasyCorp\Bundle\EasyAdminBundle\Dto\EntityDto;
+use EasyCorp\Bundle\EasyAdminBundle\Dto\SearchDto;
+use EasyCorp\Bundle\EasyAdminBundle\Orm\EntityRepository;
+use EasyCorp\Bundle\EasyAdminBundle\Contracts\Controller\CrudControllerInterface;
+use EasyCorp\Bundle\EasyAdminBundle\Router\CrudUrlGenerator;
 
-class PersonCrudController extends AbstractCrudController
+class RepresentativeCrudController extends AbstractCrudController
 {
 
     public static function getEntityFqcn(): string
@@ -16,8 +44,8 @@ class PersonCrudController extends AbstractCrudController
     public function configureCrud(Crud $crud): Crud
     {
         return $crud
-                        ->setPageTitle(Crud::PAGE_EDIT, 'Edit %entity_name%')
-                        ->setHelp('index', 'Locking staff deactivates nonprofit and blocks staff log in. Replacing also removes current staff.')
+                        ->setPageTitle(Crud::PAGE_INDEX, 'Representative')
+                        ->setHelp('index', 'Replacing removes current staff.')
                         ->setSearchFields(['id', 'roles', 'email', 'fname', 'sname', 'confirmationToken', 'replacementStatus']);
     }
 
@@ -59,14 +87,14 @@ class PersonCrudController extends AbstractCrudController
         }
     }
 
-    /*
-      public function configureFields(string $pageName): iterable
-      {
-      return [
-      IdField::new('id'),
-      TextField::new('title'),
-      TextEditorField::new('description'),
-      ];
-      }
-     */
+    public function createIndexQueryBuilder(SearchDto $searchDto, EntityDto $entityDto, FieldCollection $fields, FilterCollection $filters): QueryBuilder
+    {
+        $role = serialize(["ROLE_REP"]);
+        $qb = $this->get(EntityRepository::class)->createQueryBuilder($searchDto, $entityDto, $fields, $filters);
+        $qb->andWhere('entity.roles = :role');
+        $qb->setParameter('role', $role);
+
+        return $qb;
+    }
+
 }

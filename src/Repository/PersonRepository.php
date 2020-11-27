@@ -18,6 +18,7 @@ use Doctrine\Persistence\ManagerRegistry;
 
 class PersonRepository extends ServiceEntityRepository implements UserLoaderInterface
 {
+
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Person::class);
@@ -28,11 +29,12 @@ class PersonRepository extends ServiceEntityRepository implements UserLoaderInte
         $entityManager = $this->getEntityManager();
 
         return $entityManager->createQuery(
-            'SELECT p
+                                'SELECT p
                 FROM App\Entity\Person p
                 WHERE p.email = :query'
-        )
+                        )
                         ->setParameter('query', $usernameOrEmail)
                         ->getOneOrNullResult();
     }
+
 }

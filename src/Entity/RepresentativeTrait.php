@@ -71,7 +71,11 @@ trait RepresentativeTrait
 
     public function getOrgname()
     {
-        return $this->nonprofit->getOrgname();
+        if (!is_null($this->nonprofit)) {
+            return $this->nonprofit->getOrgname();
+        }
+
+        return null;
     }
 
     public function __toString()

@@ -11,6 +11,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Person;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -19,14 +20,13 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class DefaultController extends AbstractController
 {
+
     /**
      * @Route("/", name="home_page")
      */
     public function index()
     {
-//        if (null !== $this->getUser() && ($this->getUser()->hasRole('ROLE_ADMIN') || $this->getUser()->hasRole('ROLE_SUPER_ADMIN'))) {
-//            return $this->redirectToRoute('dashboard');
-//        }
         return $this->render('Default/home_page.html.twig');
     }
+
 }
