@@ -30,6 +30,11 @@ class Person implements UserInterface
     use RepresentativeTrait;
     use VolunteerTrait;
 
+    public function __construct($role)
+    {
+        $this->addRole($role);
+    }
+
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()

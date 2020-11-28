@@ -13,14 +13,15 @@ namespace App\Form\Type;
 
 use App\Form\Type\Field\FocusFieldType;
 use App\Entity\Nonprofit;
-use App\Entity\Representative;
-use App\Form\Type\NewUserType;
+use App\Entity\Person;
+use App\Form\Type\UserType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class NonprofitType extends AbstractType
 {
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
@@ -97,9 +98,9 @@ class NonprofitType extends AbstractType
         ;
 
         if (true === $options['register']) {
-            $builder->add('rep', NewUserType::class, [
+            $builder->add('rep', UserType::class, [
                 'label' => false,
-                'data_class' => Representative::class,
+                'data_class' => Person::class,
                 'mapped' => false,
             ]);
         }
@@ -118,4 +119,5 @@ class NonprofitType extends AbstractType
     {
         return 'org';
     }
+
 }

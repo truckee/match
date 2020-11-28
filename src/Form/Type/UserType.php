@@ -11,10 +11,13 @@
 
 namespace App\Form\Type;
 
-use App\Entity\Volunteer;
+use App\Entity\Person;
 use App\Form\Type\Field\FocusFieldType;
 use App\Form\Type\Field\SkillFieldType;
 use App\Validator\Constraints\GloballyUnique;
+use App\Validator\Constraints\PasswordRequirements;
+use Symfony\Component\Form\Extension\Core\Type\PasswordType;
+use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -23,11 +26,9 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 
-/**
- *
- */
 class UserType extends AbstractType
 {
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
@@ -53,32 +54,86 @@ class UserType extends AbstractType
                     'constraints' => [new NotBlank(['message' => "First name is required"])],
                 ])
         ;
-        if (Volunteer::class === $options['data_class']) {
-            $builder->add('receiveEmail')
-                    ->add('focuses', FocusFieldType::class)
-                    ->add('skills', SkillFieldType::class)
-            ;
-        }
+//        if (Volunteer::class === $options['data_class']) {
+//            $builder->add('receiveEmail')
+//                    ->add('focuses', FocusFieldType::class)
+//                    ->add('skills', SkillFieldType::class)
+//            ;
+//        }
 
+        /*
+         * New Volunteer: Person->hasRole('ROLE_VOLUNTEER');  $data instanceof Person::class; id === null
+         * New Rep: $user === null
+         * Volunteer profile: Person->hasRole('ROLE_VOLUNTEER');  $data instanceof Person::class; id not null
+         * Rep profile: Person->hasRole('ROLE_REP');  $data instanceof Person::class; id not null
+         */
         $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
             $user = $event->getData();
             $form = $event->getForm();
+            if (null === $user) {
+                $user = new Person('ROLE_REP');
+            } else {
+                $user = $event->getData();
+            }
 
+            if ($user->hasRole('ROLE_VOLUNTEER')) {
+                $form
+                        ->add('focuses', FocusFieldType::class)
+                        ->add('skills', SkillFieldType::class)
+                ;
+                if (false === $form->getConfig()->getOption('register')) {
+                    $form->add('receiveEmail');
+                }
+            }
+
+            // new users
             if (null === $user->getId()) {
                 $form->add('email', null, [
-                    'attr' => [
-                        'class' => 'mb-2',
-                        'size' => '15',
-                        'required' => true,
-                    ],
-                    'label' => 'Email: ',
-                    'label_attr' => ['class' => 'mr-2'],
-                    'constraints' => [
-                        new NotBlank(['message' => "Email is required"]),
-                        new GloballyUnique(),
-                    ]
-                ]);
+                            'attr' => [
+                                'class' => 'mb-2',
+                                'size' => '15',
+                                'required' => true,
+                            ],
+                            'label' => 'Email: ',
+                            'label_attr' => ['class' => 'mr-2'],
+                            'constraints' => [
+                                new NotBlank(['message' => "Email is required"]),
+                                new GloballyUnique(),
+                            ]
+                        ])
+                        ->add('plainPassword', RepeatedType::class, array(
+                            'type' => PasswordType::class,
+                            'help' => '(At least 6 characters, incl. upper & lower case letters and at least one number)',
+                            'mapped' => false,
+                            'constraints' => [
+                                new NotBlank(['message' => "Password may not empty"]),
+                                new PasswordRequirements()
+                            ],
+                            'invalid_message' => 'Passwords do not match',
+                            'first_options' => [
+                                'attr' => [
+                                    'class' => 'mb-2',
+                                    'size' => '15',
+                                    'required' => true,
+                                ],
+                                'label' => 'Password:',
+                                'label_attr' => ['class' => 'mr-2'],
+                                'required' => true,
+                            ],
+                            'second_options' => [
+                                'attr' => [
+                                    'class' => 'mb-2',
+                                    'size' => '15',
+                                    'required' => true,
+                                ],
+                                'label' => 'Confirm:',
+                                'label_attr' => ['class' => 'mr-2'],
+                                'required' => true,
+                            ],
+                        ))
+                ;
             }
+
             if (null === $user->getId() && null !== $form->getConfig()->getOption('npo_id')) {
                 $form->add('npoid', HiddenType::class, [
                     'mapped' => false,
@@ -94,6 +149,8 @@ class UserType extends AbstractType
             'data_class' => null,
             'required' => false,
             'npo_id' => null,
+            'register' => false,
         ]);
     }
+
 }

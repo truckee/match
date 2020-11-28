@@ -11,11 +11,12 @@
 
 namespace App\Services;
 
-use App\Entity\Admin;
+use App\Entity\Person;
 use Doctrine\ORM\EntityManagerInterface;
 
 class EmailerService
 {
+
     private $defaultMailer;
     private $em;
 
@@ -37,8 +38,8 @@ class EmailerService
                 ->setFrom($mailer)
                 ->setTo($mailParams['recipient'])
                 ->setBody(
-                    $mailParams['view'],
-                    'text/html'
+                $mailParams['view'],
+                'text/html'
                 )
         ;
 
@@ -51,9 +52,10 @@ class EmailerService
 //            $this->spoolMailer->send($message);
 //        }
     }
-    
+
     public function getMailer()
     {
-        return $this->em->getRepository(Admin::class)->findOneBy(['mailer' => true]);
+        return $this->em->getRepository(Person::class)->findOneBy(['mailer' => true]);
     }
+
 }

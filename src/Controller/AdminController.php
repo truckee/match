@@ -11,11 +11,14 @@
 
 namespace App\Controller;
 
+use App\Controller\Admin\NonprofitCrudController;
 use App\Entity\Nonprofit;
 use App\Entity\Person;
 use App\Form\Type\UserType;
 use App\Services\EmailerService;
 use App\Services\ChartService;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
+use EasyCorp\Bundle\EasyAdminBundle\Router\CrudUrlGenerator;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -25,6 +28,13 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
  */
 class AdminController extends AbstractController
 {
+
+    private $crudUrlGenerator;
+
+    public function __construct(CrudUrlGenerator $crudUrlGenerator)
+    {
+        $this->crudUrlGenerator = $crudUrlGenerator;
+    }
 
     /**
      * @Route("/dashboard", name="dashboard")
@@ -96,13 +106,12 @@ class AdminController extends AbstractController
         $em->persist($rep);
         $em->flush();
 
+        $url = $this->crudUrlGenerator
+                ->build()
+                ->setController(NonprofitCrudController::class)
+                ->setAction(Action::INDEX);
 
-        $route = $request->query->get('route');
-        if (null !== $route) {
-            return $this->redirectToRoute('easyadmin', ['entity' => 'Nonprofit']);
-        }
-
-        return $this->redirectToRoute('dashboard');
+        return $this->redirect($url);
     }
 
     /**

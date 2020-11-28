@@ -12,8 +12,7 @@
 namespace App\Controller;
 
 use App\Entity\Opportunity;
-use App\Entity\Representative;
-use App\Entity\Volunteer;
+use App\Entity\Person;
 use App\Form\Type\NonprofitType;
 use App\Form\Type\UserType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -50,8 +49,8 @@ class ProfileController extends AbstractController
             $em->persist($npo);
             $em->flush();
             $this->addFlash(
-                'success',
-                'Profile updated'
+                    'success',
+                    'Profile updated'
             );
 
             return $this->redirectToRoute('home_page');
@@ -78,25 +77,28 @@ class ProfileController extends AbstractController
             return $this->redirectToRoute('home_page');
         }
         $em = $this->getDoctrine()->getManager();
-        if (Representative::class === get_class($user)) {
+        if ($user->hasRole('ROLE_REP')) {
             $templates[] = 'Default/_empty.html.twig';
         }
+//        if (Representative::class === get_class($user)) {
+//            $templates[] = 'Default/_empty.html.twig';
+//        }
         $templates[] = 'Profile/_user.html.twig';
-        if (Volunteer::class === get_class($user)) {
+        if ($user->hasRole('ROLE_VOLUNTEER')) {
             $templates[] = 'Default/_focuses.html.twig';
             $templates[] = 'Default/_skills.html.twig';
         }
         $headerText = $user->getFname() . ' ' . $user->getSname() . ' profile';
         $form = $this->createForm(UserType::class, $user, [
-            'data_class' => get_class($user),
+            'data_class' => Person::class,
         ]);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $em->persist($user);
             $em->flush();
             $this->addFlash(
-                'success',
-                'Profile updated'
+                    'success',
+                    'Profile updated'
             );
 
             return $this->redirectToRoute('home_page');
@@ -106,11 +108,12 @@ class ProfileController extends AbstractController
             'templates' => $templates,
             'headerText' => $headerText,
         ];
-        if (Volunteer::class === get_class($user)) {
+        if ($user->hasRole('ROLE_VOLUNTEER')) {
             $options['focusHeader'] = "Volunteer's Focus(es)";
             $options['skillHeader'] = "Volunteer's Skill(s)";
         }
-         
+
         return $this->render('Default/form_templates.html.twig', $options);
     }
+
 }

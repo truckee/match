@@ -52,7 +52,7 @@ class NonprofitFixture extends AbstractFixture implements OrderedFixtureInterfac
         $npo3->setActive(true);
         $npo3->setWebsite('http://ttrash.bogus.info');
 
-        $rep1 = new Person();
+        $rep1 = new Person('ROLE_REP');
         $rep1->setConfirmationToken('tuvxyz');
         $rep1->setEmail('unknown@bogus.info');
         $rep1->setEnabled(false);
@@ -60,32 +60,31 @@ class NonprofitFixture extends AbstractFixture implements OrderedFixtureInterfac
         $rep1->setSname('Bogus');
         $password = $this->encoder->encodePassword($rep1, '123Abc');
         $rep1->setPassword($password);
-        $rep1->addRole('ROLE_REP');
         $expires = new \DateTime();
         $rep1->setTokenExpiresAt($expires->add(new \DateInterval('P10Y')));
         $rep1->setNonprofit($npo1);
         $rep1->setReplacementStatus("Replace");
 
-        $rep2 = new Person();
+        $rep2 = new Person('ROLE_REP');
+        $expires = new \DateTime();
         $rep2->setEmail('staff@bogus.info');
         $rep2->setEnabled(true);
         $rep2->setFname('Misfit');
         $rep2->setSname('Bogus');
         $password2 = $this->encoder->encodePassword($rep2, '123Abc');
         $rep2->setPassword($password2);
-        $rep2->addRole('ROLE_REP');
         $this->setReference('staff', $rep2);
         $rep2->setNonprofit($npo2);
         $rep2->setReplacementStatus("Replace");
 
-        $rep3 = new Person();
+        $rep3 = new Person('ROLE_REP');
+        $expires = new \DateTime();
         $rep3->setEmail('rather@bogus.info');
         $rep3->setEnabled(true);
         $rep3->setFname('Rather');
         $rep3->setSname('Bogus');
         $password1 = $this->encoder->encodePassword($rep3, '123Abc');
         $rep3->setPassword($password1);
-        $rep3->addRole('ROLE_REP');
         $rep3->setNonprofit($npo3);
         $rep3->setReplacementStatus("Replace");
 
