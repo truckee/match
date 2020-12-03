@@ -43,13 +43,13 @@ class UserFixture extends AbstractFixture implements OrderedFixtureInterface, OR
         // user random@bogus.info with a 10 year confirmation token for testing
         // unexpired confirmation token; enabled = false
         {
-            $volunteer = new Person('ROLE_VOLUNTEER');
+            $volunteer = new Person();
             $volunteer->setConfirmationToken('abcdef');
             $expires = new \DateTime();
             $volunteer->setTokenExpiresAt($expires->add(new \DateInterval('P10Y')));
             // enabled false means not yet confirmed
             $volunteer->setEnabled(false);
-
+            $volunteer->addRole('ROLE_VOLUNTEER');
             $volunteer->setEmail('random@bogus.info');
             $volunteer->setFname('Random');
             $volunteer->setSname('Bogus');
@@ -63,11 +63,11 @@ class UserFixture extends AbstractFixture implements OrderedFixtureInterface, OR
         // user pseudo@bogus.info enabled = true:
         // for reset password, profile check
         {
-            $volunteer1 = new Person('ROLE_VOLUNTEER');
+            $volunteer1 = new Person();
             $volunteer1->setConfirmationToken('ghijkl');
             $volunteer1->setTokenExpiresAt($expires);
             $volunteer1->setEnabled(true);
-
+            $volunteer1->addRole('ROLE_VOLUNTEER');
             $volunteer1->setEmail('pseudo@bogus.info');
             $volunteer1->setFname('Very');
             $volunteer1->setSname('Bogus');
@@ -79,12 +79,12 @@ class UserFixture extends AbstractFixture implements OrderedFixtureInterface, OR
 
         // user garbled@bogus.info with expired confirmation token
         {
-            $volunteer2 = new Person('ROLE_VOLUNTEER');
+            $volunteer2 = new Person();
             $volunteer2->setConfirmationToken('fedcba');
             $expires2 = new \DateTime();
             $volunteer2->setTokenExpiresAt($expires2->sub(new \DateInterval('PT3H')));
             $volunteer2->setEnabled(false);
-
+            $volunteer2->addRole('ROLE_VOLUNTEER');
             $volunteer2->setEmail('garbled@bogus.info');
             $volunteer2->setFname('Very');
             $volunteer2->setSname('Bogus');
@@ -96,9 +96,9 @@ class UserFixture extends AbstractFixture implements OrderedFixtureInterface, OR
 
         // user volunteer@bogus.info for testing searches
         {
-            $volunteer3 = new Person('ROLE_VOLUNTEER');
+            $volunteer3 = new Person();
             $volunteer3->setEnabled(true);
-
+            $volunteer3->addRole('ROLE_VOLUNTEER');
             $volunteer3->setEmail('volunteer@bogus.info');
             $volunteer3->setFname('Exceptionally');
             $volunteer3->setSname('Bogus');
@@ -115,7 +115,8 @@ class UserFixture extends AbstractFixture implements OrderedFixtureInterface, OR
 
         // admin user; also for testing null tokens
         {
-            $admin = new Person('ROLE_SUPER_ADMIN');
+            $admin = new Person();
+            $admin->addRole('ROLE_SUPER_ADMIN');
             $admin->setEmail('admin@bogus.info');
             $admin->setEnabled(true);
             $admin->setMailer(false);
@@ -125,7 +126,8 @@ class UserFixture extends AbstractFixture implements OrderedFixtureInterface, OR
             $admin->setPassword($password4);
             $manager->persist($admin);
         } {
-            $admin1 = new Person('ROLE_ADMIN');
+            $admin1 = new Person();
+            $admin1->addRole('ROLE_ADMIN');
             $admin1->setConfirmationToken('mynameis');
             $admin1->setTokenExpiresAt($expires);
             $admin1->setEmail('obvious@bogus.info');
@@ -136,7 +138,8 @@ class UserFixture extends AbstractFixture implements OrderedFixtureInterface, OR
             $admin1->setPassword($this->encoder->encodePassword($admin, '123Abc'));
             $manager->persist($admin1);
         } {
-            $admin2 = new Person('ROLE_ADMIN');
+            $admin2 = new Person();
+            $admin2->addRole('ROLE_ADMIN');
             $admin2->setConfirmationToken('whoami');
             $admin2->setTokenExpiresAt($expires2);
             $admin2->setEmail('nothere@bogus.info');

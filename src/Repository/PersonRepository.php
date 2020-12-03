@@ -26,15 +26,34 @@ class PersonRepository extends ServiceEntityRepository implements UserLoaderInte
 
     public function loadUserByUsername(string $usernameOrEmail)
     {
-        $entityManager = $this->getEntityManager();
+        $em = $this->getEntityManager();
 
-        return $entityManager->createQuery(
+        return $em->createQuery(
                                 'SELECT p
                 FROM App\Entity\Person p
                 WHERE p.email = :query'
                         )
                         ->setParameter('query', $usernameOrEmail)
                         ->getOneOrNullResult();
+    }
+
+    public function getLockableStaff($npo)
+    {
+        $qb = $this->createQueryBuilder('p');
+
+        return $this->createQueryBuilder('p')
+                        ->select('p')
+//                        ->from(Person::class, 'p')
+                        ->join('p.nonprofit', 'n')
+                        ->where('n = ?1')
+                        ->andWhere($qb->expr()->orX(
+                                        $qb->expr()->eq('p.replacementStatus', '?2'),
+                                        $qb->expr()->eq('p.replacementStatus', '?3'),
+                        ))
+                        ->setParameter(1, $npo)
+                        ->setParameter(2, 'Pending')
+                        ->setParameter(3, 'Replace')
+                        ->getQuery()->getSingleResult();
     }
 
 }

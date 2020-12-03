@@ -37,12 +37,16 @@ class ProfileController extends AbstractController
         $em = $this->getDoctrine()->getManager();
         $npo = $user->getNonprofit();
         $opps = $em->getRepository(Opportunity::class)->findBy(['nonprofit' => $npo], ['oppname' => 'ASC']);
-        $templates = [
-            'Nonprofit/_nonprofit_form.html.twig',
-            'Default/_focuses.html.twig',
-            'Nonprofit/_opportunities.html.twig',
+
+        $header = ['left' => 'Nonprofit Organization',
+            'center' => "Nonprofit's Focus(es)",
+            'right' => $npo->getOrgname() . " Opportunities",
         ];
+        $entity_form['left'] = ['Nonprofit/_nonprofit_form.html.twig'];
+        $entity_form['center'] = ['Default/_focuses.html.twig'];
+        $entity_form['right'] = ['Nonprofit/_opportunities.html.twig'];
         $headerText = $npo->getOrgname() . ' profile';
+
         $form = $this->createForm(NonprofitType::class, $npo);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
@@ -56,13 +60,13 @@ class ProfileController extends AbstractController
             return $this->redirectToRoute('home_page');
         }
 
-        return $this->render('Default/form_templates.html.twig', [
+        return $this->render('Entity/entity_form.html.twig', [
                     'form' => $form->createView(),
-                    'templates' => $templates,
                     'headerText' => $headerText,
                     'npo' => $npo,
                     'rep' => $user,
-                    'focusHeader' => $npo->getOrgname() . "'s Focus(es)",
+                    'header' => $header,
+                    'entity_form' => $entity_form,
                     'opportunities' => $opps,
         ]);
     }
@@ -70,27 +74,38 @@ class ProfileController extends AbstractController
     /**
      * @Route("/person", name="profile_person")
      */
-    public function volunteer(Request $request)
+    public function person(Request $request)
     {
         $user = $this->getUser();
         if (!$user) {
             return $this->redirectToRoute('home_page');
         }
         $em = $this->getDoctrine()->getManager();
-        if ($user->hasRole('ROLE_REP')) {
-            $templates[] = 'Default/_empty.html.twig';
+
+        if ($user->hasRole('ROLE_REP') || $user->hasRole('ROLE_ADMIN')) {
+            $header = ['center' => $user->getFullname()];
+            $entity_form['center'] = [
+                'Entity/_user_name.html.twig',
+            ];
         }
-//        if (Representative::class === get_class($user)) {
-//            $templates[] = 'Default/_empty.html.twig';
-//        }
-        $templates[] = 'Profile/_user.html.twig';
         if ($user->hasRole('ROLE_VOLUNTEER')) {
-            $templates[] = 'Default/_focuses.html.twig';
-            $templates[] = 'Default/_skills.html.twig';
+            $header = [
+                'left' => $user->getFullname(),
+                'center' => "Volunteer's Focus(es)",
+                'right' => "Volunteer's Skill(s)",
+            ];
+            $entity_form['left'] = [
+                'Entity/_user_name.html.twig',
+                'Entity/_vol_receive_email.html.twig',
+            ];
+            $entity_form['center'] = ['Default/_focuses.html.twig'];
+            $entity_form['right'] = ['Default/_skills.html.twig'];
         }
+
         $headerText = $user->getFname() . ' ' . $user->getSname() . ' profile';
         $form = $this->createForm(UserType::class, $user, [
-            'data_class' => Person::class,
+            'register' => false,
+            'password' => false,
         ]);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
@@ -103,17 +118,14 @@ class ProfileController extends AbstractController
 
             return $this->redirectToRoute('home_page');
         }
-        $options = [
-            'form' => $form->createView(),
-            'templates' => $templates,
-            'headerText' => $headerText,
-        ];
-        if ($user->hasRole('ROLE_VOLUNTEER')) {
-            $options['focusHeader'] = "Volunteer's Focus(es)";
-            $options['skillHeader'] = "Volunteer's Skill(s)";
-        }
 
-        return $this->render('Default/form_templates.html.twig', $options);
+        return $this->render('Entity/entity_form.html.twig', [
+                    'form' => $form->createView(),
+                    'headerText' => $headerText,
+                    'header' => $header,
+                    'entity_form' => $entity_form,
+                        ]
+        );
     }
 
 }

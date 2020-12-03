@@ -18,6 +18,7 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
  */
 class RegistrationTest extends WebTestCase
 {
+
     public function setup(): void
     {
         $this->client = static::createClient();
@@ -105,10 +106,10 @@ class RegistrationTest extends WebTestCase
             'email' => 'pseudo@bogus.info',
             'password' => 'Abc123',
         ]);
-        
+
         $this->assertStringContainsString('Volunteer Connections for Western Nevada', $this->client->getResponse()->getContent());
     }
-    
+
     public function testFogottenPasswordNotAUser()
     {
         $this->client->followRedirects(false);
@@ -116,16 +117,16 @@ class RegistrationTest extends WebTestCase
         $this->client->submitForm('Submit', [
             'user_email[email]' => 'swimming@pool.com',
         ]);
-        
+
         $mailCollector = $this->client->getProfile()->getCollector('swiftmailer');
 
         $this->assertSame(1, $mailCollector->getMessageCount());
         $collectedMessages = $mailCollector->getMessages();
         $message = $collectedMessages[0];
-        
+
         $this->assertStringContainsString('email is not recognized', $message->getBody());
     }
-    
+
     public function testFogottenPasswordUser()
     {
         $this->client->followRedirects(false);
@@ -133,27 +134,47 @@ class RegistrationTest extends WebTestCase
         $this->client->submitForm('Submit', [
             'user_email[email]' => 'random@bogus.info',
         ]);
-        
+
         $mailCollector = $this->client->getProfile()->getCollector('swiftmailer');
 
         $this->assertSame(1, $mailCollector->getMessageCount());
         $collectedMessages = $mailCollector->getMessages();
         $message = $collectedMessages[0];
-        
+
         $this->assertStringContainsString('to change your password', $message->getBody());
     }
-    
+
     public function testNewNonprofitActivationEmail()
     {
         $this->client->followRedirects(false);
         $this->client->request('GET', '/register/confirm/tuvxyz');
-        
+
         $mailCollector = $this->client->getProfile()->getCollector('swiftmailer');
 
         $this->assertSame(1, $mailCollector->getMessageCount());
         $collectedMessages = $mailCollector->getMessages();
         $message = $collectedMessages[0];
-        
+
         $this->assertStringContainsString('new nonprofit has submitted registration', $message->getBody());
     }
+
+    public function testNonUserRegistration()
+    {
+        $this->client->request('GET', '/register');
+
+        $this->assertStringContainsString('Registration is not available', $this->client->getResponse()->getContent());
+
+        $this->client->request('GET', '/register/person');
+
+        $this->assertStringContainsString('Registration is not available', $this->client->getResponse()->getContent());
+
+        $this->client->request('GET', '/register/person/admin');
+
+        $this->assertStringContainsString('Registration is not available', $this->client->getResponse()->getContent());
+
+        $this->client->request('GET', '/register/person/staff');
+
+        $this->assertStringContainsString('Registration is not available', $this->client->getResponse()->getContent());
+    }
+
 }

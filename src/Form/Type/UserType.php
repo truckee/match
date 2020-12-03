@@ -54,12 +54,6 @@ class UserType extends AbstractType
                     'constraints' => [new NotBlank(['message' => "First name is required"])],
                 ])
         ;
-//        if (Volunteer::class === $options['data_class']) {
-//            $builder->add('receiveEmail')
-//                    ->add('focuses', FocusFieldType::class)
-//                    ->add('skills', SkillFieldType::class)
-//            ;
-//        }
 
         /*
          * New Volunteer: Person->hasRole('ROLE_VOLUNTEER');  $data instanceof Person::class; id === null
@@ -70,13 +64,7 @@ class UserType extends AbstractType
         $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
             $user = $event->getData();
             $form = $event->getForm();
-            if (null === $user) {
-                $user = new Person('ROLE_REP');
-            } else {
-                $user = $event->getData();
-            }
-
-            if ($user->hasRole('ROLE_VOLUNTEER')) {
+            if (null !== $user && $user->hasRole('ROLE_VOLUNTEER')) {
                 $form
                         ->add('focuses', FocusFieldType::class)
                         ->add('skills', SkillFieldType::class)
@@ -87,69 +75,74 @@ class UserType extends AbstractType
             }
 
             // new users
-            if (null === $user->getId()) {
+            if ((null !== $user && null === $user->getId()) || null === $user) {
                 $form->add('email', null, [
-                            'attr' => [
-                                'class' => 'mb-2',
-                                'size' => '15',
-                                'required' => true,
-                            ],
-                            'label' => 'Email: ',
-                            'label_attr' => ['class' => 'mr-2'],
-                            'constraints' => [
-                                new NotBlank(['message' => "Email is required"]),
-                                new GloballyUnique(),
-                            ]
-                        ])
-                        ->add('plainPassword', RepeatedType::class, array(
-                            'type' => PasswordType::class,
-                            'help' => '(At least 6 characters, incl. upper & lower case letters and at least one number)',
-                            'mapped' => false,
-                            'constraints' => [
-                                new NotBlank(['message' => "Password may not empty"]),
-                                new PasswordRequirements()
-                            ],
-                            'invalid_message' => 'Passwords do not match',
-                            'first_options' => [
-                                'attr' => [
-                                    'class' => 'mb-2',
-                                    'size' => '15',
-                                    'required' => true,
-                                ],
-                                'label' => 'Password:',
-                                'label_attr' => ['class' => 'mr-2'],
-                                'required' => true,
-                            ],
-                            'second_options' => [
-                                'attr' => [
-                                    'class' => 'mb-2',
-                                    'size' => '15',
-                                    'required' => true,
-                                ],
-                                'label' => 'Confirm:',
-                                'label_attr' => ['class' => 'mr-2'],
-                                'required' => true,
-                            ],
-                        ))
+                    'attr' => [
+                        'class' => 'mb-2',
+                        'size' => '15',
+                        'required' => true,
+                    ],
+                    'label' => 'Email: ',
+                    'label_attr' => ['class' => 'mr-2'],
+                    'constraints' => [
+                        new NotBlank(['message' => "Email is required"]),
+                        new GloballyUnique(),
+                    ]
+                ])
                 ;
             }
 
-            if (null === $user->getId() && null !== $form->getConfig()->getOption('npo_id')) {
+            if ($form->getConfig()->getOption('password')) {
+                $form->add('plainPassword', RepeatedType::class, array(
+                    'type' => PasswordType::class,
+                    'help' => '(At least 6 characters, incl. upper & lower case letters and at least one number)',
+                    'mapped' => false,
+                    'constraints' => [
+                        new NotBlank(['message' => "Password may not empty"]),
+                        new PasswordRequirements()
+                    ],
+                    'invalid_message' => 'Passwords do not match',
+                    'first_options' => [
+                        'attr' => [
+                            'class' => 'mb-2',
+                            'size' => '15',
+                            'required' => true,
+                        ],
+                        'label' => 'Password:',
+                        'label_attr' => ['class' => 'mr-2'],
+                        'required' => true,
+                    ],
+                    'second_options' => [
+                        'attr' => [
+                            'class' => 'mb-2',
+                            'size' => '15',
+                            'required' => true,
+                        ],
+                        'label' => 'Confirm:',
+                        'label_attr' => ['class' => 'mr-2'],
+                        'required' => true,
+                    ],
+                ));
+            }
+
+            if (null === $user && null !== $form->getConfig()->getOption('npo_id')) {
                 $form->add('npoid', HiddenType::class, [
                     'mapped' => false,
                     'data' => $form->getConfig()->getOption('npo_id')
                 ]);
             }
-        });
+        }
+        );
     }
 
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'data_class' => null,
+            'data_class' => Person::class,
             'required' => false,
             'npo_id' => null,
             'register' => false,
+            'password' => true,
         ]);
     }
 

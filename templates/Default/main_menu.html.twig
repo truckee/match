@@ -22,7 +22,7 @@
                     <div class="dropdown-menu" aria-labelledby="navbarAdmin">
                         <a class="dropdown-item" href="/admin">Options</a>
                         {% if is_granted('ROLE_SUPER_ADMIN') %}
-                            <a class="dropdown-item" href="{{ path('admin_invite') }}">Invite new admin</a>
+                            <a class="dropdown-item" href="{{ path('register_person', {'type':'admin'}) }}">Invite new admin</a>
                         {% endif %}
                     </div>
                 </li>

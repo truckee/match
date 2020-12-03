@@ -1,6 +1,6 @@
 {# form.staff occurs when registering a nonprofit #}
 {#{{ dump(form) }}#}
-{% if form.rep is defined %}{% set user = form.rep %}{% else %}{% set user = form %}{% endif %}
+{% if staff is defined %}{% set user = form.rep %}{% else %}{% set user = form %}{% endif %}
 <div class="text-center text-bold ul-cfwn mb-2">
     {{ userHeader }}
 </div>

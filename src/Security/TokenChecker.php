@@ -11,6 +11,7 @@
 
 namespace App\Security;
 
+use App\Entity\Person;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
@@ -39,7 +40,7 @@ class TokenChecker
             return null;
         }
 
-        $user = $this->em->getRepository('App:Person')->findOneBy(['confirmationToken' => $token]);
+        $user = $this->em->getRepository(Person::class)->findOneBy(['confirmationToken' => $token]);
         if (null === $user) {
             $this->session->getFlashBag()->add('danger', 'Invalid registration data');
 

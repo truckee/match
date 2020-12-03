@@ -12,12 +12,11 @@
 namespace App\Controller\Admin;
 
 use App\Entity\Person;
+use App\Form\Type\Field\SwitchFieldType;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
-use EasyCorp\Bundle\EasyAdminBundle\Config\Filters;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ArrayField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IntegerField;
@@ -30,8 +29,6 @@ use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\EntityDto;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\SearchDto;
 use EasyCorp\Bundle\EasyAdminBundle\Orm\EntityRepository;
-use EasyCorp\Bundle\EasyAdminBundle\Contracts\Controller\CrudControllerInterface;
-use EasyCorp\Bundle\EasyAdminBundle\Router\CrudUrlGenerator;
 
 class RepresentativeCrudController extends AbstractCrudController
 {
@@ -44,7 +41,7 @@ class RepresentativeCrudController extends AbstractCrudController
     public function configureCrud(Crud $crud): Crud
     {
         return $crud
-                        ->setPageTitle(Crud::PAGE_INDEX, 'Representative')
+                        ->setPageTitle(Crud::PAGE_INDEX, 'Staff')
                         ->setHelp('index', 'Replacing removes current staff.')
                         ->setSearchFields(['id', 'roles', 'email', 'fname', 'sname', 'confirmationToken', 'replacementStatus']);
     }
@@ -65,8 +62,8 @@ class RepresentativeCrudController extends AbstractCrudController
         $lastLogin = DateTimeField::new('lastLogin');
         $confirmationToken = TextField::new('confirmationToken');
         $tokenExpiresAt = DateTimeField::new('tokenExpiresAt');
-        $locked = BooleanField::new('locked');
-        $enabled = BooleanField::new('enabled');
+        $locked = SwitchFieldType::new('locked');
+        $enabled = SwitchFieldType::new('enabled');
         $replacementStatus = TextField::new('replacementStatus');
         $initiated = DateField::new('initiated');
         $completed = DateField::new('completed');
@@ -77,7 +74,7 @@ class RepresentativeCrudController extends AbstractCrudController
         $orgname = TextareaField::new('orgname');
 
         if (Crud::PAGE_INDEX === $pageName) {
-            return [$replace, $fullName, $email, $orgname];
+            return [$replace, $locked, $fullName, $email, $orgname];
         } elseif (Crud::PAGE_DETAIL === $pageName) {
             return [$id, $roles, $password, $email, $fname, $sname, $lastLogin, $confirmationToken, $tokenExpiresAt, $locked, $enabled, $replacementStatus, $initiated, $completed, $nonprofit];
         } elseif (Crud::PAGE_NEW === $pageName) {

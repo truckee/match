@@ -100,7 +100,6 @@ class NonprofitType extends AbstractType
         if (true === $options['register']) {
             $builder->add('rep', UserType::class, [
                 'label' => false,
-                'data_class' => Person::class,
                 'mapped' => false,
             ]);
         }

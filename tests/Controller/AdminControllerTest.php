@@ -18,6 +18,7 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
  */
 class AdminControllerTest extends WebTestCase
 {
+
     public function setup(): void
     {
         $this->client = $this->createClient();
@@ -29,35 +30,35 @@ class AdminControllerTest extends WebTestCase
         ]);
         $this->crawler = $this->client->request('GET', '/admin');
     }
-    
+
     public function testDashboard()
     {
         $this->client->request('GET', '/admin/dashboard');
-        
+
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
         $this->assertStringContainsString('Admin dashboard', $this->client->getResponse()->getContent());
-        
+
         $this->client->request('GET', '/admin');
         $this->assertStringContainsString('Nonprofit', $this->client->getResponse()->getContent());
         $this->assertStringContainsString('Activate', $this->client->getResponse()->getContent());
     }
-    
+
     public function testActivateNonprofit()
     {
         $crawler = $this->client->request('GET', '/admin');
         $this->client->clickLink('Activate');
-        
+
         $this->assertStringContainsString('Nonprofit activated!', $this->client->getResponse()->getContent());
     }
-    
+
     public function testDeactivateNonprofit()
     {
         $btn = $this->crawler->filter(".btn:contains('Deactivate')")->link();
         $this->client->click($btn);
-        
+
         $this->assertStringContainsString('Nonprofit deactivated', $this->client->getResponse()->getContent());
     }
-    
+
     public function testActivationEmail()
     {
         $this->client->followRedirects(false);
@@ -70,26 +71,26 @@ class AdminControllerTest extends WebTestCase
 
         $this->assertStringContainsString('You will now be able post opportunities', $message->getBody());
     }
-    
+
     public function testLockAndUnlockUser()
     {
         $this->client->clickLink('Volunteer');
-        
+
         $this->assertStringContainsString('Locked', $this->client->getResponse()->getContent());
 
         $this->client->clickLink('Lock');
-        
+
         $this->assertStringContainsString('is now locked', $this->client->getResponse()->getContent());
 
         $this->client->clickLink('Unlock');
-        
+
         $this->assertStringContainsString('is now unlocked', $this->client->getResponse()->getContent());
     }
-    
+
     public function testStaffReplacementEmailSent()
     {
         $this->client->clickLink('Staff');
-        
+
 //        $this->assertStringContainsString('Locking staff deactivates nonprofit', $this->client->getResponse()->getContent());
 
         $this->client->clickLink('Replace');
@@ -100,10 +101,10 @@ class AdminControllerTest extends WebTestCase
             'user[sname]' => 'Garbage',
             'user[email]' => 'ugar@bogus.info'
         ]);
-        
+
         $this->assertStringContainsString('Replacement email sent', $this->client->getResponse()->getContent());
     }
-    
+
     public function testStaffReplacementEmailToken()
     {
         $this->client->clickLink('Staff');
@@ -114,7 +115,7 @@ class AdminControllerTest extends WebTestCase
             'user[sname]' => 'Garbage',
             'user[email]' => 'ugar@bogus.info'
         ]);
-        
+
         $mailCollector = $this->client->getProfile()->getCollector('swiftmailer');
 
         $this->assertSame(1, $mailCollector->getMessageCount());
@@ -123,98 +124,109 @@ class AdminControllerTest extends WebTestCase
         $body = $message->getBody();
         $pos = strpos($body, '">link') - 32;
         $token = substr($body, $pos, 32);
-        
+
+        $this->client->request('GET', '/logout');
+
         $this->client->followRedirects(true);
         $this->client->request('GET', '/register/reset/' . $token);
         $this->client->submitForm('Save', [
             'new_password[plainPassword][first]' => 'Abc123',
             'new_password[plainPassword][second]' => 'Abc123',
         ]);
-        
+
         $this->assertStringContainsString('You are now the registered representative', $this->client->getResponse()->getContent());
     }
-    
+
     public function testInviteExistingEmail()
     {
-        $this->client->request('GET', '/admin/invite');
-        $this->client->followRedirects(false);
+        $this->client->request('GET', '/');
+        $this->client->clickLink('Invite new admin');
         $this->client->submitForm('Save', [
             'user[fname]' => 'Useless',
             'user[sname]' => 'Garbage',
             'user[email]' => 'staff@bogus.info'
         ]);
-        
+
         $this->assertStringContainsString('Email already registered', $this->client->getResponse()->getContent());
     }
-    
+
     public function testInviteNewAdminEmail()
     {
-        $this->client->request('GET', '/admin/invite');
+        $this->client->clickLink('Home');
+        $this->client->clickLink('Invite new admin');
         $this->client->followRedirects(false);
         $this->client->submitForm('Save', [
             'user[fname]' => 'Useless',
             'user[sname]' => 'Garbage',
             'user[email]' => 'startrek@bogus.info'
         ]);
-        
+
         $mailCollector = $this->client->getProfile()->getCollector('swiftmailer');
 
         $this->assertSame(1, $mailCollector->getMessageCount());
         $collectedMessages = $mailCollector->getMessages();
         $message = $collectedMessages[0];
-        
+
         $this->assertStringContainsString('You are invited to be an admin user', $message->getBody());
+
+        $this->client->followRedirects(true);
+        $body = $message->getBody();
+        $pos = strpos($body, '">link') - 32;
+        $token = substr($body, $pos, 32);
+        $this->client->request('GET', '/register/confirm/' . $token);
+
+        $this->assertStringContainsString('thank you for accepting. You may now log i', $this->client->getResponse()->getContent());
     }
-    
+
     public function testNonAdminValidToken()
     {
-        $this->client->request('GET', '/register/invite/abcdef');
-        
+        $this->client->request('GET', '/register/confirm/invalidToken');
+
         $this->assertStringContainsString('Invalid registration data', $this->client->getResponse()->getContent());
     }
-    
+
     public function testExpiredToken()
     {
         $this->client->followRedirects(false);
-        $this->client->request('GET', '/register/invite/whoami');
+        $this->client->request('GET', '/register/confirm/whoami');
         $mailCollector = $this->client->getProfile()->getCollector('swiftmailer');
 
         $this->assertSame(1, $mailCollector->getMessageCount());
         $collectedMessages = $mailCollector->getMessages();
         $message = $collectedMessages[0];
-        
+
         $this->assertStringContainsString('has just failed due to it having expired', $message->getBody());
     }
-    
+
     public function testRegisterNewAdmin() //mynameis
     {
-        $this->client->request('GET', '/register/invite/mynameis');
+        $this->client->request('GET', '/register/confirm/mynameis');
         $this->client->submitForm('Save', [
             'new_password[plainPassword][first]' => 'Abc123',
             'new_password[plainPassword][second]' => 'Abc123',
         ]);
-    
-        $this->assertStringContainsString('Your admin account is created', $this->client->getResponse()->getContent());
+
+        $this->assertStringContainsString('thank you for accepting', $this->client->getResponse()->getContent());
     }
-    
+
     public function testAdminScreen()
     {
         $this->client->request('GET', '/admin');
         $this->client->clickLink('Admin');
-    
+
         $this->assertStringContainsString('ROLE_SUPER_ADMIN', $this->client->getResponse()->getContent());
     }
-    
+
     public function testEnableDisableFails()
     {
         $this->client->request('GET', '/admin');
         $crawler = $this->client->clickLink('Admin');
         $link = $crawler->filter('#Adminenabled1')->link();
         $this->client->click($link);
-        
+
         $this->assertStringContainsString('Benny Borko cannot be disabled', $this->client->getResponse()->getContent());
     }
-    
+
     public function testEnableDisableSucceeds()
     {
         $this->client->request('GET', '/admin');
@@ -230,7 +242,7 @@ class AdminControllerTest extends WebTestCase
 
         $this->assertNull($str2);
     }
-    
+
     public function testFocusAdd()
     {
         $this->client->request('GET', '/admin');
@@ -243,7 +255,7 @@ class AdminControllerTest extends WebTestCase
 
         $this->assertStringContainsString('<strong>4</strong>', $this->client->getResponse()->getContent());
     }
-    
+
     public function testSkillAdd()
     {
         $this->client->request('GET', '/admin');
@@ -253,7 +265,8 @@ class AdminControllerTest extends WebTestCase
         $form['Skill[skill]'] = 'Another skill';
         $form['Skill[enabled]']->tick();
         $this->client->submit($form);
-        
+
         $this->assertStringContainsString('<strong>4</strong> results', $this->client->getResponse()->getContent());
     }
+
 }

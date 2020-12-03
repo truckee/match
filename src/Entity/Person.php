@@ -20,7 +20,6 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Table(name="person")
- * @ORM\Entity
  * @ORM\Entity(repositoryClass="App\Repository\PersonRepository")
  */
 class Person implements UserInterface
@@ -29,11 +28,6 @@ class Person implements UserInterface
     use AdminTrait;
     use RepresentativeTrait;
     use VolunteerTrait;
-
-    public function __construct($role)
-    {
-        $this->addRole($role);
-    }
 
     /**
      * @ORM\Id()
@@ -87,6 +81,14 @@ class Person implements UserInterface
      * @ORM\Column(type="boolean")
      */
     private $locked = false;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Nonprofit", inversedBy="reps", cascade={"persist", "remove"})
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="orgId", referencedColumnName="id")
+     * })
+     */
+    protected $nonprofit;
 
     public function getId(): ?int
     {
@@ -259,7 +261,7 @@ class Person implements UserInterface
         return $this;
     }
 
-    public function isLocked()
+    public function getLocked()
     {
         return $this->locked;
     }

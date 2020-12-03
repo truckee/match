@@ -17,14 +17,6 @@ use Doctrine\ORM\Mapping as ORM;
 trait RepresentativeTrait
 {
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Nonprofit", inversedBy="reps", cascade={"persist", "remove"})
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="orgId", referencedColumnName="id")
-     * })
-     */
-    protected $nonprofit;
-
     public function getNonprofit()
     {
         return $this->nonprofit;

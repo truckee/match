@@ -52,7 +52,8 @@ class NonprofitFixture extends AbstractFixture implements OrderedFixtureInterfac
         $npo3->setActive(true);
         $npo3->setWebsite('http://ttrash.bogus.info');
 
-        $rep1 = new Person('ROLE_REP');
+        $rep1 = new Person();
+        $rep1->addRole('ROLE_REP');
         $rep1->setConfirmationToken('tuvxyz');
         $rep1->setEmail('unknown@bogus.info');
         $rep1->setEnabled(false);
@@ -65,7 +66,8 @@ class NonprofitFixture extends AbstractFixture implements OrderedFixtureInterfac
         $rep1->setNonprofit($npo1);
         $rep1->setReplacementStatus("Replace");
 
-        $rep2 = new Person('ROLE_REP');
+        $rep2 = new Person();
+        $rep2->addRole('ROLE_REP');
         $expires = new \DateTime();
         $rep2->setEmail('staff@bogus.info');
         $rep2->setEnabled(true);
@@ -77,7 +79,8 @@ class NonprofitFixture extends AbstractFixture implements OrderedFixtureInterfac
         $rep2->setNonprofit($npo2);
         $rep2->setReplacementStatus("Replace");
 
-        $rep3 = new Person('ROLE_REP');
+        $rep3 = new Person();
+        $rep3->addRole('ROLE_REP');
         $expires = new \DateTime();
         $rep3->setEmail('rather@bogus.info');
         $rep3->setEnabled(true);

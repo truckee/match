@@ -18,6 +18,7 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
  */
 class VolunteerRegistrationControllerTest extends WebTestCase
 {
+
     public function setup(): void
     {
         $this->client = static::createClient();
@@ -59,16 +60,16 @@ class VolunteerRegistrationControllerTest extends WebTestCase
     public function testVolunteerRegistrationEmail()
     {
         $this->client->followRedirects(false);
-        $crawler = $this->client->request('GET', '/register/volunteer');
+        $crawler = $this->client->request('GET', '/register/person/volunteer');
         $buttonCrawlerNode = $crawler->selectButton('submit');
         $form = $buttonCrawlerNode->form();
-        $form['new_user[fname]'] = 'Benny';
-        $form['new_user[sname]'] = 'Borko';
-        $form['new_user[email]'] = 'bborko@bogus.info';
-        $form['new_user[plainPassword][first]'] = '123Abc';
-        $form['new_user[plainPassword][second]'] = '123Abc';
-        $form['new_user[focuses]'][0]->tick();
-        $form['new_user[skills]'][0]->tick();
+        $form['user[fname]'] = 'Benny';
+        $form['user[sname]'] = 'Borko';
+        $form['user[email]'] = 'bborko@bogus.info';
+        $form['user[plainPassword][first]'] = '123Abc';
+        $form['user[plainPassword][second]'] = '123Abc';
+        $form['user[focuses]'][0]->tick();
+        $form['user[skills]'][0]->tick();
         $this->client->submit($form);
 
         $mailCollector = $this->client->getProfile()->getCollector('swiftmailer');
@@ -82,18 +83,19 @@ class VolunteerRegistrationControllerTest extends WebTestCase
 
     private function volunteerRegistration()
     {
-        $crawler = $this->client->request('GET', '/register/volunteer');
+        $crawler = $this->client->request('GET', '/register/person/volunteer');
         $buttonCrawlerNode = $crawler->selectButton('submit');
         $form = $buttonCrawlerNode->form();
-        $form['new_user[fname]'] = 'Benny';
-        $form['new_user[sname]'] = 'Borko';
-        $form['new_user[email]'] = 'bborko@bogus.info';
-        $form['new_user[plainPassword][first]'] = '123Abc';
-        $form['new_user[plainPassword][second]'] = '123Abc';
-        $form['new_user[focuses]'][0]->tick();
-        $form['new_user[skills]'][0]->tick();
+        $form['user[fname]'] = 'Benny';
+        $form['user[sname]'] = 'Borko';
+        $form['user[email]'] = 'bborko@bogus.info';
+        $form['user[plainPassword][first]'] = '123Abc';
+        $form['user[plainPassword][second]'] = '123Abc';
+        $form['user[focuses]'][0]->tick();
+        $form['user[skills]'][0]->tick();
         $this->client->submit($form);
 
         return $this->client->getResponse()->getContent();
     }
+
 }

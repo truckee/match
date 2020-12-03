@@ -11,8 +11,8 @@
 
 namespace App\Controller\Admin;
 
-//use App\Controller\Admin\RoleVolunteerCrudController;
 use App\Entity\Person;
+use App\Form\Type\Field\SwitchFieldType;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ArrayField;
@@ -62,12 +62,12 @@ class VolunteerCrudController extends AbstractCrudController
         $lastLogin = DateTimeField::new('lastLogin');
         $confirmationToken = TextField::new('confirmationToken');
         $tokenExpiresAt = DateTimeField::new('tokenExpiresAt');
-        $locked = BooleanField::new('locked');
-//        $locked = BooleanField::new('locked')->renderAsSwitch(false)->setTemplatePath('Admin/locked_badge.html.twig');
-        $enabled = BooleanField::new('enabled');
-        $receiveEmail = BooleanField::new('receiveEmail');
-//        $enabled = SwitchFieldType::new('enabled');
-//        $receiveEmail = SwitchFieldType::new('receiveEmail');
+//        $locked = BooleanField::new('locked');
+        $locked = BooleanField::new('locked')->renderAsSwitch(false)->setTemplatePath('Admin/locked_badge.html.twig');
+//        $enabled = BooleanField::new('enabled');
+//        $receiveEmail = BooleanField::new('receiveEmail');
+        $enabled = SwitchFieldType::new('enabled');
+        $receiveEmail = SwitchFieldType::new('receiveEmail');
         $focuses = AssociationField::new('focuses');
         $skills = AssociationField::new('skills');
         $id = IntegerField::new('id', 'ID');

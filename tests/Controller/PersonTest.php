@@ -17,10 +17,12 @@ use PHPUnit\Framework\TestCase;
 class PersonTest extends TestCase
 {
 
-    public function testNewVolunteer()
+    public function testNewPersonRoles()
     {
-        $volunteer = new Person('ROLE_VOLUNTEER');
-        $this->assertTrue($volunteer->hasRole('ROLE_VOLUNTEER'));
+        $person = new Person('ROLE_SUPER_ADMIN');
+        $roles = $person->getRoles();
+
+        $this->assertTrue(in_array('ROLE_SUPER_ADMIN', $roles));
     }
 
 }
