@@ -12,7 +12,6 @@
 namespace App\DataFixtures\Test;
 
 use App\Entity\Person;
-//use App\Entity\Volunteer;
 use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
@@ -119,7 +118,7 @@ class UserFixture extends AbstractFixture implements OrderedFixtureInterface, OR
             $admin->addRole('ROLE_SUPER_ADMIN');
             $admin->setEmail('admin@bogus.info');
             $admin->setEnabled(true);
-            $admin->setMailer(false);
+            $admin->setMailer(true);
             $admin->setFname('Benny');
             $admin->setSname('Borko');
             $password4 = $this->encoder->encodePassword($admin, '123Abc');

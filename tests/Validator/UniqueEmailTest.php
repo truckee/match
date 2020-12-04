@@ -16,42 +16,46 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 /**
  * @group Validator
  */
-class UniquePasswordTest extends WebTestCase
+class UniqueEmailTest extends WebTestCase
 {
+
     public function setup(): void
     {
         $this->client = $this->createClient();
         $this->client->followRedirects();
     }
-    
+
     public function testAdminEmail()
     {
-        $content = $this->volunteerRegistration('admin@bogus.info');
-        
-        $this->assertStringContainsString('Email already registered', $content);
-    }
-    
-    public function testStaffEmail()
-    {
-        $content = $this->volunteerRegistration('staff@bogus.info');
-        
+        $content = $this->registration('admin@bogus.info');
+
         $this->assertStringContainsString('Email already registered', $content);
     }
 
-    private function volunteerRegistration($email)
+    public function testStaffEmail()
     {
-        $crawler = $this->client->request('GET', '/register/volunteer');
+        $content = $this->registration('staff@bogus.info');
+
+        $this->assertStringContainsString('Email already registered', $content);
+    }
+
+    private function registration($email)
+    {
+        $this->client->request('GET', '/');
+        $this->client->clickLink('Volunteer');
+        $crawler = $this->client->clickLink('Become a volunteer');
         $buttonCrawlerNode = $crawler->selectButton('submit');
         $form = $buttonCrawlerNode->form();
-        $form['new_user[fname]'] = 'Benny';
-        $form['new_user[sname]'] = 'Borko';
-        $form['new_user[email]'] = $email;
-        $form['new_user[plainPassword][first]'] = '123Abc';
-        $form['new_user[plainPassword][second]'] = '123Abc';
-        $form['new_user[focuses]'][0]->tick();
-        $form['new_user[skills]'][0]->tick();
+        $form['user[fname]'] = 'Benny';
+        $form['user[sname]'] = 'Borko';
+        $form['user[email]'] = $email;
+        $form['user[plainPassword][first]'] = '123Abc';
+        $form['user[plainPassword][second]'] = '123Abc';
+        $form['user[focuses]'][0]->tick();
+        $form['user[skills]'][0]->tick();
         $this->client->submit($form);
 
         return $this->client->getResponse()->getContent();
     }
+
 }

@@ -43,19 +43,16 @@ class EmailerService
                 )
         ;
 
-        $this->defaultMailer->send($message);
+        $sent = $this->defaultMailer->send($message);
 
-        return true;
-//        if (!array_key_exists('spool', $mailParams)) {
-//            $this->defaultMailer->send($message);
-//        } else {
-//            $this->spoolMailer->send($message);
-//        }
+        return $sent;
     }
 
     public function getSender()
     {
-        return $this->em->getRepository(Person::class)->findOneBy(['mailer' => true]);
+        $sender = $this->em->getRepository(Person::class)->findOneBy(['mailer' => true]);
+
+        return $sender->getEmail();
     }
 
 }

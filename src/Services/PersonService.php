@@ -27,7 +27,7 @@ class PersonService
     public function roleConverter($id)
     {
         $person = $this->em->getRepository(Person::class)->findOneBy(['id' => $id]);
-        if ($person->hasRole('ROLE_ADMIN')) {
+        if ($person->hasRole('ROLE_ADMIN') || $person->hasRole('ROLE_SUPER_ADMIN')) {
             return 'Admin';
         }
         if ($person->hasRole('ROLE_REP')) {

@@ -23,12 +23,13 @@ class VolunteerRegistrationControllerTest extends WebTestCase
     {
         $this->client = static::createClient();
         $this->client->followRedirects();
+        $this->client->request('GET', '/');
     }
 
     public function testVolunteerPageValidation()
     {
-        $this->client->request('GET', '/register/volunteer');
-
+        $this->client->clickLink('Volunteer');
+        $this->client->ClickLink('Become a volunteer');
         $this->client->submitForm('Save');
         $this->assertStringContainsString('First name is required', $this->client->getResponse()->getContent());
         $this->assertStringContainsString('Last name is required', $this->client->getResponse()->getContent());
@@ -59,8 +60,9 @@ class VolunteerRegistrationControllerTest extends WebTestCase
     // Note: this test uses text from templates/Email/volunteer_confirmation.html.twig
     public function testVolunteerRegistrationEmail()
     {
+        $this->client->clickLink('Volunteer');
+        $crawler = $this->client->ClickLink('Become a volunteer');
         $this->client->followRedirects(false);
-        $crawler = $this->client->request('GET', '/register/person/volunteer');
         $buttonCrawlerNode = $crawler->selectButton('submit');
         $form = $buttonCrawlerNode->form();
         $form['user[fname]'] = 'Benny';
@@ -83,7 +85,8 @@ class VolunteerRegistrationControllerTest extends WebTestCase
 
     private function volunteerRegistration()
     {
-        $crawler = $this->client->request('GET', '/register/person/volunteer');
+        $this->client->clickLink('Volunteer');
+        $crawler = $this->client->ClickLink('Become a volunteer');
         $buttonCrawlerNode = $crawler->selectButton('submit');
         $form = $buttonCrawlerNode->form();
         $form['user[fname]'] = 'Benny';

@@ -22,7 +22,7 @@ trait AdminTrait
      */
     private $mailer;
 
-    public function isMailer()
+    public function getMailer()
     {
         return $this->mailer;
     }

@@ -20,6 +20,7 @@ use Symfony\Component\Console\Tester\CommandTester;
  */
 class CreateAdminTest extends KernelTestCase
 {
+
     public function testExecute()
     {
         $kernel = static::createKernel();
@@ -40,4 +41,5 @@ class CreateAdminTest extends KernelTestCase
 
         $this->assertStringContainsString('Admin user created', $output);
     }
+
 }

@@ -31,18 +31,18 @@ class LoadTestDataCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-//        $command1 = $this->getApplication()->find('doctrine:database:drop');
-//        $arguments1 = [
-//            'command' => 'doctrine:database:drop',
-//            '--force' => true,
-//            ];
-//        $drop = new ArrayInput($arguments1);
-//        $command1->run($drop, $output);
-//
-//        $command2 = $this->getApplication()->find('doctrine:database:create');
-//        $arguments2 = ['command' => 'doctrine:database:create'];
-//        $createDb = new ArrayInput($arguments2);
-//        $command2->run($createDb, $output);
+        $command1 = $this->getApplication()->find('doctrine:database:drop');
+        $arguments1 = [
+            'command' => 'doctrine:database:drop',
+            '--force' => true,
+        ];
+        $drop = new ArrayInput($arguments1);
+        $command1->run($drop, $output);
+
+        $command2 = $this->getApplication()->find('doctrine:database:create');
+        $arguments2 = ['command' => 'doctrine:database:create'];
+        $createDb = new ArrayInput($arguments2);
+        $command2->run($createDb, $output);
 
         $command3 = $this->getApplication()->find('doctrine:schema:update');
         $arguments3 = [

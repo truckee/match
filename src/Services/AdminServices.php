@@ -56,6 +56,7 @@ class AdminServices
                 'recipient' => $rep->getEmail(),
                 'subject' => 'Nonprofit activated!',
             ];
+
             $this->emailSvc->appMailer($mailParams);
             $message = 'Nonprofit activated!';
         } else {

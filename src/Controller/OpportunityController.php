@@ -12,7 +12,7 @@
 namespace App\Controller;
 
 use App\Entity\Opportunity;
-use App\Entity\Volunteer;
+use App\Entity\Person;
 use App\Form\Type\OpportunityType;
 use App\Form\Type\OpportunitySearchType;
 use App\Services\EmailerService;
@@ -26,8 +26,14 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class OpportunityController extends AbstractController
 {
-    public function __construct()
+
+    private $mailer;
+    private $newOpp;
+
+    public function __construct(EmailerService $mailer, NewOppEmailService $newOpp)
     {
+        $this->mailer = $mailer;
+        $this->newOpp = $newOpp;
         $this->templates = [
             'Opportunity/_suggestions.html.twig',
             'Opportunity/_opportunity.html.twig',
@@ -55,12 +61,11 @@ class OpportunityController extends AbstractController
             $em->persist($opportunity);
             $em->flush();
 
-            $volunteers = $em->getRepository(Volunteer::class)->opportunityEmails($opportunity);
-            $oppMail = new NewOppEmailService($em);
-            $oppMail->newOppEmail($mailer, $volunteers, $opportunity);
+            $volunteers = $em->getRepository(Person::class)->opportunityEmails($opportunity);
+            $oppVol = $this->newOpp->newOppEmail($mailer, $volunteers, $opportunity);
             $this->addFlash(
-                'success',
-                'Opportunity added; ' . count($volunteers) . ' volunteer(s) will be notified'
+                    'success',
+                    'Opportunity added; ' . count($volunteers) . ' volunteer(s) will be notified'
             );
 
             return $this->redirectToRoute('profile_nonprofit');
@@ -95,8 +100,8 @@ class OpportunityController extends AbstractController
             $em->persist($opportunity);
             $em->flush();
             $this->addFlash(
-                'success',
-                'Opportunity updated'
+                    'success',
+                    'Opportunity updated'
             );
 
             return $this->redirectToRoute('profile_nonprofit');
@@ -135,7 +140,7 @@ class OpportunityController extends AbstractController
             }
             if (empty($opps)) {
                 $this->addFlash('warning', 'No matching opportunities found');
-                
+
                 return $this->redirectToRoute('opp_search');
             }
             return $this->render('/Opportunity/search_results.html.twig', [
@@ -151,4 +156,5 @@ class OpportunityController extends AbstractController
                     'submitValue' => 'Search',
         ]);
     }
+
 }

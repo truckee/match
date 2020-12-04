@@ -18,6 +18,7 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
  */
 class NonprofitControllerTest extends WebTestCase
 {
+
     public function setup(): void
     {
         $this->client = $this->createClient();
@@ -26,7 +27,9 @@ class NonprofitControllerTest extends WebTestCase
 
     public function testView()
     {
-        $this->client->request('GET', '/opportunity/search');
+        $this->client->request('GET', '/');
+        $this->client->clickLink('Volunteer');
+        $this->client->clickLink('Search for opportunities');
         $this->client->submitForm('submit');
 
         $this->assertStringContainsString('Turkey Fund', $this->client->getResponse()->getContent());
@@ -42,4 +45,5 @@ class NonprofitControllerTest extends WebTestCase
 
         $this->assertStringContainsString('Nonprofit not found', $this->client->getResponse()->getContent());
     }
+
 }

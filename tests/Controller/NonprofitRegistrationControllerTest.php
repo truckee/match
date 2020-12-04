@@ -94,7 +94,6 @@ class NonprofitRegistrationControllerTest extends WebTestCase
         $this->client->request('GET', '/');
         $this->client->clickLink('Nonprofits');
         $crawler = $this->client->clickLink('Register a nonprofit');
-//        $crawler = $this->client->request('GET', '/register/nonprofit');
         $buttonCrawlerNode = $crawler->selectButton('submit');
         $form = $buttonCrawlerNode->form();
         $form['org[orgname]'] = 'Glenshire Fund';

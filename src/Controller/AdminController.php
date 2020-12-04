@@ -200,20 +200,20 @@ class AdminController extends AbstractController
     private function mailer($id)
     {
         $em = $this->getDoctrine()->getManager();
-        $mailer = $em->getRepository(Admin::class)->findOneBy(['mailer' => true]);
+        $mailer = $em->getRepository(Person::class)->findOneBy(['mailer' => true]);
 
         if ((int) $id === $mailer->getId()) {
             return;
         }
 
-        $selected = $em->getRepository(Admin::class)->find($id);
+        $selected = $em->getRepository(Person::class)->find($id);
         if (false === $selected->getEnabled()) {
             $this->addFlash('warning', 'Disabled admins cannot be mailer');
 
             return;
         }
 
-        $entities = $em->getRepository(Admin::class)->findBy(['enabled' => true]);
+        $entities = $em->getRepository(Person::class)->findBy(['enabled' => true]);
         foreach ($entities as $admin) {
             if ((int) $id === $admin->getId()) {
                 $admin->setMailer(true);
@@ -240,9 +240,9 @@ class AdminController extends AbstractController
     private function adminEnabler($id)
     {
         $em = $this->getDoctrine()->getManager();
-        $admin = $em->getRepository(Admin::class)->find($id);
+        $admin = $em->getRepository(Person::class)->find($id);
         $enabled = $admin->getEnabled();
-        if (!$admin->isMailer() && !$admin->hasRole('ROLE_SUPER_ADMIN')) {
+        if (!$admin->getMailer() && !$admin->hasRole('ROLE_SUPER_ADMIN')) {
             $admin->setEnabled(!$enabled);
             $em->persist($admin);
             $em->flush();

@@ -11,7 +11,7 @@
 
 namespace App\Services;
 
-use App\Entity\Admin;
+use App\Entity\Person;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
@@ -20,6 +20,7 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
  */
 class AdminManager
 {
+
     private $em;
     private $encoder;
 
@@ -28,17 +29,17 @@ class AdminManager
         $this->em = $em;
         $this->encoder = $encoder;
     }
-    
+
     public function createAdmin($user)
     {
-        $admin = new Admin();
+        $admin = new Person();
         $admin->setFname($user['fname']);
         $admin->setSname($user['sname']);
         $admin->setEmail($user['email']);
         $admin->setEnabled(true);
         $admin->setPassword($this->encoder->encodePassword(
-            $admin,
-            $user['password']
+                        $admin,
+                        $user['password']
         ));
         $admin->setMailer($this->mailerNotExists());
         $admin->setRoles([
@@ -46,14 +47,15 @@ class AdminManager
         ]);
         $this->em->persist($admin);
         $this->em->flush();
-        
+
         return $admin;
     }
-    
+
     private function mailerNotExists()
     {
-        $mailer = $this->em->getRepository(Admin::class)->findOneBy(['mailer' => true]);
-        
+        $mailer = $this->em->getRepository(Person::class)->findOneBy(['mailer' => true]);
+
         return is_null($mailer);
     }
+
 }

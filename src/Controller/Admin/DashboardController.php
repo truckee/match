@@ -40,6 +40,8 @@ class DashboardController extends AbstractDashboardController
                         ->setController(RepresentativeCrudController::class);
         yield MenuItem::linkToCrud('Volunteer', 'fa fa-folder-open', Person::class)
                         ->setController(VolunteerCrudController::class);
+        yield MenuItem::linkToCrud('Admin', 'fa fa-folder-open', Person::class)
+                        ->setController(AdminCrudController::class);
         yield MenuItem::linktoRoute('Dashboard', 'fas fa-folder-open', 'dashboard');
         yield MenuItem::linktoRoute('Home', 'fas fa-home', 'home_page');
     }

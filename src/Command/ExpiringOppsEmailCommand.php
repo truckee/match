@@ -23,14 +23,15 @@ use Twig\Environment;
  */
 class ExpiringOppsEmailCommand extends Command
 {
+
     private $mailer;
-    private $sender;
+    private $expNoticer;
     private $twig;
 
-    public function __construct(ExpirationNoticeService $sender, EmailerService $mailer, Environment $twig)
+    public function __construct(ExpirationNoticeService $expNoticer, EmailerService $mailer, Environment $twig)
     {
         $this->mailer = $mailer;
-        $this->sender = $sender;
+        $this->expNoticer = $expNoticer;
         $this->twig = $twig;
 
         parent::__construct();
@@ -45,8 +46,9 @@ class ExpiringOppsEmailCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->sender->expirationNotices($this->mailer, $this->twig);
+        $this->expNoticer->expirationNotices($this->mailer, $this->twig);
 
         return 0;
     }
+
 }

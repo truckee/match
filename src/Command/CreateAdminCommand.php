@@ -11,6 +11,7 @@
 
 namespace App\Command;
 
+use App\Entity\Person;
 use App\Services\AdminManager;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -23,6 +24,7 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class CreateAdminCommand extends Command
 {
+
     protected static $defaultName = 'app:create-admin';
     private $em;
     private $encoder;
@@ -105,7 +107,8 @@ class CreateAdminCommand extends Command
         } else {
             $output->writeln('Something went wrong!');
         }
-        
+
         return 0;
     }
+
 }

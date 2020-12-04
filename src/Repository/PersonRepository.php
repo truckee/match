@@ -56,4 +56,41 @@ class PersonRepository extends ServiceEntityRepository implements UserLoaderInte
                         ->getQuery()->getSingleResult();
     }
 
+    public function opportunityEmails($opportunity)
+    {
+        $conn = $this->getEntityManager()->getConnection();
+        $npoId = $opportunity->getNonprofit()->getId();
+        $oppId = $opportunity->getId();
+
+        // focus selected volunteers
+        $focusSQL = 'SELECT p.id '
+                . 'FROM person p '
+                . 'JOIN vol_focus vf ON vf.volid = p.id '
+                . 'JOIN org_focus org_f ON org_f.focusid = vf.focusid '
+                . 'WHERE org_f.orgId = :npoId'
+        ;
+        $focusStmt = $conn->prepare($focusSQL);
+        $focusStmt->execute(['npoId' => $npoId]);
+        $focusVolunteers = $focusStmt->fetchAll();
+        foreach ($focusVolunteers as $item) {
+            $volunteers[] = $item['id'];
+        }
+        // skill selected volunteers
+        $skillSQL = 'SELECT p.id FROM person p '
+                . 'JOIN vol_skill vs on vs.volId = p.id '
+                . 'JOIN opp_skill os ON os.skillId = vs.skillId '
+                . 'WHERE os.oppId = :oppId';
+        $skillStmt = $conn->prepare($skillSQL);
+        $skillStmt->execute(['oppId' => $oppId]);
+        $skillVolunteers = $skillStmt->fetchAll();
+        ;
+        foreach ($skillVolunteers as $item) {
+            if (!in_array($item['id'], $volunteers)) {
+                $volunteers[] = $item['id'];
+            }
+        }
+
+        return $volunteers;
+    }
+
 }

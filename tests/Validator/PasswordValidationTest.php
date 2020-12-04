@@ -18,6 +18,7 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
  */
 class PasswordValidationTest extends WebTestCase
 {
+
     public function setup(): void
     {
         $this->client = $this->createClient();
@@ -27,14 +28,14 @@ class PasswordValidationTest extends WebTestCase
     public function testValidPassword()
     {
         $content = $this->volunteerRegistration('123Abc');
-        
+
         $this->assertStringContainsString('registration confirmation has been sent', $content);
     }
 
     public function testShortAlphaPassword()
     {
         $content = $this->volunteerRegistration('abc');
-        
+
         $this->assertStringContainsString('At least 6 characters long', $content);
         $this->assertStringContainsString('Must include both upper and lower case letters', $content);
         $this->assertStringContainsString('Must include at least one number', $content);
@@ -43,7 +44,7 @@ class PasswordValidationTest extends WebTestCase
     public function testShortNumericPassword()
     {
         $content = $this->volunteerRegistration('123');
-        
+
         $this->assertStringContainsString('At least 6 characters long', $content);
         $this->assertStringContainsString('Must include both upper and lower case letters', $content);
         $this->assertStringContainsString('Must include at least one letter', $content);
@@ -51,18 +52,21 @@ class PasswordValidationTest extends WebTestCase
 
     private function volunteerRegistration($password)
     {
-        $crawler = $this->client->request('GET', '/register/volunteer');
+        $this->client->request('GET', '/');
+        $this->client->clickLink('Volunteer');
+        $crawler = $this->client->clickLink('Become a volunteer');
         $buttonCrawlerNode = $crawler->selectButton('submit');
         $form = $buttonCrawlerNode->form();
-        $form['new_user[fname]'] = 'Benny';
-        $form['new_user[sname]'] = 'Borko';
-        $form['new_user[email]'] = 'bborko@bogus.info';
-        $form['new_user[plainPassword][first]'] = $password;
-        $form['new_user[plainPassword][second]'] = $password;
-        $form['new_user[focuses]'][0]->tick();
-        $form['new_user[skills]'][0]->tick();
+        $form['user[fname]'] = 'Benny';
+        $form['user[sname]'] = 'Borko';
+        $form['user[email]'] = 'bborko@bogus.info';
+        $form['user[plainPassword][first]'] = $password;
+        $form['user[plainPassword][second]'] = $password;
+        $form['user[focuses]'][0]->tick();
+        $form['user[skills]'][0]->tick();
         $this->client->submit($form);
 
         return $this->client->getResponse()->getContent();
     }
+
 }

@@ -16,11 +16,13 @@ use App\Entity\RepresentativeTrait;
 use App\Entity\VolunteerTrait;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Table(name="person")
  * @ORM\Entity(repositoryClass="App\Repository\PersonRepository")
+ * @UniqueEntity("email")
  */
 class Person implements UserInterface
 {

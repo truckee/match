@@ -18,6 +18,7 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
  */
 class OpportunityTest extends WebTestCase
 {
+
     public function setup(): void
     {
         $this->client = $this->createClient();
@@ -39,6 +40,7 @@ class OpportunityTest extends WebTestCase
         $form['opportunity[description]'] = 'Dorkify';
         $form['opportunity[skills]'][0]->tick();
         $this->client->submit($form);
+//        file_put_contents('g:/documents/response.html', $this->client->getResponse()->getContent());
 
         $this->assertStringContainsString('Opportunity added; 1', $this->client->getResponse()->getContent());
     }
@@ -57,4 +59,5 @@ class OpportunityTest extends WebTestCase
 
         $this->assertStringContainsString('Opportunity updated', $this->client->getResponse()->getContent());
     }
+
 }

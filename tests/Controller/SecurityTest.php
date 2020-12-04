@@ -18,20 +18,23 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
  */
 class SecurityTest extends WebTestCase
 {
-    public function setup() : void
+
+    public function setup(): void
     {
         $this->client = static::createClient();
         $this->client->followRedirects();
+        $this->client->request('GET', '/');
     }
-    
+
     public function testLogin()
     {
-        $this->client->request('GET', '/login');
+        $this->client->clickLink('Log in');
         $this->client->submitForm('Sign in', [
             'email' => 'admin@bogus.info',
             'password' => '123Abc',
         ]);
-        
+
         $this->assertStringContainsString('Admin dashboard', $this->client->getResponse()->getContent());
     }
+
 }

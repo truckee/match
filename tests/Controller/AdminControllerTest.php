@@ -45,7 +45,6 @@ class AdminControllerTest extends WebTestCase
 
     public function testActivateNonprofit()
     {
-        $crawler = $this->client->request('GET', '/admin');
         $this->client->clickLink('Activate');
 
         $this->assertStringContainsString('Nonprofit activated!', $this->client->getResponse()->getContent());
@@ -90,8 +89,6 @@ class AdminControllerTest extends WebTestCase
     public function testStaffReplacementEmailSent()
     {
         $this->client->clickLink('Staff');
-
-//        $this->assertStringContainsString('Locking staff deactivates nonprofit', $this->client->getResponse()->getContent());
 
         $this->client->clickLink('Replace');
 
@@ -139,7 +136,7 @@ class AdminControllerTest extends WebTestCase
 
     public function testInviteExistingEmail()
     {
-        $this->client->request('GET', '/');
+        $this->client->clickLink('Home');
         $this->client->clickLink('Invite new admin');
         $this->client->submitForm('Save', [
             'user[fname]' => 'Useless',
@@ -200,28 +197,24 @@ class AdminControllerTest extends WebTestCase
 
     public function testRegisterNewAdmin() //mynameis
     {
+        $this->client->request('GET', '/');
         $this->client->request('GET', '/register/confirm/mynameis');
-        $this->client->submitForm('Save', [
-            'new_password[plainPassword][first]' => 'Abc123',
-            'new_password[plainPassword][second]' => 'Abc123',
-        ]);
 
-        $this->assertStringContainsString('thank you for accepting', $this->client->getResponse()->getContent());
+        $this->assertStringContainsString('Account is confirmed; thank you for accepting. You may now log in', $this->client->getResponse()->getContent());
     }
 
     public function testAdminScreen()
     {
-        $this->client->request('GET', '/admin');
         $this->client->clickLink('Admin');
 
-        $this->assertStringContainsString('ROLE_SUPER_ADMIN', $this->client->getResponse()->getContent());
+        $this->assertStringContainsString('Benny Borko', $this->client->getResponse()->getContent());
     }
 
     public function testEnableDisableFails()
     {
-        $this->client->request('GET', '/admin');
         $crawler = $this->client->clickLink('Admin');
-        $link = $crawler->filter('#Adminenabled1')->link();
+
+        $link = $crawler->filter('#enabled5')->link();
         $this->client->click($link);
 
         $this->assertStringContainsString('Benny Borko cannot be disabled', $this->client->getResponse()->getContent());
@@ -229,23 +222,22 @@ class AdminControllerTest extends WebTestCase
 
     public function testEnableDisableSucceeds()
     {
-        $this->client->request('GET', '/admin');
         $crawler = $this->client->clickLink('Admin');
-        $link = $crawler->filter('#Adminenabled2')->link();
-        $str1 = $crawler->filter('#Adminenabled2 > input[type=checkbox]')->attr('checked');
+
+        $link = $crawler->filter('#enabled5')->link();
+        $str1 = $crawler->filter('#enabled5 > input[type=checkbox]')->attr('checked');
 
         $this->assertStringContainsString('checked', $str1);
 
         $this->client->click($link);
         $this->client->request('GET', '/admin');
-        $str2 = $crawler->filter('#Adminenabled3 > input[type=checkbox]')->attr('checked');
+        $str2 = $crawler->filter('#enabled7   > input[type=checkbox]')->attr('checked');
 
         $this->assertNull($str2);
     }
 
     public function testFocusAdd()
     {
-        $this->client->request('GET', '/admin');
         $this->client->clickLink('Focus');
         $crawler = $this->client->clickLink('Add Focus');
         $form = $crawler->selectButton('Create')->eq(1)->form();
@@ -258,7 +250,6 @@ class AdminControllerTest extends WebTestCase
 
     public function testSkillAdd()
     {
-        $this->client->request('GET', '/admin');
         $this->client->clickLink('Skill');
         $crawler = $this->client->clickLink('Add Skill');
         $form = $crawler->selectButton('Create')->eq(1)->form();

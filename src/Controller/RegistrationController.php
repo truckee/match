@@ -58,7 +58,7 @@ class RegistrationController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $email = $request->request->get('user_email')['email'];
             $em = $this->getDoctrine()->getManager();
-            $sender = $this->getParameter('app.sender_address');
+            $sender = $this->mailer->getSender();
             $user = $em->getRepository(Person::class)->findOneBy(['email' => $email]);
             $this->addFlash(
                     'success',
@@ -314,7 +314,7 @@ class RegistrationController extends AbstractController
         if ($now > $user->getTokenExpiresAt()) {
             $this->addFlash(
                     'danger',
-                    $messageType . ' has expired. Please register again.'
+                    $messageType . ' has expired.'
             );
             switch ($class) {
                 case 'rep':
@@ -322,10 +322,19 @@ class RegistrationController extends AbstractController
                     $org = $user->getNonprofit();
                     $em->remove($org);
                     break;
-                case 'admin':
                 case 'volunteer':
-                    $path = 'register_person';
+                    $path = 'home_page';
                     $em->remove($user);
+                case 'admin':
+                    $view = $this->renderView('Email/expired_invite.html.twig', [
+                        'user' => $user,
+                    ]);
+                    $mailParams = [
+                        'view' => $view,
+                        'subject' => 'Expired invitation',
+                    ];
+                    $this->mailer->appMailer($mailParams);
+                    $path = 'home_page';
                 default:
                     break;
             }
