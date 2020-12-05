@@ -1,9 +1,0 @@
-{{ form_row(form.fname) }}
-{{ form_row(form.sname) }}
-{% if staff is defined %}
-    {{ form_row(form.email) }}
-{% endif %}
-{# render only if user is a volunteer #}
-{% if is_granted('ROLE_VOLUNTEER') and not is_granted('ROLE_ADMIN') %}
-    {{ form_row(form.receiveEmail) }}
-{% endif %}

@@ -12,7 +12,7 @@
 namespace App\Controller;
 
 use App\Entity\Nonprofit;
-use App\Entity\Representative;
+use App\Entity\Person;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -42,11 +42,12 @@ class NonprofitController extends AbstractController
 
             return $this->redirectToRoute('home_page');
         }
-        $rep = $em->getRepository(Representative::class)->findOneBy(['nonprofit' => $npo, 'replacementStatus' => 'Replace']);
-        
+        $rep = $em->getRepository(Person::class)->findOneBy(['nonprofit' => $npo, 'replacementStatus' => 'Replace']);
+
         return $this->render('Nonprofit/nonprofit_view.html.twig', [
-            'npo'=>$npo,
-            'staff' => $rep,
-            ]);
+                    'npo' => $npo,
+                    'rep' => $rep,
+        ]);
     }
+
 }

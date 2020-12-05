@@ -24,7 +24,7 @@
                                             {% endif %}
                                     {% endfor %}
                             <tr><td>
-                                    {% if opp.nonprofit.website is not null %}
+                                    {% if opp.nonprofit.website is not empty %}
                                         <a class="cfwn-blue" href="{{ opp.nonprofit.website }}">Website</a>
                                     {% endif %}
                         </table>

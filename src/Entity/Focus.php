@@ -36,7 +36,7 @@ class Focus
     /**
      * @var string|null
      *
-     * @ORM\Column(name="focus", type="string", length=45, nullable=true)
+     * @ORM\Column(name="focus", type="string", length=45, nullable=true, unique=true)
      */
     private $focus;
 

@@ -7,20 +7,43 @@
  * file that was distributed with this source code.
  */
 
-//src/Services/RegistrationService.php
+//src/Services/TemplateService.php
 
 namespace App\Services;
 
-use Twig\Environment;
-
-class RegistrationService
+class TemplateService
 {
 
-    private $twig;
-
-    public function __construct(Environment $twig)
+    public function oppView()
     {
-        $this->twig = $twig;
+        $header = [
+            'left' => 'Filling out the form',
+            'center' => 'Opportunity',
+            'right' => 'Skill(s)',
+        ];
+        $entity_form = [
+            'left' => ['Opportunity/_suggestions.html.twig'],
+            'center' => ['Opportunity/_opportunity.html.twig'],
+            'right' => ['Default/_skills.html.twig']
+        ];
+
+        return ['header' => $header, 'entityForm' => $entity_form];
+    }
+
+    public function oppSearch()
+    {
+        $header = [
+            'left' => 'Searching for opportunities',
+            'center' => 'Focus(es)',
+            'right' => 'Skill(s)',
+        ];
+        $entity_form = [
+            'left' => ['Opportunity/_search_instructions.html.twig'],
+            'center' => ['Default/_focuses.html.twig'],
+            'right' => ['Default/_skills.html.twig']
+        ];
+
+        return ['header' => $header, 'entityForm' => $entity_form];
     }
 
     public function preRegAdmin()

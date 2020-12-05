@@ -1,14 +1,17 @@
 {% extends 'base.html.twig' %}
 {% form_theme form 'form/form_row.html.twig' %}
+{% if submitValue is not defined %}{% set value = 'Save' %}{% else %}{% set value = submitValue %}{% endif %}
 {% block body %}
     <div class="text-center mb-2" style="font-size: 18px;">
         {% autoescape %}
             <b>{{ headerText|raw }}</b>
         {% endautoescape %}
     </div>
-    <div class="text-center">
-        <span class="text-danger">*</span> indicates item is required
-    </div>
+    {% if value == 'Save' %}
+        <div class="text-center">
+            <span class="text-danger">*</span> indicates item is required
+        </div>
+    {%  endif %}
     {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
     <div class="row">
         <div class="col-4">
@@ -56,7 +59,6 @@
         </div>
         <div class="col-4 text-center">
             {{ form_row(form._token) }}
-            {% if submitValue is not defined %}{% set value = 'Save' %}{% else %}{% set value = submitValue %}{% endif %}
             <div><input class="btn-sm btn-info" type="submit" name="submit" value="{{ value }}"></div>
         </div>
     </div>

@@ -40,7 +40,6 @@ class OpportunityTest extends WebTestCase
         $form['opportunity[description]'] = 'Dorkify';
         $form['opportunity[skills]'][0]->tick();
         $this->client->submit($form);
-//        file_put_contents('g:/documents/response.html', $this->client->getResponse()->getContent());
 
         $this->assertStringContainsString('Opportunity added; 1', $this->client->getResponse()->getContent());
     }

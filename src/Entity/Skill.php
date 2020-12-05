@@ -36,7 +36,7 @@ class Skill
     /**
      * @var string|null
      *
-     * @ORM\Column(name="skill", type="string", length=45, nullable=true)
+     * @ORM\Column(name="skill", type="string", length=45, nullable=true, unique=true)
      */
     private $skill;
 

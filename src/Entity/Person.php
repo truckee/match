@@ -50,7 +50,8 @@ class Person implements UserInterface
     private $password;
 
     /**
-     * @ORM\Column(type="string", length=180, unique=true)
+     * @ORM\Column(name="email", type="string", length=255, unique=true)
+     * @Assert\Email
      */
     private $email;
 
@@ -202,24 +203,6 @@ class Person implements UserInterface
     public function hasRole($role)
     {
         return in_array(strtoupper($role), $this->roles);
-    }
-
-    public function hasRoleAdmin()
-    {
-        return (in_array('ROLE_ADMIN', $this->getRoles())) ? 'Yes' : 'No';
-    }
-
-    public function setHasRoleAdmin($isAdmin)
-    {
-        $roles = $this->getRoles();
-        if ('Yes' === $isAdmin && 'No' === $this->hasRoleAdmin()) {
-            $roles[] = 'ROLE_ADMIN';
-        }
-        if ('No' === $isAdmin && 'Yes' == $this->hasRoleAdmin()) {
-            $key = array_search('ROLE_ADMIN', $roles);
-            unset($roles[$key]);
-        }
-        $this->setRoles(array_values($roles));
     }
 
     /**

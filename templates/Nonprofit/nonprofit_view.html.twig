@@ -16,15 +16,17 @@
         <div class="col-4">
         </div>
         <div class="col-4 mb-2">
-            <div class="d-flex flex-row">
-                <div class="d-flex p-2">
-                    Address
+            {% if  npo.address is not empty %}
+                <div class="d-flex flex-row">
+                    <div class="d-flex p-2">
+                        Address
+                    </div>
+                    <div class="d-flex p-2">
+                        {{ npo.address }} {{ npo.city }}, {{ npo.zip }}
+                    </div>
                 </div>
-                <div class="d-flex p-2">
-                    {{ npo.address }} {{ npo.city }}, {{ npo.zip }}
-                </div>
-            </div>
-            {% if npo.website is not null %}
+            {% endif %}
+            {% if npo.website is not empty %}
                 <div class="d-flex flex-row">
                     <div class="d-flex p-2">
                         Website

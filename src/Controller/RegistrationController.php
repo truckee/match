@@ -18,7 +18,7 @@ use App\Form\Type\UserType;
 use App\Form\Type\NewPasswordType;
 use App\Form\Type\Field\UserEmailType;
 use App\Services\EmailerService;
-use App\Services\RegistrationService;
+use App\Services\TemplateService;
 use App\Security\TokenChecker;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -33,17 +33,17 @@ class RegistrationController extends AbstractController
 
     private $encoder;
     private $mailer;
-    private $regSvc;
+    private $templateSvc;
 
     public function __construct(
             UserPasswordEncoderInterface $encoder,
             EmailerService $mailer,
-            RegistrationService $regSvc
+            TemplateService $templateSvc
     )
     {
         $this->encoder = $encoder;
         $this->mailer = $mailer;
-        $this->regSvc = $regSvc;
+        $this->templateSvc = $templateSvc;
     }
 
     /**
@@ -186,7 +186,7 @@ class RegistrationController extends AbstractController
         if ('volunteer' === $type && null === $this->getUser()) {
             $person = new Person();
             $person->addRole('ROLE_VOLUNTEER');
-            $preReg = $this->regSvc->preRegVolunteer();
+            $preReg = $this->templateSvc->preRegVolunteer();
             $header = $preReg['header'];
             $headerText = 'Become a volunteer';
             $entity_form = $preReg['entityForm'];
@@ -198,7 +198,7 @@ class RegistrationController extends AbstractController
         if ('admin' === $type && $this->isGranted('ROLE_ADMIN')) {
             $person = new Person();
             $person->addRole('ROLE_ADMIN');
-            $preReg = $this->regSvc->preRegAdmin();
+            $preReg = $this->templateSvc->preRegAdmin();
             $header = $preReg['header'];
             $headerText = 'Invite an admin';
             $entity_form = $preReg['entityForm'];
@@ -220,7 +220,7 @@ class RegistrationController extends AbstractController
             $this->$propMethod($person, $userData);
             // send confirmation email
             $postRegMethod = $type . 'PostReg';
-            $mailParams = $this->regSvc->$postRegMethod($person);
+            $mailParams = $this->templateSvc->$postRegMethod($person);
             $this->mailer->appMailer($mailParams);
 
             $em = $this->getDoctrine()->getManager();
@@ -250,7 +250,7 @@ class RegistrationController extends AbstractController
         $form = $this->createForm(NonprofitType::class, $org, [
             'register' => true,
         ]);
-        $preReg = $this->regSvc->preRegNonprofit();
+        $preReg = $this->templateSvc->preRegNonprofit();
         $header = $preReg['header'];
         $entity_form = $preReg['entityForm'];
 
@@ -260,7 +260,7 @@ class RegistrationController extends AbstractController
             $em = $this->getDoctrine()->getManager();
             $rep = $this->repProperties($orgData['rep']);
             $postRegMethod = 'nonprofitPostReg';
-            $mailParams = $this->regSvc->$postRegMethod($org, $rep);
+            $mailParams = $this->templateSvc->$postRegMethod($org, $rep);
             $this->mailer->appMailer($mailParams);
 
             // store entities
@@ -486,9 +486,9 @@ class RegistrationController extends AbstractController
         $person->setMailer(false);
     }
 
-    private function commonProperties($person, $password)
+    private function commonProperties($person, $plainPassword)
     {
-        $password = $this->encoder->encodePassword($person, $password);
+        $password = $this->encoder->encodePassword($person, $plainPassword);
         $person->setPassword($password);
         $person->setEnabled(false);
         $person->setConfirmationToken(md5(uniqid(rand(), true)));
