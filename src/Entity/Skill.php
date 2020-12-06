@@ -18,11 +18,12 @@ use Doctrine\ORM\Mapping as ORM;
  * Skill
  *
  * @ORM\Table(name="skill")
- * @ORM\Entity(repositoryClass="App\Repository\SkillRepository")
+ * @ORM\Entity
  * @UniqueEntity("skill", message="Skill has already been used")
  */
 class Skill
 {
+
     /**
      * @var int
      *
@@ -35,7 +36,7 @@ class Skill
     /**
      * @var string|null
      *
-     * @ORM\Column(name="skill", type="string", length=45, nullable=true)
+     * @ORM\Column(name="skill", type="string", length=45, nullable=true, unique=true)
      */
     private $skill;
 
@@ -45,7 +46,7 @@ class Skill
      * @ORM\Column(name="enabled", type="boolean", nullable=false)
      */
     private $enabled;
-    
+
     /**
      * @var \Doctrine\Common\Collections\Collection
      *
@@ -54,7 +55,7 @@ class Skill
     protected $opportunities;
 
     /**
-     * @ORM\ManyToMany(targetEntity="Volunteer", mappedBy="skills")
+     * @ORM\ManyToMany(targetEntity="Person", mappedBy="skills")
      */
     protected $volunteers;
 
@@ -86,4 +87,5 @@ class Skill
 
         return $this;
     }
+
 }

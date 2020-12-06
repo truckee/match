@@ -13,7 +13,7 @@ namespace App\Repository;
 
 use App\Entity\Volunteer;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\Common\Persistence\ManagerRegistry;
+use Doctrine\Persistence\ManagerRegistry;
 
 class VolunteerRepository extends ServiceEntityRepository
 {
@@ -21,27 +21,27 @@ class VolunteerRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Volunteer::class);
     }
-    
+
     public function opportunityEmails($opportunity)
     {
-        $conn  = $this->getEntityManager()->getConnection();
+        $conn = $this->getEntityManager()->getConnection();
         $npoId = $opportunity->getNonprofit()->getId();
         $oppId = $opportunity->getId();
-        
+
         // focus selected volunteers
         $focusSQL = 'SELECT v.id '
                 . 'FROM volunteer v '
                 . 'JOIN vol_focus vf ON vf.volid = v.id '
                 . 'JOIN org_focus of ON of.focusid = vf.focusid '
                 . 'WHERE of.orgId = :npoId'
-                ;
+        ;
         $focusStmt = $conn->prepare($focusSQL);
         $focusStmt->execute(['npoId' => $npoId]);
         $focusVolunteers = $focusStmt->fetchAll();
         foreach ($focusVolunteers as $item) {
             $volunteers[] = $item['id'];
         }
-        
+
         // skill selected volunteers
         $skillSQL = 'SELECT v.id FROM volunteer v '
                 . 'JOIN vol_skill vs on vs.volId = v.id '
@@ -55,7 +55,7 @@ class VolunteerRepository extends ServiceEntityRepository
                 $volunteers[] = $item['id'];
             }
         }
-        
+
         return $volunteers;
     }
 }

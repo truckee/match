@@ -11,7 +11,6 @@
 
 namespace App\Tests\Pages;
 
-
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 /**
@@ -19,8 +18,6 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
  */
 class SearchTest extends WebTestCase
 {
-
-
     public function setup(): void
     {
         $this->client = $this->createClient();

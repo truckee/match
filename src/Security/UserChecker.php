@@ -11,7 +11,7 @@
 
 namespace App\Security;
 
-use App\Entity\User as AppUser;
+use App\Entity\Person as AppUser;
 use Symfony\Component\Security\Core\Exception\CustomUserMessageAuthenticationException;
 use Symfony\Component\Security\Core\User\UserCheckerInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -21,6 +21,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
  */
 class UserChecker implements UserCheckerInterface
 {
+
     public function checkPreAuth(UserInterface $user)
     {
         if (!$user instanceof AppUser) {
@@ -33,17 +34,18 @@ class UserChecker implements UserCheckerInterface
         if (!$user instanceof AppUser) {
             return;
         }
-        
-        if ($user->isLocked()) {
+
+        if ($user->getLocked()) {
             throw new CustomUserMessageAuthenticationException('Account is locked');
         }
 
         if ($user->hasRole('role_rep') && !$user->hasRole('ROLE_ADMIN') && !$user->getNonprofit()->isActive()) {
             throw new CustomUserMessageAuthenticationException('Nonprofit has not yet been activated');
         }
-        
-        if (!$user->isEnabled()) {
+
+        if (!$user->getEnabled()) {
             throw new CustomUserMessageAuthenticationException('Account has not been confirmed');
         }
     }
+
 }

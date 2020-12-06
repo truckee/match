@@ -11,8 +11,7 @@
 
 namespace App\DataFixtures\Test;
 
-use App\Entity\Admin;
-use App\Entity\Volunteer;
+use App\Entity\Person;
 use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
@@ -43,71 +42,68 @@ class UserFixture extends AbstractFixture implements OrderedFixtureInterface, OR
         // user random@bogus.info with a 10 year confirmation token for testing
         // unexpired confirmation token; enabled = false
         {
-            $volunteer = new Volunteer();
+            $volunteer = new Person();
             $volunteer->setConfirmationToken('abcdef');
             $expires = new \DateTime();
             $volunteer->setTokenExpiresAt($expires->add(new \DateInterval('P10Y')));
             // enabled false means not yet confirmed
             $volunteer->setEnabled(false);
-
+            $volunteer->addRole('ROLE_VOLUNTEER');
             $volunteer->setEmail('random@bogus.info');
             $volunteer->setFname('Random');
             $volunteer->setSname('Bogus');
             $volunteer->setReceiveEmail(true);
             $password = $this->encoder->encodePassword($volunteer, '123Abc');
             $volunteer->setPassword($password);
-            $volunteer->setRoles(['ROLE_VOLUNTEER']);
+//            $volunteer->setRoles(['ROLE_VOLUNTEER']);
             $manager->persist($volunteer);
         }
 
-        // user pseudo@bogus.info enabled = true: 
+        // user pseudo@bogus.info enabled = true:
         // for reset password, profile check
         {
-            $volunteer1 = new Volunteer();
+            $volunteer1 = new Person();
             $volunteer1->setConfirmationToken('ghijkl');
             $volunteer1->setTokenExpiresAt($expires);
             $volunteer1->setEnabled(true);
-
+            $volunteer1->addRole('ROLE_VOLUNTEER');
             $volunteer1->setEmail('pseudo@bogus.info');
             $volunteer1->setFname('Very');
             $volunteer1->setSname('Bogus');
             $volunteer1->setReceiveEmail(true);
             $password1 = $this->encoder->encodePassword($volunteer1, '123Abc');
             $volunteer1->setPassword($password1);
-            $volunteer1->setRoles(['ROLE_VOLUNTEER']);
             $manager->persist($volunteer1);
         }
 
         // user garbled@bogus.info with expired confirmation token
         {
-            $volunteer2 = new Volunteer();
+            $volunteer2 = new Person();
             $volunteer2->setConfirmationToken('fedcba');
             $expires2 = new \DateTime();
             $volunteer2->setTokenExpiresAt($expires2->sub(new \DateInterval('PT3H')));
             $volunteer2->setEnabled(false);
-
+            $volunteer2->addRole('ROLE_VOLUNTEER');
             $volunteer2->setEmail('garbled@bogus.info');
             $volunteer2->setFname('Very');
             $volunteer2->setSname('Bogus');
             $volunteer2->setReceiveEmail(true);
             $password2 = $this->encoder->encodePassword($volunteer2, '123Abc');
             $volunteer2->setPassword($password2);
-            $volunteer2->setRoles(['ROLE_VOLUNTEER']);
             $manager->persist($volunteer2);
         }
 
         // user volunteer@bogus.info for testing searches
         {
-            $volunteer3 = new Volunteer();
+            $volunteer3 = new Person();
             $volunteer3->setEnabled(true);
-
+            $volunteer3->addRole('ROLE_VOLUNTEER');
             $volunteer3->setEmail('volunteer@bogus.info');
             $volunteer3->setFname('Exceptionally');
             $volunteer3->setSname('Bogus');
             $volunteer3->setReceiveEmail(true);
             $password3 = $this->encoder->encodePassword($volunteer3, '123Abc');
             $volunteer3->setPassword($password3);
-            $volunteer3->setRoles(['ROLE_VOLUNTEER']);
             $volunteer3->addFocus($this->getReference('focus_seniors'));
             $volunteer3->addFocus($this->getReference('focus_health'));
             $volunteer3->addSkill($this->getReference('skill_admin'));
@@ -118,22 +114,19 @@ class UserFixture extends AbstractFixture implements OrderedFixtureInterface, OR
 
         // admin user; also for testing null tokens
         {
-            $admin = new Admin();
+            $admin = new Person();
+            $admin->addRole('ROLE_SUPER_ADMIN');
             $admin->setEmail('admin@bogus.info');
             $admin->setEnabled(true);
             $admin->setMailer(true);
             $admin->setFname('Benny');
             $admin->setSname('Borko');
-            $admin->setRoles([
-                'ROLE_SUPER_ADMIN',
-            ]);
             $password4 = $this->encoder->encodePassword($admin, '123Abc');
             $admin->setPassword($password4);
             $manager->persist($admin);
-        }
-        
-        {
-            $admin1 = new Admin();
+        } {
+            $admin1 = new Person();
+            $admin1->addRole('ROLE_ADMIN');
             $admin1->setConfirmationToken('mynameis');
             $admin1->setTokenExpiresAt($expires);
             $admin1->setEmail('obvious@bogus.info');
@@ -141,25 +134,18 @@ class UserFixture extends AbstractFixture implements OrderedFixtureInterface, OR
             $admin1->setMailer(false);
             $admin1->setFname('Benny');
             $admin1->setSname('Borko');
-            $admin1->setRoles([
-                'ROLE_ADMIN',
-            ]);
             $admin1->setPassword($this->encoder->encodePassword($admin, '123Abc'));
             $manager->persist($admin1);
-        }
-        
-        {
-            $admin2 = new Admin();
+        } {
+            $admin2 = new Person();
+            $admin2->addRole('ROLE_ADMIN');
             $admin2->setConfirmationToken('whoami');
             $admin2->setTokenExpiresAt($expires2);
             $admin2->setEmail('nothere@bogus.info');
-            $admin2->setEnabled(true);
+            $admin2->setEnabled(false);
             $admin2->setMailer(false);
             $admin2->setFname('Benny');
             $admin2->setSname('Borko');
-            $admin2->setRoles([
-                'ROLE_ADMIN',
-            ]);
             $admin2->setPassword('mynameis');
             $manager->persist($admin2);
         }

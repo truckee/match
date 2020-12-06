@@ -11,7 +11,6 @@
 
 namespace App\Tests\Controller;
 
-
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 /**
@@ -19,6 +18,7 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
  */
 class OpportunityTest extends WebTestCase
 {
+
     public function setup(): void
     {
         $this->client = $this->createClient();
@@ -58,4 +58,5 @@ class OpportunityTest extends WebTestCase
 
         $this->assertStringContainsString('Opportunity updated', $this->client->getResponse()->getContent());
     }
+
 }

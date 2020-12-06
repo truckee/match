@@ -18,11 +18,12 @@ use Doctrine\ORM\Mapping as ORM;
  * Focus
  *
  * @ORM\Table(name="focus")
- * @ORM\Entity(repositoryClass="App\Repository\FocusRepository")
+ * @ORM\Entity
  * @UniqueEntity("focus", message="Focus has already been used")
  */
 class Focus
 {
+
     /**
      * @var int
      *
@@ -35,7 +36,7 @@ class Focus
     /**
      * @var string|null
      *
-     * @ORM\Column(name="focus", type="string", length=45, nullable=true)
+     * @ORM\Column(name="focus", type="string", length=45, nullable=true, unique=true)
      */
     private $focus;
 
@@ -52,7 +53,7 @@ class Focus
     protected $nonprofits;
 
     /**
-     * @ORM\ManyToMany(targetEntity="Volunteer", mappedBy="focuses")
+     * @ORM\ManyToMany(targetEntity="Person", mappedBy="focuses")
      */
     protected $volunteers;
 
@@ -84,4 +85,5 @@ class Focus
 
         return $this;
     }
+
 }

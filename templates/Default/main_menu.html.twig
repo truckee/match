@@ -2,11 +2,11 @@
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>
-    <a class="navbar-brand" href="{{ path('home') }}"><img src="{{ asset('build/images/pseudo_logo.jpg') }}" alt="Community Foundation of Western Nevada"></a>
+    <a class="navbar-brand" href="{{ path('home_page') }}"><img src="{{ asset('build/images/pseudo_logo.jpg') }}" alt="Community Foundation of Western Nevada"></a>
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav ml-auto">
             <li class="nav-item">
-                <a class="nav-link" href="{{ path('home') }}">Home</a>
+                <a class="nav-link" href="{{ path('home_page') }}">Home</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="{{ path('vol_index') }}">Volunteer</a>
@@ -22,7 +22,7 @@
                     <div class="dropdown-menu" aria-labelledby="navbarAdmin">
                         <a class="dropdown-item" href="/admin">Options</a>
                         {% if is_granted('ROLE_SUPER_ADMIN') %}
-                            <a class="dropdown-item" href="{{ path('admin_invite') }}">Invite new admin</a>
+                            <a class="dropdown-item" href="{{ path('register_person', {'type':'admin'}) }}">Invite new admin</a>
                         {% endif %}
                     </div>
                 </li>

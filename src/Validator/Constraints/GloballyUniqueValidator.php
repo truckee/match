@@ -11,7 +11,7 @@
 
 namespace App\Validator\Constraints;
 
-use App\Entity\User;
+use App\Entity\Person;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 use Doctrine\ORM\EntityManagerInterface;
@@ -21,18 +21,21 @@ use Doctrine\ORM\EntityManagerInterface;
  */
 class GloballyUniqueValidator extends ConstraintValidator
 {
+
     private $em;
-    
+
     public function __construct(EntityManagerInterface $em)
     {
         $this->em = $em;
     }
+
     public function validate($email, Constraint $constraint)
     {
-        $found = $this->em->getRepository(User::class)->findOneBy(['email' => $email]);
+        $found = $this->em->getRepository(Person::class)->findOneBy(['email' => $email]);
         if (null !== $found) {
             $this->context->buildViolation($constraint->message)
                     ->addViolation();
         }
     }
+
 }

@@ -1,6 +1,0 @@
-{% for rep in item.staff %}
-    {% if rep.replacementStatus == 'Replace' %}
-        {% set mailto = rep.email %}
-        <a href="mailto:{{ mailto }}">{{ mailto }}</a>
-    {% endif %}
-{% endfor %}

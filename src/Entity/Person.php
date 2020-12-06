@@ -11,19 +11,26 @@
 
 namespace App\Entity;
 
+use App\Entity\AdminTrait;
+use App\Entity\RepresentativeTrait;
+use App\Entity\VolunteerTrait;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * @ORM\Table(name="usertable")
- * @ORM\Entity
- * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
- * @ORM\InheritanceType("JOINED")
- * @ORM\DiscriminatorColumn(name="type", type="string")
- * @ORM\DiscriminatorMap({"rep" = "Representative", "volunteer" = "Volunteer", "admin" = "Admin"})
+ * @ORM\Table(name="person")
+ * @ORM\Entity(repositoryClass="App\Repository\PersonRepository")
+ * @UniqueEntity("email")
  */
-abstract class User implements UserInterface
+class Person implements UserInterface
 {
+
+    use AdminTrait;
+    use RepresentativeTrait;
+    use VolunteerTrait;
+
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
@@ -43,7 +50,8 @@ abstract class User implements UserInterface
     private $password;
 
     /**
-     * @ORM\Column(type="string", length=180, unique=true)
+     * @ORM\Column(name="email", type="string", length=255, unique=true)
+     * @Assert\Email
      */
     private $email;
 
@@ -76,6 +84,14 @@ abstract class User implements UserInterface
      * @ORM\Column(type="boolean")
      */
     private $locked = false;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Nonprofit", inversedBy="reps", cascade={"persist", "remove"})
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="orgId", referencedColumnName="id")
+     * })
+     */
+    protected $nonprofit;
 
     public function getId(): ?int
     {
@@ -176,35 +192,17 @@ abstract class User implements UserInterface
 
     public function addRole($role)
     {
-        $role = strtoupper($role);
-        if (!in_array($role, $this->roles, true)) {
+        $ucRole = strtoupper($role);
+        if (!in_array($ucRole, $this->roles, true)) {
             $this->roles[] = $role;
         }
-        
+
         return $this;
     }
 
     public function hasRole($role)
     {
         return in_array(strtoupper($role), $this->roles);
-    }
-
-    public function hasRoleAdmin()
-    {
-        return (in_array('ROLE_ADMIN', $this->getRoles())) ? 'Yes' : 'No';
-    }
-
-    public function setHasRoleAdmin($isAdmin)
-    {
-        $roles = $this->getRoles();
-        if ('Yes' === $isAdmin && 'No' === $this->hasRoleAdmin()) {
-            $roles[] = 'ROLE_ADMIN';
-        }
-        if ('No' === $isAdmin && 'Yes' == $this->hasRoleAdmin()) {
-            $key = array_search('ROLE_ADMIN', $roles);
-            unset($roles[$key]);
-        }
-        $this->setRoles(array_values($roles));
     }
 
     /**
@@ -219,7 +217,7 @@ abstract class User implements UserInterface
         return $this;
     }
 
-    public function isEnabled()
+    public function getEnabled()
     {
         return $this->enabled;
     }
@@ -248,7 +246,7 @@ abstract class User implements UserInterface
         return $this;
     }
 
-    public function isLocked()
+    public function getLocked()
     {
         return $this->locked;
     }
@@ -259,14 +257,6 @@ abstract class User implements UserInterface
 
         return $this;
     }
-
-//    public function unlock()
-//    {
-//        $this->locked = false;
-//
-//        return $this;
-//
-//    }
 
     /**
      * Used only on successful authentication
@@ -289,13 +279,17 @@ abstract class User implements UserInterface
         return $this->fname . ' ' . $this->sname;
     }
 
+    // volunteer properties $ methods
     // required by interface, otherwise irrelevant
 
     public function eraseCredentials()
     {
+
     }
 
     public function getSalt()
     {
+
     }
+
 }

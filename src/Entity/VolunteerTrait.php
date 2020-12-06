@@ -7,26 +7,16 @@
  * file that was distributed with this source code.
  */
 
-//src/Entity/Volunteer.php
+//src/Entity/VolunteerTrait.php
 
 namespace App\Entity;
 
 use App\Entity\Focus;
 use App\Entity\Skill;
-use App\Entity\User;
-use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
-/**
- * @ORM\Entity(repositoryClass = "App\Repository\VolunteerRepository")
- * @ORM\Table(name="volunteer")
- */
-class Volunteer extends User
+trait VolunteerTrait
 {
-    public function __construct()
-    {
-        $this->addRole('ROLE_VOLUNTEER');
-    }
 
     /**
      * @var int
@@ -79,7 +69,7 @@ class Volunteer extends User
     public function addFocus(Focus $focus)
     {
         $this->focuses[] = $focus;
- 
+
         return $this;
     }
 
@@ -148,4 +138,5 @@ class Volunteer extends User
     {
         return $this->skills;
     }
+
 }

@@ -13,7 +13,7 @@ namespace App\DataFixtures\Test;
 
 use App\Entity\Nonprofit;
 use App\Entity\Opportunity;
-use App\Entity\Representative;
+use App\Entity\Person;
 use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
@@ -22,6 +22,7 @@ use Doctrine\Bundle\FixturesBundle\ORMFixtureInterface;
 
 class NonprofitFixture extends AbstractFixture implements OrderedFixtureInterface, ORMFixtureInterface
 {
+
     private $encoder;
 
     public function __construct(UserPasswordEncoderInterface $encoder)
@@ -51,7 +52,8 @@ class NonprofitFixture extends AbstractFixture implements OrderedFixtureInterfac
         $npo3->setActive(true);
         $npo3->setWebsite('http://ttrash.bogus.info');
 
-        $rep1 = new Representative();
+        $rep1 = new Person();
+        $rep1->addRole('ROLE_REP');
         $rep1->setConfirmationToken('tuvxyz');
         $rep1->setEmail('unknown@bogus.info');
         $rep1->setEnabled(false);
@@ -59,32 +61,33 @@ class NonprofitFixture extends AbstractFixture implements OrderedFixtureInterfac
         $rep1->setSname('Bogus');
         $password = $this->encoder->encodePassword($rep1, '123Abc');
         $rep1->setPassword($password);
-        $rep1->setRoles(['ROLE_REP']);
         $expires = new \DateTime();
         $rep1->setTokenExpiresAt($expires->add(new \DateInterval('P10Y')));
         $rep1->setNonprofit($npo1);
         $rep1->setReplacementStatus("Replace");
 
-        $rep2 = new Representative();
+        $rep2 = new Person();
+        $rep2->addRole('ROLE_REP');
+        $expires = new \DateTime();
         $rep2->setEmail('staff@bogus.info');
         $rep2->setEnabled(true);
         $rep2->setFname('Misfit');
         $rep2->setSname('Bogus');
         $password2 = $this->encoder->encodePassword($rep2, '123Abc');
         $rep2->setPassword($password2);
-        $rep2->setRoles(['ROLE_REP']);
         $this->setReference('staff', $rep2);
         $rep2->setNonprofit($npo2);
         $rep2->setReplacementStatus("Replace");
 
-        $rep3 = new Representative();
+        $rep3 = new Person();
+        $rep3->addRole('ROLE_REP');
+        $expires = new \DateTime();
         $rep3->setEmail('rather@bogus.info');
         $rep3->setEnabled(true);
         $rep3->setFname('Rather');
         $rep3->setSname('Bogus');
         $password1 = $this->encoder->encodePassword($rep3, '123Abc');
         $rep3->setPassword($password1);
-        $rep3->setRoles(['ROLE_REP']);
         $rep3->setNonprofit($npo3);
         $rep3->setReplacementStatus("Replace");
 
@@ -114,10 +117,10 @@ class NonprofitFixture extends AbstractFixture implements OrderedFixtureInterfac
                 . 'feugiat ligula. Donec hendrerit, felis et imperdiet euismod, '
                 . 'purus ipsum pretium metus, in lacinia nulla nisl eget sapien.');
         $opp1->addSkill($this->getReference('skill_admin'));
-        
+
         $npo2->addOpportunity($opp);
         $npo3->addOpportunity($opp1);
-        
+
         $manager->persist($opp);
         $manager->persist($opp1);
         $manager->persist($rep2);
@@ -125,7 +128,7 @@ class NonprofitFixture extends AbstractFixture implements OrderedFixtureInterfac
         $manager->persist($npo1);
         $manager->persist($npo2);
         $manager->persist($npo3);
-        
+
         $manager->flush();
     }
 

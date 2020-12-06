@@ -12,11 +12,12 @@
 namespace App\Controller;
 
 use App\Entity\Opportunity;
-use App\Entity\Volunteer;
+use App\Entity\Person;
 use App\Form\Type\OpportunityType;
 use App\Form\Type\OpportunitySearchType;
 use App\Services\EmailerService;
 use App\Services\NewOppEmailService;
+use App\Services\TemplateService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -26,13 +27,16 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class OpportunityController extends AbstractController
 {
-    public function __construct()
+
+    private $mailer;
+    private $newOpp;
+    private $templateSvc;
+
+    public function __construct(EmailerService $mailer, NewOppEmailService $newOpp, TemplateService $templateSvc)
     {
-        $this->templates = [
-            'Opportunity/_suggestions.html.twig',
-            'Opportunity/_opportunity.html.twig',
-            'Default/_skills.html.twig'
-        ];
+        $this->mailer = $mailer;
+        $this->newOpp = $newOpp;
+        $this->templateSvc = $templateSvc;
     }
 
     /**
@@ -42,12 +46,14 @@ class OpportunityController extends AbstractController
     {
         $user = $this->getUser();
         if (null === $user || !$user->hasRole('ROLE_REP')) {
-            return $this->redirectToRoute('home');
+            return $this->redirectToRoute('home_page');
         }
         $nonprofit = $user->getNonprofit();
         $opportunity = new Opportunity();
         $form = $this->createForm(OpportunityType::class, $opportunity);
-        $templates = $this->templates;
+        $oppView = $this->templateSvc->oppView();
+        $header = $oppView['header'];
+        $entity_form = $oppView['entityForm'];
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $em = $this->getDoctrine()->getManager();
@@ -55,23 +61,21 @@ class OpportunityController extends AbstractController
             $em->persist($opportunity);
             $em->flush();
 
-            $volunteers = $em->getRepository(Volunteer::class)->opportunityEmails($opportunity);
-            $oppMail = new NewOppEmailService($em);
-            $oppMail->newOppEmail($mailer, $volunteers, $opportunity);
+            $volunteers = $em->getRepository(Person::class)->opportunityEmails($opportunity);
+            $oppVol = $this->newOpp->newOppEmail($mailer, $volunteers, $opportunity);
             $this->addFlash(
-                'success',
-                'Opportunity added; ' . count($volunteers) . ' volunteer(s) will be notified'
+                    'success',
+                    'Opportunity added; ' . count($volunteers) . ' volunteer(s) will be notified'
             );
 
             return $this->redirectToRoute('profile_nonprofit');
         }
 
-        return $this->render('Default/form_templates.html.twig', [
+        return $this->render('Entity/entity_form.html.twig', [
                     'form' => $form->createView(),
-                    'templates' => $templates,
                     'headerText' => 'Add ' . $nonprofit->getOrgname() . ' opportunity',
-                    'skillHeader' => 'Opportunity skill requirements',
-                    'oppHeader' => 'Opportunity'
+                    'header' => $header,
+                    'entity_form' => $entity_form,
         ]);
     }
 
@@ -82,32 +86,33 @@ class OpportunityController extends AbstractController
     {
         $user = $this->getUser();
         if (null === $user || !$user->hasRole('ROLE_REP') || null === $id) {
-            return $this->redirectToRoute('home');
+            return $this->redirectToRoute('home_page');
         }
 
         $em = $this->getDoctrine()->getManager();
         $opportunity = $em->getRepository(Opportunity::class)->find($id);
         $nonprofit = $opportunity->getNonprofit();
         $form = $this->createForm(OpportunityType::class, $opportunity);
-        $templates = $this->templates;
+        $oppView = $this->templateSvc->oppView();
+        $header = $oppView['header'];
+        $entity_form = $oppView['entityForm'];
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $em->persist($opportunity);
             $em->flush();
             $this->addFlash(
-                'success',
-                'Opportunity updated'
+                    'success',
+                    'Opportunity updated'
             );
 
             return $this->redirectToRoute('profile_nonprofit');
         }
 
-        return $this->render('Default/form_templates.html.twig', [
+        return $this->render('Entity/entity_form.html.twig', [
                     'form' => $form->createView(),
-                    'templates' => $templates,
                     'headerText' => 'Edit ' . $nonprofit->getOrgname() . ' opportunity',
-                    'skillHeader' => 'Opportunity skill requirements',
-                    'oppHeader' => 'Opportunity'
+                    'header' => $header,
+                    'entity_form' => $entity_form,
         ]);
     }
 
@@ -116,11 +121,9 @@ class OpportunityController extends AbstractController
      */
     public function search(Request $request)
     {
-        $templates = [
-            'Opportunity/_search_instructions.html.twig',
-            'Default/_focuses.html.twig',
-            'Default/_skills.html.twig',
-        ];
+        $oppSearch = $this->templateSvc->oppSearch();
+        $header = $oppSearch['header'];
+        $entity_form = $oppSearch['entityForm'];
         $form = $this->createForm(OpportunitySearchType::class);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
@@ -135,20 +138,20 @@ class OpportunityController extends AbstractController
             }
             if (empty($opps)) {
                 $this->addFlash('warning', 'No matching opportunities found');
-                
+
                 return $this->redirectToRoute('opp_search');
             }
             return $this->render('/Opportunity/search_results.html.twig', [
                         'opportunities' => $opps
             ]);
         }
-        return $this->render('Default/form_templates.html.twig', [
+        return $this->render('Entity/entity_form.html.twig', [
                     'form' => $form->createView(),
-                    'templates' => $templates,
                     'headerText' => 'Opportunity search',
-                    'focusHeader' => 'Focus options',
-                    'skillHeader' => 'Skill options',
                     'submitValue' => 'Search',
+                    'header' => $header,
+                    'entity_form' => $entity_form,
         ]);
     }
+
 }

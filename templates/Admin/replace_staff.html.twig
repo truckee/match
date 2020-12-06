@@ -1,8 +1,8 @@
-{% set status = item.replacementStatus %}
+{% set status = entity.instance.replacementStatus %}
 {% set class = 'badge badge-warning' %}
 {% if status == 'Replace' %}
     <a class="{{ class }}" 
-       href="{{ path('replace_staff', {'id':item.id}) }}">
+       href="{{ path('replace_staff', {'id':entity.instance.id}) }}">
         {{ status }}</a>
     {% else %}
         {% if status == 'Replacement' %}
@@ -12,5 +12,6 @@
         {% elseif status == 'Pending' %}
             {% set class = 'badge badge-light' %}
         {% endif %}
-    <span class="{{class }}">{{ status }}</span>
-{% endif %}    
+        <span class="{{class }}">{{ status }}</span>
+    {% endif %}    
+

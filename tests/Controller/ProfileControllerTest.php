@@ -11,7 +11,6 @@
 
 namespace App\Tests\Controller;
 
-
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 /**
@@ -20,16 +19,16 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 class ProfileControllerTest extends WebTestCase
 {
 
-
     public function setup(): void
     {
         $this->client = $this->createClient();
         $this->client->followRedirects();
+        $this->client->request('GET', '/');
     }
 
     public function testVolunteerProfile()
     {
-        $this->client->request('GET', '/login');
+        $this->client->clickLink('Log in');
         $this->client->submitForm('Sign in', [
             'email' => 'volunteer@bogus.info',
             'password' => '123Abc',
@@ -37,7 +36,7 @@ class ProfileControllerTest extends WebTestCase
         $this->client->request('GET', '/profile/person');
 
         $this->assertStringContainsString('Exceptionally Bogus profile', $this->client->getResponse()->getContent());
-        
+
         $this->client->submitForm('Save', [
             'user[fname]' => 'Unchained',
         ]);
@@ -47,7 +46,7 @@ class ProfileControllerTest extends WebTestCase
 
     public function testNonprofitProfile()
     {
-        $this->client->request('GET', '/login');
+        $this->client->clickLink('Log in');
         $this->client->submitForm('Sign in', [
             'email' => 'staff@bogus.info',
             'password' => '123Abc',

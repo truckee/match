@@ -1,0 +1,4 @@
+{% if form.rep is defined %}{% set entity = form.rep %}{% else %}{% set entity = form %}{% endif %}
+<div class=" mb-2">
+    {{ form_row(entity.email) }}
+</div>

@@ -31,5 +31,3 @@ services:
     ## service to send immediate (memory) and spooled email
     App\Services\EmailerService:
         $defaultMailer: '@swiftmailer.mailer'
-
-        

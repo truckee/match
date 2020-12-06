@@ -7,34 +7,15 @@
  * file that was distributed with this source code.
  */
 
-//src/Entity/Representative.php
+//src/Entity/RepresentativeTrait.php
 
 namespace App\Entity;
 
-use App\Entity\User as User;
 use App\Entity\Nonprofit;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * Staff
- *
- * @ORM\Table(name="staff")
- * @ORM\Entity
- */
-class Representative extends User
+trait RepresentativeTrait
 {
-    public function __construct()
-    {
-        $this->addRole('ROLE_REP');
-    }
-    
-    /**
-     * @ORM\ManyToOne(targetEntity="Nonprofit", inversedBy="reps", cascade={"persist", "remove"})
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="orgId", referencedColumnName="id")
-     * })
-     */
-    protected $nonprofit;
 
     public function getNonprofit()
     {
@@ -47,16 +28,16 @@ class Representative extends User
 
         return $this;
     }
-    
+
     /**
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="string", nullable=true)
      * Options: "Replace", "Pending", "Replaced", "Replacement"
      * Replace: nonprofit's representative
      * Pending: representative for which a replacement has been named
      * Replacement: previous representative
      * replacement: person named but not yet registered as representative
      */
-    public $replacementStatus;
+    private $replacementStatus;
 
     /**
      * @ORM\Column(type="date", nullable=true)
@@ -67,25 +48,30 @@ class Representative extends User
      * @ORM\Column(type="date", nullable=true)
      */
     private $completed;
-    
+
     public function getReplacementStatus()
     {
         return $this->replacementStatus;
     }
-    
+
     public function setReplacementStatus($replacementStatus)
     {
         $this->replacementStatus = $replacementStatus;
-        
+
         return $this;
     }
-    
+
     public function getOrgname()
     {
-        return $this->nonprofit->getOrgname();
+        if (!is_null($this->nonprofit)) {
+            return $this->nonprofit->getOrgname();
+        }
+
+        return null;
     }
-    
-    public function __toString() {
+
+    public function __toString()
+    {
         return $this->getFname() . ' ' . $this->getSname();
     }
 
@@ -112,4 +98,5 @@ class Representative extends User
 
         return $this;
     }
+
 }

@@ -11,15 +11,14 @@
 
 namespace App\Controller;
 
-use App\Entity\Admin;
 use App\Entity\Nonprofit;
-use App\Entity\Representative;
-use App\Entity\Volunteer;
+use App\Entity\Person;
 use App\Form\Type\NonprofitType;
-use App\Form\Type\NewUserType;
+use App\Form\Type\UserType;
 use App\Form\Type\NewPasswordType;
 use App\Form\Type\Field\UserEmailType;
 use App\Services\EmailerService;
+use App\Services\TemplateService;
 use App\Security\TokenChecker;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -33,9 +32,18 @@ class RegistrationController extends AbstractController
 {
 
     private $encoder;
+    private $mailer;
+    private $templateSvc;
 
-    public function __construct(UserPasswordEncoderInterface $encoder) {
+    public function __construct(
+            UserPasswordEncoderInterface $encoder,
+            EmailerService $mailer,
+            TemplateService $templateSvc
+    )
+    {
         $this->encoder = $encoder;
+        $this->mailer = $mailer;
+        $this->templateSvc = $templateSvc;
     }
 
     /**
@@ -43,14 +51,15 @@ class RegistrationController extends AbstractController
      *
      * @Route("/forgot", name="register_forgot")
      */
-    public function forgotPassword(Request $request, EmailerService $mailer) {
+    public function forgotPassword(Request $request)
+    {
         $form = $this->createForm(UserEmailType::class);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $email = $request->request->get('user_email')['email'];
             $em = $this->getDoctrine()->getManager();
-            $sender = $this->getParameter('app.sender_address');
-            $user = $em->getRepository('App:User')->findOneBy(['email' => $email]);
+            $sender = $this->mailer->getSender();
+            $user = $em->getRepository(Person::class)->findOneBy(['email' => $email]);
             $this->addFlash(
                     'success',
                     'Email sent to address provided'
@@ -81,9 +90,9 @@ class RegistrationController extends AbstractController
                 'recipient' => $email,
                 'subject' => 'Volunteer Connections forgotten password',
             ];
-            $mailer->appMailer($mailParams);
+            $this->mailer->appMailer($mailParams);
 
-            return $this->redirectToRoute('home');
+            return $this->redirectToRoute('home_page');
         }
 
         return $this->render('Registration/forgot.html.twig', [
@@ -95,42 +104,47 @@ class RegistrationController extends AbstractController
     /**
      * @Route("/reset/{token}", name="reset_password")
      */
-    public function resetPassword(Request $request, TokenChecker $checker, UserPasswordEncoderInterface $passwordEncoder, $token = null) {
-        $user = $checker->checkToken($token);
+    public function resetPassword(Request $request, TokenChecker $checker, $token = null)
+    {
+        $user = $this->getUser() ?? $checker->checkToken($token) ?? null;
         if (null === $user) {
-            return $this->redirectToRoute('home');
+            return $this->redirectToRoute('home_page');
         }
-
-        $em = $this->getDoctrine()->getManager();
         $expiresAt = $user->getTokenExpiresAt();
         $now = new \DateTime();
+
         // has token expired?
-        if ($now > $expiresAt) {
+        if (!is_null($expiresAt) && $now > $expiresAt) {
             $this->addFlash(
                     'danger',
                     'Password link has expired'
             );
 
-            return $this->redirectToRoute('home');
+            return $this->redirectToRoute('home_page');
         }
 
-        $templates = [
-            'Default/_empty.html.twig',
-            'Registration/_password.html.twig',
-        ];
+        $header = ['center' => ''];
+        $entity_form['center'] = [
+            'Entity/_name_vars.html.twig',
+            'Entity/_email_var.html.twig',
+            'Entity/_user_plain_password.html.twig',
+                ]
+        ;
+
         $form = $this->createForm(NewPasswordType::class, $user);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
+            $em = $this->getDoctrine()->getManager();
             $user->setPassword(
-                    $passwordEncoder->encodePassword(
+                    $this->encoder->encodePassword(
                             $user,
                             $form->get('plainPassword')->getData()
                     )
             );
             // if user is a staff replacement accept user
-            if (Representative::class === get_class($user) && 'Replacement' === $user->getReplacementStatus()) {
+            if ('Replacement' === $user->getReplacementStatus()) {
                 $nonprofit = $user->getNonprofit();
-                $replacedStaff = $em->getRepository(Representative::class)->findOneBy(['replacementStatus' => 'Pending']);
+                $replacedStaff = $em->getRepository(Person::class)->findOneBy(['replacementStatus' => 'Pending', 'nonprofit' => $nonprofit]);
                 $replacedStaff->setReplacementStatus("Replaced");
                 $replacedStaff->setEnabled(false);
                 $user->setReplacementStatus('Replace');
@@ -138,7 +152,7 @@ class RegistrationController extends AbstractController
                 $user->setConfirmationToken(null);
                 $user->setEnabled(true);
                 $user->setCompleted(new \DateTime());
-                
+
                 $this->addFlash(
                         'success',
                         'You are now the registered representative for ' . $nonprofit->getOrgname(),
@@ -152,95 +166,102 @@ class RegistrationController extends AbstractController
             $em->persist($user);
             $em->flush();
 
-            return $this->redirectToRoute('home');
+            return $this->redirectToRoute('home_page');
         }
 
-        return $this->render('Default/form_templates.html.twig', [
+        return $this->render('Entity/entity_form.html.twig', [
                     'form' => $form->createView(),
                     'headerText' => 'Set new password',
-                    'templates' => $templates,
+                    'header' => $header,
+                    'entity_form' => $entity_form,
         ]);
     }
 
     /**
-     * @Route("/volunteer", name="register_volunteer")
+     * @Route("/person/{type}", name="register_person")
      */
-    public function registerVolunteer(Request $request, EmailerService $mailer) {
-        $volunteer = new Volunteer();
-        $form = $this->createForm(NewUserType::class, $volunteer, [
-            'register' => true,
-            'data_class' => Volunteer::class,
-        ]);
-        $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {
-            $userData = $request->request->get('new_user');
-            $this->volunteerProperties($volunteer, $userData);
-
-            // send confirmation email
-            $view = $this->renderView('Email/volunteer_confirmation.html.twig', [
-                'fname' => $volunteer->getFname(),
-                'token' => $volunteer->getConfirmationToken(),
-                'expires' => $volunteer->getTokenExpiresAt(),
+    public function registerPerson(Request $request, $type)
+    {
+        $person = null;
+        if ('volunteer' === $type && null === $this->getUser()) {
+            $person = new Person();
+            $person->addRole('ROLE_VOLUNTEER');
+            $preReg = $this->templateSvc->preRegVolunteer();
+            $header = $preReg['header'];
+            $headerText = 'Become a volunteer';
+            $entity_form = $preReg['entityForm'];
+            $form = $this->createForm(UserType::class, $person, [
+                'register' => true,
             ]);
-            $mailParams = [
-                'view' => $view,
-                'recipient' => $volunteer->getEmail(),
-                'subject' => 'Volunteer Connections',
-            ];
-            $mailer->appMailer($mailParams);
-
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($volunteer);
-            $em->flush();
-            $this->addFlash(
-                    'success',
-                    'A volunteer registration confirmation has been sent to your email address'
-            );
-
-            return $this->redirectToRoute('home');
         }
 
-        return $this->render('Volunteer/volunteer_form.html.twig', [
+        if ('admin' === $type && $this->isGranted('ROLE_ADMIN')) {
+            $person = new Person();
+            $person->addRole('ROLE_ADMIN');
+            $preReg = $this->templateSvc->preRegAdmin();
+            $header = $preReg['header'];
+            $headerText = 'Invite an admin';
+            $entity_form = $preReg['entityForm'];
+            $form = $this->createForm(UserType::class, $person, [
+                'password' => false,
+            ]);
+        }
+
+        if (null === $person) {
+            $this->addFlash('warning', 'Registration is not available');
+
+            return $this->redirectToRoute('home_page');
+        }
+
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $userData = $request->request->get('user');
+            $propMethod = $type . 'Properties';
+            $this->$propMethod($person, $userData);
+            // send confirmation email
+            $postRegMethod = $type . 'PostReg';
+            $mailParams = $this->templateSvc->$postRegMethod($person);
+            $this->mailer->appMailer($mailParams);
+
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($person);
+            $em->flush();
+            if (isset($preReg['flashMessage'])) {
+                $this->addFlash('success', $preReg['flashMessage']);
+            }
+
+            return $this->redirectToRoute('home_page');
+        }
+
+        return $this->render('Entity/entity_form.html.twig', [
                     'form' => $form->createView(),
-                    'headerText' => 'Become a volunteer',
-                    'userHeader' => 'Volunteer',
-                    'focusHeader' => "Volunteer's Focus(es)",
-                    'skillHeader' => "Volunteer's Skill(s)",
-//                    'templates' => $templates,
+                    'headerText' => $headerText,
+                    'header' => $header,
+                    'entity_form' => $entity_form,
         ]);
     }
 
     /**
      * @Route("/nonprofit", name="register_org")
      */
-    public function registerNonprofit(Request $request, EmailerService $mailer) {
+    public function registerNonprofit(Request $request)
+    {
         $org = new Nonprofit();
-        $form = $this->createForm(NonprofitType::class, $org, ['register' => true,]);
-        $templates = [
-            'Nonprofit/_nonprofit_form.html.twig',
-            'Registration/_new_user.html.twig',
-            'Default/_focuses.html.twig',
-        ];
+        $form = $this->createForm(NonprofitType::class, $org, [
+            'register' => true,
+        ]);
+        $preReg = $this->templateSvc->preRegNonprofit();
+        $header = $preReg['header'];
+        $entity_form = $preReg['entityForm'];
+
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $orgData = $request->request->get('org');
             $em = $this->getDoctrine()->getManager();
             $rep = $this->repProperties($orgData['rep']);
-            $org->addRep($rep);
-            $org->setActive(false);
-            // send confirmation email
-            $view = $this->renderView('Email/staff_confirmation.html.twig', [
-                'fname' => $rep->getFname(),
-                'token' => $rep->getConfirmationToken(),
-                'expires' => $rep->getTokenExpiresAt(),
-                'orgname' => $org->getOrgname(),
-            ]);
-            $mailParams = [
-                'view' => $view,
-                'recipient' => $rep->getEmail(),
-                'subject' => 'Volunteer Connections',
-            ];
-            $mailer->appMailer($mailParams);
+            $postRegMethod = 'nonprofitPostReg';
+            $mailParams = $this->templateSvc->$postRegMethod($org, $rep);
+            $this->mailer->appMailer($mailParams);
 
             // store entities
             $em->persist($rep);
@@ -256,51 +277,64 @@ class RegistrationController extends AbstractController
                     'Look for the confirmation email that has been sent to the address provided'
             );
 
-
-            return $this->redirectToRoute('home');
+            return $this->redirectToRoute('home_page');
         }
 
-        return $this->render('Default/form_templates.html.twig', [
+        return $this->render('Entity/entity_form.html.twig', [
                     'form' => $form->createView(),
                     'headerText' => 'Add a nonprofit',
-                    'userHeader' => 'Staff Member',
-                    'orgHeader' => 'Nonprofit',
-                    'focusHeader' => "Nonprofit's Focus",
-                    'templates' => $templates,
+                    'header' => $header,
+                    'entity_form' => $entity_form
         ]);
     }
 
     /**
      * @Route("/confirm/{token}", name = "confirm")
      */
-    public function confirm(TokenChecker $checker, EmailerService $mailer, $token = null) {
+    public function confirm(TokenChecker $checker, $token = null)
+    {
         $user = $checker->checkToken($token);
         if (null === $user) {
-            return $this->redirectToRoute('home');
+            return $this->redirectToRoute('home_page');
         }
-
-        $class = get_class($user);
-
+        $roles = $user->getRoles();
+        $class = '';
+        $messageType = 'Registration';
+        if (in_array('ROLE_VOLUNTEER', $roles)) {
+            $class = 'volunteer';
+        } elseif (in_array('ROLE_REP', $roles)) {
+            $class = 'rep';
+        } elseif (in_array('ROLE_ADMIN', $roles) || in_array('ROLE_SUPER_ADMIN', $roles)) {
+            $class = 'admin';
+            $messageType = 'Invitation';
+        }
         $em = $this->getDoctrine()->getManager();
         // if token is expired, remove user
         $now = new \DateTime();
         if ($now > $user->getTokenExpiresAt()) {
             $this->addFlash(
                     'danger',
-                    'Registration has expired. Please register again.'
+                    $messageType . ' has expired.'
             );
             switch ($class) {
-                case Representative::class:
+                case 'rep':
                     $path = 'register_org';
                     $org = $user->getNonprofit();
                     $em->remove($org);
                     break;
-
-                case Volunteer::class:
-                    $path = 'register_volunteer';
+                case 'volunteer':
+                    $path = 'home_page';
                     $em->remove($user);
-
-                // no break
+                case 'admin':
+                    $view = $this->renderView('Email/expired_invite.html.twig', [
+                        'user' => $user,
+                    ]);
+                    $mailParams = [
+                        'view' => $view,
+                        'subject' => 'Expired invitation',
+                    ];
+                    $this->mailer->appMailer($mailParams);
+                    $path = 'home_page';
                 default:
                     break;
             }
@@ -311,26 +345,28 @@ class RegistrationController extends AbstractController
         $flashMessage = 'Account is confirmed';
         // send notice email
         switch ($class) {
-            case Representative::class:
+            case 'rep':
                 $org = $user->getNonprofit();
                 $org->setActive(true);
                 $em->persist($org);
                 // notice to admin
-                $recipient = $em->getRepository(Admin::class)->findOneBy(['mailer' => true]);
+                $recipient = $em->getRepository(Person::class)->findOneBy(['mailer' => true]);
                 $view = $this->renderView('Email/new_nonprofit_notice.html.twig', ['npo' => $org,]);
                 $mailParams = [
                     'view' => $view,
-                    'recipient' => $recipient,
+                    'recipient' => $this->mailer->getSender(),
                     'subject' => 'New Nonprofit Registration',
                 ];
 
-                $mailer->appMailer($mailParams);
+                $this->mailer->appMailer($mailParams);
 
                 $flashMessage .= '; please wait for nonprofit activation to login';
                 break;
-            case Volunteer::class:
+            case 'volunteer':
                 $user->setReceiveEmail(true);
                 break;
+            case 'admin':
+                $flashMessage .= '; thank you for accepting. You may now log in';
             default:
                 break;
         }
@@ -351,98 +387,114 @@ class RegistrationController extends AbstractController
     }
 
     /**
-     * @Route("/invite/{token}", name = "register_invite")
+     * @Route("/replaceStaff/{id}", name="replace_staff")
      */
-    public function invitation(Request $request, TokenChecker $checker, UserPasswordEncoderInterface $passwordEncoder, EmailerService $mailer, $token = null) {
-        $user = $checker->checkToken($token);
-        if (null === $user) {
-            return $this->redirectToRoute('home');
+    public function replaceStaff(Request $request, $id)
+    {
+        if (null === $id || !$this->isGranted('ROLE_ADMIN')) {
+            return $this->redirectToRoute('home_page');
         }
 
-        $class = get_class($user);
-        if (Admin::class !== $class) {
-            $this->addFlash(
-                    'danger',
-                    'Invalid registration data',
-            );
+        $replacement = new Person();
+        $replacement->addRole('ROLE_REP');
+        $em = $this->getDoctrine()->getManager();
+        $rep = $em->getRepository(Person::class)->find($id);
+        $nonprofit = $rep->getNonprofit();
 
-            return $this->redirectToRoute('home');
-        }
+        $header = ['center' => ''];
+        $entity_form['center'] = [
+            'Entity/_user_name.html.twig',
+            'Entity/_user_email.html.twig',
+        ];
+        $form = $this->createForm(UserType::class, $replacement, [
+            'password' => false,
+        ]);
 
-        $now = new \DateTime();
-        if ($now > $user->getTokenExpiresAt()) {
-            $this->addFlash(
-                    'danger',
-                    'Invitation has expired'
-            );
-            $view = $this->renderView('Email/expired_invite.html.twig', [
-                'user' => $user,
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $email = $request->request->get('user')['email'];
+            $token = md5(uniqid(rand(), true));
+            $expiresAt = date_add(new \DateTime(), new \DateInterval('P7D'));
+
+            $replacement->setTokenExpiresAt($expiresAt);
+            $replacement->setConfirmationToken($token);
+            $replacement->setPassword('hailhail');
+            $replacement->setEnabled(false);
+            $replacement->setNonprofit($nonprofit);
+            $replacement->setReplacementStatus('Replacement');
+            $replacement->setInitiated(new \DateTime());
+
+            $rep->setReplacementStatus('Pending');
+
+            $view = $this->renderView('Email/staff_replacement.html.twig', [
+                'replacement' => $replacement,
+                'nonprofit' => $nonprofit,
+                'token' => $token,
+                'expires' => $expiresAt,
             ]);
             $mailParams = [
                 'view' => $view,
-                'subject' => 'Expired invitation',
+                'recipient' => $email,
+                'subject' => $nonprofit->getOrgname() . ' staff replacement',
             ];
-            $mailer->appMailer($mailParams);
+            $this->mailer->appMailer($mailParams);
 
-            return $this->redirectToRoute('home');
-        }
-        // now set a password
-        $templates = [
-            'Default/_empty.html.twig',
-            'Registration/_password.html.twig',
-        ];
-        $form = $this->createForm(NewPasswordType::class, $user);
-        $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {
-            $user->setPassword(
-                    $passwordEncoder->encodePassword(
-                            $user,
-                            $form->get('plainPassword')->getData()
-                    )
-            );
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($user);
+            $em->persist($rep);
+            $em->persist($replacement);
             $em->flush();
 
-            $this->addFlash(
-                    'success',
-                    'Your admin account is created!'
-            );
+            $this->addFlash('success', 'Replacement email sent');
 
-            return $this->redirectToRoute('home');
+            return $this->redirectToRoute('dashboard');
         }
 
-        return $this->render('Default/form_templates.html.twig', [
+        return $this->render('Entity/entity_form.html.twig', [
                     'form' => $form->createView(),
-                    'headerText' => 'Set new password',
-                    'templates' => $templates,
-        ]);
+                    'staff' => $rep,
+                    'header' => $header,
+                    'entity_form' => $entity_form,
+                    'headerText' => 'Replacement for ' . $rep->getFullName() . '<br />' .
+                    $rep->getNonprofit()->getOrgname(),
+                ])
+        ;
     }
 
-    private function repProperties($data) {
+    private function repProperties($data)
+    {
         // create new staff entity
-        $rep = new Representative();
-        $rep->setFname($data['fname']);
-        $rep->setSname($data['sname']);
-        $rep->setEmail($data['email']);
-        $rep->setEnabled(false);
-        $password = $this->encoder->encodePassword($rep, $data['plainPassword']['first']);
-        $rep->setPassword($password);
-        $rep->setConfirmationToken(md5(uniqid(rand(), true)));
-        $expiresAt = new \DateTime();
-        $rep->setTokenExpiresAt($expiresAt->add(new \DateInterval('PT3H')));
-        $rep->setReplacementStatus('Replace');
+        $person = new Person();
+        $person->addRole('ROLE_REP');
+        $person->setFname($data['fname']);
+        $person->setSname($data['sname']);
+        $person->setEmail($data['email']);
+        $password = $this->encoder->encodePassword($person, $data['plainPassword']['first']);
+        $this->commonProperties($person, $password);
+        $person->setReplacementStatus('Replace');
 
-        return $rep;
+        return $person;
     }
 
-    private function volunteerProperties($volunteer, $data) {
-        $password = $this->encoder->encodePassword($volunteer, $data['plainPassword']['first']);
-        $volunteer->setPassword($password);
-        $volunteer->setEnabled(false);
-        $volunteer->setConfirmationToken(md5(uniqid(rand(), true)));
+    private function volunteerProperties($person, $data)
+    {
+        $password = $this->encoder->encodePassword($person, $data['plainPassword']['first']);
+        $this->commonProperties($person, $password);
+    }
+
+    private function adminProperties($person, $data)
+    {
+        $password = 'new_admin';
+        $this->commonProperties($person, $password);
+        $person->setMailer(false);
+    }
+
+    private function commonProperties($person, $plainPassword)
+    {
+        $password = $this->encoder->encodePassword($person, $plainPassword);
+        $person->setPassword($password);
+        $person->setEnabled(false);
+        $person->setConfirmationToken(md5(uniqid(rand(), true)));
         $expiresAt = new \DateTime();
-        $volunteer->setTokenExpiresAt($expiresAt->add(new \DateInterval('PT3H')));
+        $person->setTokenExpiresAt($expiresAt->add(new \DateInterval('PT3H')));
     }
 
 }

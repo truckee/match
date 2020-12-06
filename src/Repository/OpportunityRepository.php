@@ -13,7 +13,7 @@ namespace App\Repository;
 
 use App\Entity\Opportunity;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\Common\Persistence\ManagerRegistry;
+use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\ORM\QueryBuilder;
 
 /**
@@ -78,7 +78,7 @@ class OpportunityRepository extends ServiceEntityRepository
                 $opps[] = $this->getEntityManager()->getRepository(Opportunity::class)->find($item['id']);
             }
         }
-        
+
         // opps by focus
         if (!empty($focuses)) {
             $focusSQL = 'SELECT o.id FROM opportunity o '
@@ -100,7 +100,7 @@ class OpportunityRepository extends ServiceEntityRepository
                 }
             }
         }
-        
+
         return $opps;
     }
 

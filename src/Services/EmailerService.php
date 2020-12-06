@@ -11,11 +11,12 @@
 
 namespace App\Services;
 
-use App\Entity\Admin;
+use App\Entity\Person;
 use Doctrine\ORM\EntityManagerInterface;
 
 class EmailerService
 {
+
     private $defaultMailer;
     private $em;
 
@@ -27,28 +28,31 @@ class EmailerService
 
     public function appMailer($mailParams)
     {
-        $mailer = $this->em->getRepository(Admin::class)->findOneBy(['mailer' => true]);
+        $sender = $this->getSender();
         // used by new nonprofit notice, expired invitation, opportunities email report
         if (!array_key_exists('recipient', $mailParams)) {
-            $mailParams['recipient'] = $mailer;
+            $mailParams['recipient'] = $sender;
         }
 
         $message = (new \Swift_Message($mailParams['subject']))
-                ->setFrom($mailer)
+                ->setFrom($sender)
                 ->setTo($mailParams['recipient'])
                 ->setBody(
-                    $mailParams['view'],
-                    'text/html'
+                $mailParams['view'],
+                'text/html'
                 )
         ;
 
-        $this->defaultMailer->send($message);
+        $sent = $this->defaultMailer->send($message);
 
-        return true;
-//        if (!array_key_exists('spool', $mailParams)) {
-//            $this->defaultMailer->send($message);
-//        } else {
-//            $this->spoolMailer->send($message);
-//        }
+        return $sent;
     }
+
+    public function getSender()
+    {
+        $sender = $this->em->getRepository(Person::class)->findOneBy(['mailer' => true]);
+
+        return $sender->getEmail();
+    }
+
 }

@@ -18,9 +18,13 @@
                     <td class="col-2">
                         <table class="table table-borderless">
                             <tr><td><a class="cfwn-blue" href="{{ path('npo_view', {'id': opp.nonprofit.id}) }}">{{ npo }}</a>
-                            <tr><td><a class="cfwn-blue" href="mailto:{{ opp.nonprofit.representative.email }}">{{ opp.nonprofit.representative.email }}</a>
+                            <tr><td>{% for rep in  opp.nonprofit.reps %}
+                                        {% if rep.replacementStatus == 'Replace' or rep.replacementStatus == 'Pending' %} 
+                                            <a class="cfwn-blue" href="mailto:{{ rep.email }}">{{rep.email }}</a>
+                                            {% endif %}
+                                    {% endfor %}
                             <tr><td>
-                                    {% if opp.nonprofit.website is not null %}
+                                    {% if opp.nonprofit.website is not empty %}
                                         <a class="cfwn-blue" href="{{ opp.nonprofit.website }}">Website</a>
                                     {% endif %}
                         </table>
