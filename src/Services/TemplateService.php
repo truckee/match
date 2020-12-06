@@ -11,8 +11,17 @@
 
 namespace App\Services;
 
+use Twig\Environment;
+
 class TemplateService
 {
+
+    private $twig;
+
+    public function __construct(Environment $twig)
+    {
+        $this->twig = $twig;
+    }
 
     public function oppView()
     {
