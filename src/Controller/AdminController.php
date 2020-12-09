@@ -24,23 +24,22 @@ use EasyCorp\Bundle\EasyAdminBundle\Router\CrudUrlGenerator;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
-/**
- * @Route("/admin")
- */
 class AdminController extends AbstractController
 {
 
     private $crudUrlGenerator;
+    private $adminSvc;
     private $userSvc;
 
-    public function __construct(CrudUrlGenerator $crudUrlGenerator, PersonService $userSvc)
+    public function __construct(CrudUrlGenerator $crudUrlGenerator, PersonService $userSvc, AdminServices $adminSvc)
     {
         $this->crudUrlGenerator = $crudUrlGenerator;
+        $this->adminSvc = $adminSvc;
         $this->userSvc = $userSvc;
     }
 
     /**
-     * @Route("/dashboard", name="dashboard")
+     * @Route("/admin/dashboard", name="dashboard")
      *
      */
     public function index(ChartService $charter)
@@ -59,10 +58,15 @@ class AdminController extends AbstractController
     /**
      * Activates or deactivates a nonprofit
      *
-     * @Route("/status/{id}", name="status")
+     * @Route("/admin/status/{id}", name="status")
      */
-    public function statusChange(AdminServices $adminSvc, $id = null)
+    public function statusChange($id = null)
     {
+        $url = $this->crudUrlGenerator
+                ->build()
+                ->setController(NonprofitCrudController::class)
+                ->setAction(Action::INDEX);
+
         $em = $this->getDoctrine()->getManager();
         $npo = $em->getRepository(Nonprofit::class)->find($id);
         if (null === $npo) {
@@ -74,180 +78,57 @@ class AdminController extends AbstractController
             return $this->redirectToRoute('dashboard');
         }
 
-        $statusMessage = $adminSvc->statusChange($npo);
+        $statusMessage = $this->adminSvc->statusChange($npo);
         $this->addFlash(
                 'success',
                 $statusMessage
         );
-        $url = $this->crudUrlGenerator
-                ->build()
-                ->setController(NonprofitCrudController::class)
-                ->setAction(Action::INDEX);
 
         return $this->redirect($url);
     }
 
     /**
-     * @Route("/lock/{id}", name = "lock_user")
+     * @Route("/admin/lock/{id}", name = "lock_user")
      */
     public function lockUser($id)
     {
         if (null === $id) {
             return;
         }
-
-        $em = $this->getDoctrine()->getManager();
-        $user = $em->getRepository(Person::class)->find($id);
-        $state = $user->getLocked();
-        $user->setLocked(!$state);
-        $em->persist($user);
-
-        if ($user->hasRole('ROLE_REP')) {
-            $controller = RepresentativeCrudController::class;
-            $nonprofit = $user->getNonprofit();
-            $nonprofit->setActive(false);
-            $em->persist($nonprofit);
-        } elseif ($user->hasRole('ROLE_VOLUNTEER')) {
-            $controller = VolunteerCrudController::class;
-        }
-        $em->flush();
-        $lockState = $user->getLocked() ? ' is now locked' : ' is now unlocked';
-        $this->addFlash('success', $user->getFullName() . $lockState);
-        $url = $this->crudUrlGenerator
-                ->build()
-                ->setController($controller)
-                ->setAction(Action::INDEX);
+        $class = $this->userSvc->roleConverter($id);
+        $flashMessage = $this->userSvc->lockUser($id);
+        $this->addFlash($flashMessage['type'], $flashMessage['content']);
+        $url = $this->returnToAdmin($class);
 
         return $this->redirect($url);
     }
 
-//
-//    /**
-//     * @Route("/assign/{id}", name="assign_mailer")
-//     */
-//    public function assign($id)
-//    {
-//        $em = $this->getDoctrine()->getManager();
-//        $entities = $em->getRepository(Admin::class)->findAll();
-//        foreach ($entities as $admin) {
-//            if ((int) $id === $admin->getId()) {
-//                $admin->setMailer(true);
-//                $em->persist($admin);
-//            } else {
-//                $admin->setMailer(false);
-//                $em->persist($admin);
-//            }
-//        }
-//        $em->flush();
-//
-//        $response = new JsonResponse(json_encode($id));
-//        return $response;
-//    }
-//
-//    /**
-//     * @Route("/enabler", name = "admin_enabler")
-//     */
-//    public function enabler(Request $request)
-//    {
-//        $em = $this->getDoctrine()->getManager();
-//        $id = $request->query->get('id');
-//        $admin = $em->getRepository(Admin::class)->find($id);
-//        $enabled = $admin->isEnabled();
-//        if (!$admin->getSender() && !$admin->hasRole('ROLE_SUPER_ADMIN')) {
-//            $admin->setEnabled(!$enabled);
-//            $em->persist($admin);
-//            $em->flush();
-//        } else {
-//            $this->addFlash('danger', $admin->getFullName() . ' cannot be disabled');
-//        }
-//
-//        return $this->redirectToRoute('easyadmin', array(
-//            'action' => 'list',
-//            'entity' => $request->query->get('entity'),
-//        ));    }
-
     /**
-     * @Route("/switch/{id}/{field}", name="admin_switch")
+     * @Route("/admin/switch/{class}/{field}/{id}", name="admin_switch")
      */
-    public function switch($id, $field)
+    public function switch($class, $field, $id)
     {
-        $class = $this->userSvc->roleConverter($id);
+//        dd($class);
+        if ('Person' === $class) {
+            $class = $this->userSvc->roleConverter($id);
+        }
 
-        switch ($class):
-            case 'Admin':
-                if ('mailer' === $field) {
-                    $this->mailer($id);
-                }
-                if ('enabled' === $field) {
-                    $this->adminEnabler($id);
-                }
-                break;
-            default:
-                $this->enabler($field, $id);
-                break;
-        endswitch;
+        $flashMessage = $this->userSvc->switchFns($class, $id, $field);
+        $this->addFlash($flashMessage['type'], $flashMessage['content']);
+        $url = $this->returnToAdmin($class);
 
+        return $this->redirect($url);
+    }
+
+    public function returnToAdmin($class)
+    {
         $controller = 'App\\Controller\\Admin\\' . $class . 'CrudController';
         $url = $this->crudUrlGenerator
                 ->build()
                 ->setController($controller)
                 ->setAction(Action::INDEX);
 
-        return $this->redirect($url);
-    }
-
-    private function mailer($id)
-    {
-        $em = $this->getDoctrine()->getManager();
-        $mailer = $em->getRepository(Person::class)->findOneBy(['mailer' => true]);
-
-        if ((int) $id === $mailer->getId()) {
-            return;
-        }
-
-        $selected = $em->getRepository(Person::class)->find($id);
-        if (false === $selected->getEnabled()) {
-            $this->addFlash('warning', 'Disabled admins cannot be mailer');
-
-            return;
-        }
-
-        $entities = $em->getRepository(Person::class)->findBy(['enabled' => true]);
-        foreach ($entities as $admin) {
-            if ((int) $id === $admin->getId()) {
-                $admin->setMailer(true);
-            } else {
-                $admin->setMailer(false);
-            }
-            $em->persist($admin);
-        }
-        $em->flush();
-    }
-
-    private function enabler($field, $id)
-    {
-        $em = $this->getDoctrine()->getManager();
-        $vol = $em->getRepository(Person::class)->find($id);
-        $getter = 'get' . ucfirst($field);
-        $setter = 'set' . ucfirst($field);
-        $value = $vol->$getter();
-        $vol->$setter(!$value);
-        $em->persist($vol);
-        $em->flush();
-    }
-
-    private function adminEnabler($id)
-    {
-        $em = $this->getDoctrine()->getManager();
-        $admin = $em->getRepository(Person::class)->find($id);
-        $enabled = $admin->getEnabled();
-        if (!$admin->getMailer() && !$admin->hasRole('ROLE_SUPER_ADMIN')) {
-            $admin->setEnabled(!$enabled);
-            $em->persist($admin);
-            $em->flush();
-        } else {
-            $this->addFlash('danger', $admin->getFullName() . ' cannot be disabled');
-        }
+        return $url;
     }
 
 }

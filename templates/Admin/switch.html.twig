@@ -1,14 +1,19 @@
-{% if field.value  %}
-    {% set check = 'checked="checked"' %}
-{% else %}
-    {% set check = '' %}
-{% endif %}
+{% set class = entity.fqcn|slice(11,10) %}
 {% set name = field.property %}
 {% set id = entity.primaryKeyValue %}
-<div class="custom-control custom-switch">
-    <a href="{{ path('admin_switch', 
-    {'field':name, 'id':id}) }}" id="{{name~id}}">
-        <input type="checkbox" class="custom-control-input" {{ check }}>
-        <label class="custom-control-label" for="customSwitch1"></label>
-    </a>
-</div>
+{% if class == "Admin" and entity.instance.hasRole('ROLE_SUPER_ADMIN') and field.property == 'enabled' %}
+    <span class="text-danger" title="Super Admin: cannot be disabled">SA</span>
+{% else %}
+    {% if field.value  %}
+        {% set check = 'checked="checked"' %}
+    {% else %}
+        {% set check = '' %}
+    {% endif %}
+    <div class="custom-control custom-switch">
+        <a href="{{ path('admin_switch', 
+    {'class':class, 'field':name, 'id':id}) }}" id="{{name~id}}">
+            <input type="checkbox" class="custom-control-input" {{ check }}>
+            <label class="custom-control-label" for="customSwitch1"></label>
+        </a>
+    </div>
+{% endif %}
