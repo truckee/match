@@ -7,8 +7,6 @@ use App\Form\Type\Field\SwitchFieldType;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ArrayField;
-//use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
-//use EasyCorp\Bundle\EasyAdminBundle\Field\DateField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IntegerField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextareaField;
@@ -36,6 +34,7 @@ class AdminCrudController extends AbstractCrudController
                         ->setEntityLabelInPlural('Admin')
                         ->setPageTitle(Crud::PAGE_EDIT, 'Edit %entity_name%')
                         ->setHelp('index', 'Mailer is designated recipient and sender for all automated email')
+                        ->setDefaultSort(['sname' => 'ASC', 'fname' => 'ASC'])
                         ->setSearchFields(['id', 'roles', 'email', 'fname', 'sname', 'confirmationToken']);
     }
 
@@ -55,12 +54,9 @@ class AdminCrudController extends AbstractCrudController
         $lastLogin = DateTimeField::new('lastLogin');
         $confirmationToken = TextField::new('confirmationToken');
         $tokenExpiresAt = DateTimeField::new('tokenExpiresAt');
-//        $locked = BooleanField::new('locked');
-//        $enabled = BooleanField::new('enabled');
         $mailer = SwitchFieldType::new('mailer');
         $id = IntegerField::new('id', 'ID');
         $enabled = SwitchFieldType::new('enabled');
-//        $enabled = TextareaField::new('adminEnabled')->setTemplatePath('Admin/admin_enabled.html.twig');
         $fullName = TextareaField::new('fullName');
 
         if (Crud::PAGE_INDEX === $pageName) {

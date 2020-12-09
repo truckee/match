@@ -27,6 +27,7 @@ class NonprofitCrudController extends AbstractCrudController
                         ->setEntityLabelInSingular('Nonprofit')
                         ->setEntityLabelInPlural('Nonprofit')
                         ->setPageTitle(Crud::PAGE_EDIT, 'Edit %entity_name%')
+                        ->setDefaultSort(['orgname' => 'ASC'])
                         ->setHelp('index', 'Activate sends notice to staff; deactivate blocks staff log in, opportunities will not be found')
                         ->setSearchFields(['id', 'orgname', 'address', 'city', 'state', 'zip', 'phone', 'website', 'ein']);
     }
@@ -39,7 +40,7 @@ class NonprofitCrudController extends AbstractCrudController
 
     public function configureFields(string $pageName): iterable
     {
-        $orgname = TextField::new('orgname');
+        $orgname = TextField::new('orgname', 'Organization');
         $address = TextField::new('address');
         $city = TextField::new('city');
         $state = TextField::new('state');
@@ -50,7 +51,7 @@ class NonprofitCrudController extends AbstractCrudController
         $addDate = DateTimeField::new('addDate');
         $ein = TextField::new('ein', 'EIN')->setTemplatePath('Nonprofit/ein.html.twig');
         $opportunities = AssociationField::new('opportunities');
-        $reps = ArrayField::new('reps');
+        $reps = ArrayField::new('reps', 'Staff');
         $focuses = AssociationField::new('focuses');
         $id = IntegerField::new('id', 'ID');
 

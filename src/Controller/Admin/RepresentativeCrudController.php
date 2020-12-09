@@ -43,6 +43,7 @@ class RepresentativeCrudController extends AbstractCrudController
         return $crud
                         ->setPageTitle(Crud::PAGE_INDEX, 'Staff')
                         ->setHelp('index', 'Replacing removes current staff.')
+                        ->setHelp('index', 'Locking staff deactivates nonprofit and blocks staff log in')
                         ->setSearchFields(['id', 'roles', 'email', 'fname', 'sname', 'confirmationToken', 'replacementStatus']);
     }
 

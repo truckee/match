@@ -13,11 +13,14 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use EasyCorp\Bundle\EasyAdminBundle\Router\CrudUrlGenerator;
 
+/**
+ * @Route("/admin")
+ */
 class DashboardController extends AbstractDashboardController
 {
 
     /**
-     * @Route("/admin", name="admin")
+     * @Route("/", name="ea_admin")
      */
     public function index(): Response
     {

@@ -42,7 +42,8 @@ class VolunteerCrudController extends AbstractCrudController
     {
         return $crud
                         ->setPageTitle(Crud::PAGE_INDEX, 'Volunteer')
-//                        ->setHelp('index', 'Locking staff deactivates nonprofit and blocks staff log in. Replacing also removes current staff.')
+                        ->setDefaultSort(['sname' => 'ASC', 'fname' => 'ASC'])
+                        ->setDefaultSort(['sname' => 'ASC', 'fname' => 'ASC'])
                         ->setSearchFields(['id', 'roles', 'email', 'fname', 'sname', 'confirmationToken']);
     }
 

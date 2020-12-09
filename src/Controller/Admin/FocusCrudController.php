@@ -13,6 +13,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 
 class FocusCrudController extends AbstractCrudController
 {
+
     public static function getEntityFqcn(): string
     {
         return Focus::class;
@@ -21,16 +22,17 @@ class FocusCrudController extends AbstractCrudController
     public function configureCrud(Crud $crud): Crud
     {
         return $crud
-            ->setEntityLabelInSingular('Focus')
-            ->setEntityLabelInPlural('Focus')
-            ->setPageTitle(Crud::PAGE_EDIT, 'Edit %entity_name%')
-            ->setSearchFields(['id', 'focus']);
+                        ->setEntityLabelInSingular('Focus')
+                        ->setEntityLabelInPlural('Focus')
+                        ->setPageTitle(Crud::PAGE_EDIT, 'Edit %entity_name%')
+                        ->setDefaultSort(['focus' => 'ASC'])
+                        ->setSearchFields(['id', 'focus']);
     }
 
     public function configureActions(Actions $actions): Actions
     {
         return $actions
-            ->disable('delete');
+                        ->disable('delete');
     }
 
     public function configureFields(string $pageName): iterable
@@ -51,4 +53,5 @@ class FocusCrudController extends AbstractCrudController
             return [$focus, $enabled];
         }
     }
+
 }

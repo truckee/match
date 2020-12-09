@@ -13,6 +13,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 
 class SkillCrudController extends AbstractCrudController
 {
+
     public static function getEntityFqcn(): string
     {
         return Skill::class;
@@ -21,16 +22,17 @@ class SkillCrudController extends AbstractCrudController
     public function configureActions(Actions $actions): Actions
     {
         return $actions
-            ->disable('delete');
+                        ->disable('delete');
     }
 
     public function configureCrud(Crud $crud): Crud
     {
         return $crud
-            ->setEntityLabelInSingular('Skill')
-            ->setEntityLabelInPlural('Skill')
-            ->setPageTitle(Crud::PAGE_EDIT, 'Edit %entity_name%')
-            ->setSearchFields(['id', 'skill']);
+                        ->setEntityLabelInSingular('Skill')
+                        ->setEntityLabelInPlural('Skill')
+                        ->setPageTitle(Crud::PAGE_EDIT, 'Edit %entity_name%')
+                        ->setDefaultSort(['skill' => 'ASC'])
+                        ->setSearchFields(['id', 'skill']);
     }
 
     public function configureFields(string $pageName): iterable
@@ -51,4 +53,5 @@ class SkillCrudController extends AbstractCrudController
             return [$skill, $enabled];
         }
     }
+
 }
