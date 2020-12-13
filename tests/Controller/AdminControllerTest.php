@@ -213,11 +213,19 @@ class AdminControllerTest extends WebTestCase
     public function testEnableDisableFails()
     {
         $crawler = $this->client->clickLink('Admin');
-
-        $link = $crawler->filter('#enabled5')->link();
-        $this->client->click($link);
+        $switches = $crawler->filter('div.custom-control.custom-switch');
+        $text = $switches->first()->text();
+        $this->client->clickLink($text);
 
         $this->assertStringContainsString('Benny Borko cannot be disabled', $this->client->getResponse()->getContent());
+    }
+
+    public function testMailerStatus()
+    {
+        $this->client->clickLink('Admin');
+        $this->client->clickLink('Switchmailer');
+
+        $this->assertStringContainsString('No change made', $this->client->getResponse()->getContent());
     }
 
     public function testEnableDisableSucceeds()
@@ -246,6 +254,30 @@ class AdminControllerTest extends WebTestCase
         $this->client->submit($form);
 
         $this->assertStringContainsString('<strong>4</strong>', $this->client->getResponse()->getContent());
+    }
+
+    public function testFocusDisable()
+    {
+        $this->client->clickLink('Focus');
+        $this->client->clickLink('Switchenabled');
+
+        $this->assertStringContainsString('changed', $this->client->getResponse()->getContent());
+    }
+
+    public function testSkillDisable()
+    {
+        $this->client->clickLink('Skill');
+        $this->client->clickLink('Switchenabled');
+
+        $this->assertStringContainsString('changed', $this->client->getResponse()->getContent());
+    }
+
+    public function testAdminMailer()
+    {
+        $this->client->clickLink('Admin');
+        $this->client->clickLink('Switchmailer');
+
+        $this->assertStringContainsString('change', $this->client->getResponse()->getContent());
     }
 
     public function testSkillAdd()
