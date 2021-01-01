@@ -120,13 +120,12 @@ class RegistrationTest extends WebTestCase
             'user_email[email]' => 'swimming@pool.com',
         ]);
 
-        $mailCollector = $this->client->getProfile()->getCollector('swiftmailer');
+        $this->assertResponseRedirects();
 
-        $this->assertSame(1, $mailCollector->getMessageCount());
-        $collectedMessages = $mailCollector->getMessages();
-        $message = $collectedMessages[0];
+        $this->assertEmailCount(1);
+        $email = $this->getMailerMessage(0);
 
-        $this->assertStringContainsString('email is not recognized', $message->getBody());
+        $this->assertStringContainsString('email is not recognized', $email->getHtmlBody());
     }
 
     public function testFogottenPasswordUser()
@@ -138,13 +137,14 @@ class RegistrationTest extends WebTestCase
             'user_email[email]' => 'random@bogus.info',
         ]);
 
-        $mailCollector = $this->client->getProfile()->getCollector('swiftmailer');
+        $this->assertResponseRedirects();
 
-        $this->assertSame(1, $mailCollector->getMessageCount());
-        $collectedMessages = $mailCollector->getMessages();
-        $message = $collectedMessages[0];
+        $this->assertEmailCount(1);
+        $email = $this->getMailerMessage(0);
 
-        $this->assertStringContainsString('to change your password', $message->getBody());
+        $this->assertEmailHeaderSame($email, 'Subject', 'Volunteer Connections forgotten password');
+
+        $this->assertStringContainsString('to change your password', $email->getHtmlBody());
     }
 
     public function testNewNonprofitActivationEmail()
@@ -152,13 +152,12 @@ class RegistrationTest extends WebTestCase
         $this->client->followRedirects(false);
         $this->client->request('GET', '/register/confirm/tuvxyz');
 
-        $mailCollector = $this->client->getProfile()->getCollector('swiftmailer');
+        $this->assertResponseRedirects();
 
-        $this->assertSame(1, $mailCollector->getMessageCount());
-        $collectedMessages = $mailCollector->getMessages();
-        $message = $collectedMessages[0];
+        $this->assertEmailCount(1);
+        $email = $this->getMailerMessage(0);
 
-        $this->assertStringContainsString('new nonprofit has submitted registration', $message->getBody());
+        $this->assertStringContainsString('new nonprofit has submitted registration', $email->getHtmlBody());
     }
 
 //    public function testNonUserRegistration()

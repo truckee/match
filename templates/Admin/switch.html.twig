@@ -1,3 +1,4 @@
+    {# adding text with display: none; allows functional testing#}
 {% set class = entity.fqcn|slice(11,10) %}
 {% set name = field.property %}
 {% set id = entity.primaryKeyValue %}
@@ -9,10 +10,8 @@
     {% else %}
         {% set check = null %}
     {% endif %}
-    {# adding text with display: none; allows functional testing#}
     <div class="custom-control custom-switch">
-        <a href="{{ path('admin_switch', 
-    {'class':class, 'field':name, 'id':id}) }}" id="{{name~id}}">
+        <a href="{{ path('admin_switch', {'src':class~'-'~name~'-'~id}) }}" id="{{name~id}}">
             <span style="display: none;">Switch{{ name }}</span>
             <input type="checkbox" class="custom-control-input" {{ check|raw }}>
             <label class="custom-control-label" for="customSwitch"></label>

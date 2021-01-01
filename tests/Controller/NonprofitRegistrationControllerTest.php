@@ -47,13 +47,12 @@ class NonprofitRegistrationControllerTest extends WebTestCase
         $this->client->followRedirects(false);
         $this->nonprofitRegistration($params);
 
-        $mailCollector = $this->client->getProfile()->getCollector('swiftmailer');
+        $this->assertResponseRedirects();
 
-        $this->assertSame(1, $mailCollector->getMessageCount());
-        $collectedMessages = $mailCollector->getMessages();
-        $message = $collectedMessages[0];
+        $this->assertEmailCount(1);
+        $email = $this->getMailerMessage(0);
 
-        $this->assertStringContainsString('until the Foundation has activated the account', $message->getBody());
+        $this->assertStringContainsString('until the Foundation has activated the account', $email->getHtmlBody());
     }
 
     public function testNonprofitAlreadyRegistered()

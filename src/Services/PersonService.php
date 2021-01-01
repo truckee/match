@@ -11,9 +11,7 @@
 
 namespace App\Services;
 
-use App\Entity\Focus;
 use App\Entity\Person;
-use App\Entity\Skill;
 use Doctrine\ORM\EntityManagerInterface;
 
 class PersonService

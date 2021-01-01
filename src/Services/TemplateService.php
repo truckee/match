@@ -11,15 +11,18 @@
 
 namespace App\Services;
 
+use Doctrine\ORM\EntityManagerInterface;
 use Twig\Environment;
 
 class TemplateService
 {
 
+    private $em;
     private $twig;
 
-    public function __construct(Environment $twig)
+    public function __construct(EntityManagerInterface $em, Environment $twig)
     {
+        $this->em = $em;
         $this->twig = $twig;
     }
 
@@ -107,15 +110,15 @@ class TemplateService
 
     public function adminPostReg($person)
     {
-        $view = $this->twig->render('Email/invitation.html.twig', [
-            'fname' => $person->getFname(),
-            'token' => $person->getConfirmationToken(),
-            'expires' => $person->getTokenExpiresAt(),
-        ]);
         $mailParams = [
-            'view' => $view,
+            'template' => 'Email/invitation.html.twig',
             'recipient' => $person->getEmail(),
             'subject' => 'Invitation from ConnectionsReno',
+            'context' => [
+                'fname' => $person->getFname(),
+                'token' => $person->getConfirmationToken(),
+                'expires' => $person->getTokenExpiresAt(),
+            ]
         ];
 
         return $mailParams;
@@ -126,16 +129,16 @@ class TemplateService
         $org->addRep($rep);
         $org->setActive(false);
         // send confirmation email
-        $view = $this->twig->render('Email/staff_confirmation.html.twig', [
-            'fname' => $rep->getFname(),
-            'token' => $rep->getConfirmationToken(),
-            'expires' => $rep->getTokenExpiresAt(),
-            'orgname' => $org->getOrgname(),
-        ]);
         $mailParams = [
-            'view' => $view,
+            'template' => 'Email/staff_confirmation.html.twig',
             'recipient' => $rep->getEmail(),
             'subject' => 'Volunteer Connections',
+            'context' => [
+                'fname' => $rep->getFname(),
+                'token' => $rep->getConfirmationToken(),
+                'expires' => $rep->getTokenExpiresAt(),
+                'orgname' => $org->getOrgname(),
+            ]
         ];
 
         return $mailParams;
@@ -143,15 +146,15 @@ class TemplateService
 
     public function volunteerPostReg($person)
     {
-        $view = $this->twig->render('Email/volunteer_confirmation.html.twig', [
-            'fname' => $person->getFname(),
-            'token' => $person->getConfirmationToken(),
-            'expires' => $person->getTokenExpiresAt(),
-        ]);
         $mailParams = [
-            'view' => $view,
+            'template' => 'Email/volunteer_confirmation.html.twig',
             'recipient' => $person->getEmail(),
             'subject' => 'Volunteer Connections',
+            'context' => [
+                'fname' => $person->getFname(),
+                'token' => $person->getConfirmationToken(),
+                'expires' => $person->getTokenExpiresAt(),
+            ]
         ];
 
         return $mailParams;

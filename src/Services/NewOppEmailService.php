@@ -49,12 +49,12 @@ class NewOppEmailService
 
         // send report to admin
         $nVolunteers = count($volunteers);
-        $recipient = $mailer->getSender();
+        $recipient = $this->em->getRepository(Person::class)->findOneBy(['mailer' => true]);
 
         $mailParams = [
             'view' => 'Email/opportunity_email_report.html.twig',
             'context' => ['nVolunteers' => $nVolunteers, 'opportunity' => $opp,],
-            'recipient' => $recipient,
+            'recipient' => $recipient->getEmail(),
             'subject' => 'Volunteer opportunities email report',
         ];
 

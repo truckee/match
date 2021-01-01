@@ -11,48 +11,53 @@
 
 namespace App\Services;
 
-use App\Entity\Person;
-use Doctrine\ORM\EntityManagerInterface;
+//use App\Entity\Person;
+use Symfony\Component\Mailer\MailerInterface;
+//use Symfony\Component\Mime\Email;
+use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 
 class EmailerService
 {
 
-    private $defaultMailer;
-    private $em;
+    private $mailer;
 
-    public function __construct(EntityManagerInterface $em, $defaultMailer)
+    public function __construct(MailerInterface $mailer)
     {
-        $this->defaultMailer = $defaultMailer;
-        $this->em = $em;
+        $this->mailer = $mailer;
     }
 
     public function appMailer($mailParams)
     {
-        $sender = $this->getSender();
-        // used by new nonprofit notice, expired invitation, opportunities email report
-        if (!array_key_exists('recipient', $mailParams)) {
-            $mailParams['recipient'] = $sender;
-        }
-
-        $message = (new \Swift_Message($mailParams['subject']))
-                ->setFrom($sender)
-                ->setTo($mailParams['recipient'])
-                ->setBody(
-                $mailParams['view'],
-                'text/html'
-                )
+        $email = (new TemplatedEmail())
+                ->to($mailParams['recipient'])
+                ->subject($mailParams['subject'])
+                ->htmlTemplate($mailParams['template'])
+                ->context($mailParams['context'])
         ;
 
-        $sent = $this->defaultMailer->send($message);
+        $this->mailer->send($email);
 
-        return $sent;
+        return $email;
+// For SwiftMailer
+//        $message = (new \Swift_Message($mailParams['subject']))
+//                ->setFrom($sender)
+//                ->setTo($mailParams['recipient'])
+//                ->setBody(
+//                $mailParams['view'],
+//                'text/html'
+//                )
+//        ;
+//
+//        $sent = $this->defaultMailer->send($message);
+//
+//        return $sent;
     }
 
-    public function getSender()
-    {
-        $sender = $this->em->getRepository(Person::class)->findOneBy(['mailer' => true]);
-
-        return $sender->getEmail();
-    }
-
+//
+//    public function getSender()
+//    {
+//        $sender = $this->em->getRepository(Person::class)->findOneBy(['mailer' => true]);
+//
+//        return $sender->getEmail();
+//    }
 }

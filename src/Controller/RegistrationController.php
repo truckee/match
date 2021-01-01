@@ -58,7 +58,6 @@ class RegistrationController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $email = $request->request->get('user_email')['email'];
             $em = $this->getDoctrine()->getManager();
-            $sender = $this->mailer->getSender();
             $user = $em->getRepository(Person::class)->findOneBy(['email' => $email]);
             $this->addFlash(
                     'success',
@@ -67,9 +66,9 @@ class RegistrationController extends AbstractController
 
             // if nonUser
             if (null === $user) {
-                $view = $this->renderView('Email/non_user_forgotten_password.html.twig', [
-                    'supportEmail' => $sender
-                ]);
+                $sender = $em->getRepository(Person::class)->findOneBy(['mailer' => true]);
+                $template = 'Email/non_user_forgotten_password.html.twig';
+                $context = ['supportEmail' => $sender];
             } else {
                 $token = md5(uniqid(rand(), true));
                 $user->setConfirmationToken($token);
@@ -78,15 +77,17 @@ class RegistrationController extends AbstractController
 
                 $em->persist($user);
                 $em->flush();
-                $view = $this->renderView('Email/forgotten.html.twig', [
+                $template = 'Email/forgotten.html.twig';
+                $context = [
                     'fname' => $user->getFname(),
                     'token' => $token,
                     'expiresAt' => $expiresAt,
-                ]);
+                ];
             }
 
             $mailParams = [
-                'view' => $view,
+                'template' => $template,
+                'context' => $context,
                 'recipient' => $email,
                 'subject' => 'Volunteer Connections forgotten password',
             ];
@@ -300,6 +301,8 @@ class RegistrationController extends AbstractController
         $roles = $user->getRoles();
         $class = '';
         $messageType = 'Registration';
+        $em = $this->getDoctrine()->getManager();
+        $recipient = $em->getRepository(Person::class)->findOneBy(['mailer' => true]);
         if (in_array('ROLE_VOLUNTEER', $roles)) {
             $class = 'volunteer';
         } elseif (in_array('ROLE_REP', $roles)) {
@@ -308,7 +311,6 @@ class RegistrationController extends AbstractController
             $class = 'admin';
             $messageType = 'Invitation';
         }
-        $em = $this->getDoctrine()->getManager();
         // if token is expired, remove user
         $now = new \DateTime();
         if ($now > $user->getTokenExpiresAt()) {
@@ -326,11 +328,12 @@ class RegistrationController extends AbstractController
                     $path = 'home_page';
                     $em->remove($user);
                 case 'admin':
-                    $view = $this->renderView('Email/expired_invite.html.twig', [
-                        'user' => $user,
-                    ]);
+                    $template = 'Email/expired_invite.html.twig';
+                    $context = ['user' => $user];
                     $mailParams = [
-                        'view' => $view,
+                        'recipient' => $recipient->getEmail(),
+                        'template' => $template,
+                        'context' => $context,
                         'subject' => 'Expired invitation',
                     ];
                     $this->mailer->appMailer($mailParams);
@@ -350,11 +353,10 @@ class RegistrationController extends AbstractController
                 $org->setActive(true);
                 $em->persist($org);
                 // notice to admin
-                $recipient = $em->getRepository(Person::class)->findOneBy(['mailer' => true]);
-                $view = $this->renderView('Email/new_nonprofit_notice.html.twig', ['npo' => $org,]);
                 $mailParams = [
-                    'view' => $view,
-                    'recipient' => $this->mailer->getSender(),
+                    'template' => 'Email/new_nonprofit_notice.html.twig',
+                    'context' => ['npo' => $org],
+                    'recipient' => $recipient->getEmail(),
                     'subject' => 'New Nonprofit Registration',
                 ];
 
@@ -426,14 +428,14 @@ class RegistrationController extends AbstractController
 
             $rep->setReplacementStatus('Pending');
 
-            $view = $this->renderView('Email/staff_replacement.html.twig', [
-                'replacement' => $replacement,
-                'nonprofit' => $nonprofit,
-                'token' => $token,
-                'expires' => $expiresAt,
-            ]);
             $mailParams = [
-                'view' => $view,
+                'template' => 'Email/staff_replacement.html.twig',
+                'context' => [
+                    'replacement' => $replacement,
+                    'nonprofit' => $nonprofit,
+                    'token' => $token,
+                    'expires' => $expiresAt,
+                ],
                 'recipient' => $email,
                 'subject' => $nonprofit->getOrgname() . ' staff replacement',
             ];

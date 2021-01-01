@@ -74,13 +74,12 @@ class VolunteerRegistrationControllerTest extends WebTestCase
         $form['user[skills]'][0]->tick();
         $this->client->submit($form);
 
-        $mailCollector = $this->client->getProfile()->getCollector('swiftmailer');
+        $this->assertResponseRedirects();
 
-        $this->assertSame(1, $mailCollector->getMessageCount());
-        $collectedMessages = $mailCollector->getMessages();
-        $message = $collectedMessages[0];
+        $this->assertEmailCount(1);
+        $email = $this->getMailerMessage(0);
 
-        $this->assertStringContainsString('you will begin to receive emails', $message->getBody());
+        $this->assertStringContainsString('you will begin to receive emails', $email->getHtmlBody());
     }
 
     private function volunteerRegistration()

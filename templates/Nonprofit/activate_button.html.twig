@@ -1,10 +1,10 @@
-{% set url = ea_url().currentPageReferrer %}
+{#{% set url = ea_url().currentPageReferrer %}#}
 {% if not field.value %}
     <a class="btn btn-sm btn-success" 
-       href="{{ path('status', {'id':entity.primaryKeyValue, 'route':url}) }}">
+       href="{{ path('status', {'id':entity.primaryKeyValue}) }}">
         Activate</a>
 {% else %}
     <a class="btn btn-sm btn-danger" 
-       href="{{ path('status', {'id':entity.primaryKeyValue, 'route':url}) }}">
+       href="{{ path('status', {'id':entity.primaryKeyValue}) }}">
         Deactivate</a>
 {% endif %}

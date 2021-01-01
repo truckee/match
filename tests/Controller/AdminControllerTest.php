@@ -62,13 +62,12 @@ class AdminControllerTest extends WebTestCase
     {
         $this->client->followRedirects(false);
         $this->client->clickLink('Activate');
-        $mailCollector = $this->client->getProfile()->getCollector('swiftmailer');
+        $this->assertResponseRedirects();
 
-        $this->assertSame(1, $mailCollector->getMessageCount());
-        $collectedMessages = $mailCollector->getMessages();
-        $message = $collectedMessages[0];
+        $this->assertEmailCount(1);
+        $email = $this->getMailerMessage(0);
 
-        $this->assertStringContainsString('You will now be able post opportunities', $message->getBody());
+        $this->assertStringContainsString('You will now be able post opportunities', $email->getHtmlBody());
     }
 
     public function testLockAndUnlockUser()
@@ -113,12 +112,11 @@ class AdminControllerTest extends WebTestCase
             'user[email]' => 'ugar@bogus.info'
         ]);
 
-        $mailCollector = $this->client->getProfile()->getCollector('swiftmailer');
+        $this->assertResponseRedirects();
 
-        $this->assertSame(1, $mailCollector->getMessageCount());
-        $collectedMessages = $mailCollector->getMessages();
-        $message = $collectedMessages[0];
-        $body = $message->getBody();
+        $this->assertEmailCount(1);
+        $email = $this->getMailerMessage(0);
+        $body = $email->getHtmlBody();
         $pos = strpos($body, '">link') - 32;
         $token = substr($body, $pos, 32);
 
@@ -158,16 +156,15 @@ class AdminControllerTest extends WebTestCase
             'user[email]' => 'startrek@bogus.info'
         ]);
 
-        $mailCollector = $this->client->getProfile()->getCollector('swiftmailer');
+        $this->assertResponseRedirects();
 
-        $this->assertSame(1, $mailCollector->getMessageCount());
-        $collectedMessages = $mailCollector->getMessages();
-        $message = $collectedMessages[0];
+        $this->assertEmailCount(1);
+        $email = $this->getMailerMessage(0);
 
-        $this->assertStringContainsString('You are invited to be an admin user', $message->getBody());
+        $this->assertStringContainsString('You are invited to be an admin user', $email->getHtmlBody());
 
         $this->client->followRedirects(true);
-        $body = $message->getBody();
+        $body = $email->getHtmlBody();
         $pos = strpos($body, '">link') - 32;
         $token = substr($body, $pos, 32);
         $this->client->request('GET', '/register/confirm/' . $token);
@@ -186,13 +183,13 @@ class AdminControllerTest extends WebTestCase
     {
         $this->client->followRedirects(false);
         $this->client->request('GET', '/register/confirm/whoami');
-        $mailCollector = $this->client->getProfile()->getCollector('swiftmailer');
 
-        $this->assertSame(1, $mailCollector->getMessageCount());
-        $collectedMessages = $mailCollector->getMessages();
-        $message = $collectedMessages[0];
+        $this->assertResponseRedirects();
 
-        $this->assertStringContainsString('has just failed due to it having expired', $message->getBody());
+        $this->assertEmailCount(1);
+        $email = $this->getMailerMessage(0);
+
+        $this->assertStringContainsString('has just failed due to it having expired', $email->getHtmlBody());
     }
 
     public function testRegisterNewAdmin() //mynameis

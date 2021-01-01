@@ -104,11 +104,15 @@ class AdminController extends AbstractController
     }
 
     /**
-     * @Route("/admin/switch/{class}/{field}/{id}", name="admin_switch")
+     * @Route("/admin/switch/{src}", name="admin_switch")
      */
-    public function switch($class, $field, $id)
+    public function switch($src)
     {
-//        dd($class);
+        //'src' = class~'-'~name~'-'~id
+        $param = explode('-', $src);
+        $class = $param[0];
+        $field = $param[1];
+        $id = $param[2];
         if ('Person' === $class) {
             $class = $this->userSvc->roleConverter($id);
         }

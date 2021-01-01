@@ -18,6 +18,7 @@ use Doctrine\ORM\EntityManagerInterface;
 
 class ExpirationNoticeService
 {
+
     private $em;
 
     public function __construct(EntityManagerInterface $em)
@@ -37,15 +38,14 @@ class ExpirationNoticeService
                 'nonprofit' => $npo,
                 'replacementStatus' => 'Replace',
             ]);
-            $view = 'Email/expiration_notice.html.twig';
-            $context = ['opp' => $item, 'staff' => $rep,];
             $mailParams = [
-                'view' => $view,
-                'context' => $context,
+                'template' => 'Email/expiration_notice.html.twig',
+                'context' => ['opp' => $item, 'staff' => $rep,],
                 'recipient' => $rep->getEmail(),
                 'subject' => 'Expiring opportunity',
             ];
             $mailer->appMailer($mailParams);
         }
     }
+
 }

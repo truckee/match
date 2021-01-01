@@ -11,7 +11,6 @@
 
 namespace App\Services;
 
-use App\Entity\Nonprofit;
 use App\Entity\Person;
 use App\Services\EmailerService;
 use Doctrine\ORM\EntityManagerInterface;
@@ -47,14 +46,14 @@ class AdminServices
         if (false === $status) {
             $rep->setLocked(false);
             $rep->setEnabled(true);
-            $view = $this->twig->render('Email/nonprofit_activated.html.twig', [
-                'npo' => $npo,
-                'staff' => $rep,
-            ]);
             $mailParams = [
-                'view' => $view,
+                'template' => 'Email/nonprofit_activated.html.twig',
                 'recipient' => $rep->getEmail(),
                 'subject' => 'Nonprofit activated!',
+                'context' => [
+                    'npo' => $npo,
+                    'staff' => $rep,
+                ]
             ];
 
             $this->emailSvc->appMailer($mailParams);
