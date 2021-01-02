@@ -36,6 +36,8 @@ class OppEmailTest extends TestCase
         $vol3 = new Person();
         $vol3->setFname('C');
         $vol3->setEmail('C@d.com');
+        $adm = new Person();
+        $adm->setEmail('q@anon.com');
         $volunteers = [$vol1, $vol2, $vol3];
         $opp = new Opportunity();
         $opp->getOppname('D');
@@ -45,7 +47,9 @@ class OppEmailTest extends TestCase
         $repo->expects($this->any())
                 ->method('find')
                 ->willReturn($vol1);
-
+        $repo->expects($this->once())
+                ->method('findOneBy')
+                ->willReturn($adm);
         $objectManager = $this->createMock(EntityManagerInterface::class);
         $objectManager->expects($this->any())
                 ->method('getRepository')

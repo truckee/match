@@ -38,7 +38,7 @@ class NewOppEmailService
         foreach ($volunteers as $id) {
             $person = $this->em->getRepository(Person::class)->find($id);
             $mailParams = [
-                'view' => 'Email/volunteer_opportunities.html.twig',
+                'template' => 'Email/volunteer_opportunities.html.twig',
                 'context' => ['fname' => $person->getFname(), 'opportunity' => $opp,],
                 'recipient' => $person->getEmail(),
                 'subject' => 'New volunteer opportunity',
@@ -52,7 +52,7 @@ class NewOppEmailService
         $recipient = $this->em->getRepository(Person::class)->findOneBy(['mailer' => true]);
 
         $mailParams = [
-            'view' => 'Email/opportunity_email_report.html.twig',
+            'template' => 'Email/opportunity_email_report.html.twig',
             'context' => ['nVolunteers' => $nVolunteers, 'opportunity' => $opp,],
             'recipient' => $recipient->getEmail(),
             'subject' => 'Volunteer opportunities email report',

@@ -35,7 +35,8 @@ class AdminCrudController extends AbstractCrudController
                         ->setPageTitle(Crud::PAGE_EDIT, 'Edit %entity_name%')
                         ->setHelp('index', 'Mailer is designated recipient and sender for all automated email')
                         ->setDefaultSort(['sname' => 'ASC', 'fname' => 'ASC'])
-                        ->setSearchFields(['id', 'roles', 'email', 'fname', 'sname', 'confirmationToken']);
+                        ->setSearchFields(['id', 'roles', 'email', 'fname', 'sname', 'confirmationToken'])
+        ;
     }
 
     public function configureActions(Actions $actions): Actions

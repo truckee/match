@@ -209,10 +209,8 @@ class AdminControllerTest extends WebTestCase
 
     public function testEnableDisableFails()
     {
-        $crawler = $this->client->clickLink('Admin');
-        $switches = $crawler->filter('div.custom-control.custom-switch');
-        $text = $switches->first()->text();
-        $this->client->clickLink($text);
+        $this->client->clickLink('Admin');
+        $this->client->clickLink('Switchenabled');
 
         $this->assertStringContainsString('Benny Borko cannot be disabled', $this->client->getResponse()->getContent());
     }
