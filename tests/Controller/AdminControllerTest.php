@@ -270,9 +270,21 @@ class AdminControllerTest extends WebTestCase
     public function testAdminMailer()
     {
         $this->client->clickLink('Admin');
-        $this->client->clickLink('Switchmailer');
+//        $this->client->clickLink('Switchmailer');
+//
+//        $this->assertStringContainsString('change', $this->client->getResponse()->getContent());
 
-        $this->assertStringContainsString('change', $this->client->getResponse()->getContent());
+        $this->client->request('GET', '/admin/switch/Person-mailer-5');
+
+        $this->assertStringContainsString('No change made', $this->client->getResponse()->getContent());
+
+        $this->client->request('GET', '/admin/switch/Person-mailer-7');
+
+        $this->assertStringContainsString('Disabled admins cannot be mailer', $this->client->getResponse()->getContent());
+
+        $this->client->request('GET', '/admin/switch/Person-mailer-6');
+
+        $this->assertStringContainsString('Mailer status changed', $this->client->getResponse()->getContent());
     }
 
     public function testSkillAdd()

@@ -41,10 +41,6 @@ class PersonService
 
     public function switchFns($class, $id, $field)
     {
-        if ('Person' === $class) {
-            $class = $this->userSvc->roleConverter($id);
-        }
-
         switch ($class):
             case 'Admin':
                 if ('mailer' === $field) {
@@ -101,7 +97,7 @@ class PersonService
 
         $entities = $this->em->getRepository(Person::class)->findBy(['enabled' => true]);
         foreach ($entities as $admin) {
-            if ((int) $id === $admin->getId()) {
+            if ((int) $id === $admin->getId() && false === $admin->getMailer()) {
                 $admin->setMailer(true);
             } else {
                 $admin->setMailer(false);

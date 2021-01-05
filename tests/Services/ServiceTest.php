@@ -13,8 +13,9 @@ namespace App\Tests\Services;
 
 use App\Entity\Opportunity;
 use App\Entity\Person;
-use App\Services\NewOppEmailService;
 use App\Services\EmailerService;
+use App\Services\NewOppEmailService;
+use App\Services\PersonService;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ObjectRepository;
 use PHPUnit\Framework\TestCase;
@@ -22,8 +23,13 @@ use PHPUnit\Framework\TestCase;
 /**
  * @group Services
  */
-class OppEmailTest extends TestCase
+class ServiceTest extends TestCase
 {
+
+//    public function setUp()
+//    {
+//        $this->svc = new PersonService($em);
+//    }
 
     public function testOppEmail()
     {
@@ -50,12 +56,12 @@ class OppEmailTest extends TestCase
         $repo->expects($this->once())
                 ->method('findOneBy')
                 ->willReturn($adm);
-        $objectManager = $this->createMock(EntityManagerInterface::class);
-        $objectManager->expects($this->any())
+        $entityManager = $this->createMock(EntityManagerInterface::class);
+        $entityManager->expects($this->any())
                 ->method('getRepository')
                 ->willReturn($repo);
 
-        $oppEmail = new NewOppEmailService($objectManager, 'e@f.com');
+        $oppEmail = new NewOppEmailService($entityManager, 'e@f.com');
         $oppVols = $oppEmail->newOppEmail($mailer, $volunteers, $opp);
         $this->assertIsArray($oppVols);
 
