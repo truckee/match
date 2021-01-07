@@ -24,6 +24,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 
 /**
  * @Route("/register")
@@ -389,18 +390,17 @@ class RegistrationController extends AbstractController
     }
 
     /**
-     * @Route("/replaceStaff/{id}", name="replace_staff")
+     * @Route("/replaceStaff/{rep}", name="replace_staff")
+     * @ParamConverter("rep", class="App:Person")
      */
-    public function replaceStaff(Request $request, $id)
+    public function replaceStaff(Request $request, $rep)
     {
-        if (null === $id || !$this->isGranted('ROLE_ADMIN')) {
+        if (null === $rep || !$this->isGranted('ROLE_ADMIN')) {
             return $this->redirectToRoute('home_page');
         }
 
         $replacement = new Person();
         $replacement->addRole('ROLE_REP');
-        $em = $this->getDoctrine()->getManager();
-        $rep = $em->getRepository(Person::class)->find($id);
         $nonprofit = $rep->getNonprofit();
 
         $header = ['center' => ''];
@@ -414,6 +414,7 @@ class RegistrationController extends AbstractController
 
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
+            $em = $this->getDoctrine()->getManager();
             $email = $request->request->get('user')['email'];
             $token = md5(uniqid(rand(), true));
             $expiresAt = date_add(new \DateTime(), new \DateInterval('P7D'));

@@ -2,7 +2,7 @@
 {% set class = 'badge badge-warning' %}
 {% if status == 'Replace' %}
     <a class="{{ class }}" 
-       href="{{ path('replace_staff', {'id':entity.instance.id}) }}">
+       href="{{ path('replace_staff', {'rep':entity.instance.id}) }}">
         {{ status }}</a>
     {% else %}
         {% if status == 'Replacement' %}

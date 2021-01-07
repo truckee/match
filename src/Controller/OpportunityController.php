@@ -21,6 +21,7 @@ use App\Services\TemplateService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 
 /**
  * @Route("/opportunity")
@@ -80,17 +81,16 @@ class OpportunityController extends AbstractController
     }
 
     /**
-     * @Route("/edit/{id}", name = "opp_edit")
+     * @Route("/edit/{opportunity}", name = "opp_edit")
+     * @ParamConverter("opportunity", class="App:Opportunity")
      */
-    public function editOpp(Request $request, $id = null)
+    public function editOpp(Request $request, $opportunity = null)
     {
         $user = $this->getUser();
-        if (null === $user || !$user->hasRole('ROLE_REP') || null === $id) {
+        if (null === $user || !$user->hasRole('ROLE_REP') || null === $opportunity) {
             return $this->redirectToRoute('home_page');
         }
 
-        $em = $this->getDoctrine()->getManager();
-        $opportunity = $em->getRepository(Opportunity::class)->find($id);
         $nonprofit = $opportunity->getNonprofit();
         $form = $this->createForm(OpportunityType::class, $opportunity);
         $oppView = $this->templateSvc->oppView();
@@ -98,6 +98,7 @@ class OpportunityController extends AbstractController
         $entity_form = $oppView['entityForm'];
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
+            $em = $this->getDoctrine()->getManager();
             $em->persist($opportunity);
             $em->flush();
             $this->addFlash(
