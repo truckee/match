@@ -24,7 +24,6 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 
 /**
  * @Route("/register")
@@ -391,9 +390,8 @@ class RegistrationController extends AbstractController
 
     /**
      * @Route("/replaceStaff/{rep}", name="replace_staff")
-     * @ParamConverter("rep", class="App:Person")
      */
-    public function replaceStaff(Request $request, $rep)
+    public function replaceStaff(Request $request, Person $rep)
     {
         if (null === $rep || !$this->isGranted('ROLE_ADMIN')) {
             return $this->redirectToRoute('home_page');

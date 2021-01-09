@@ -21,7 +21,6 @@ use App\Services\TemplateService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 
 /**
  * @Route("/opportunity")
@@ -82,9 +81,8 @@ class OpportunityController extends AbstractController
 
     /**
      * @Route("/edit/{opportunity}", name = "opp_edit")
-     * @ParamConverter("opportunity", class="App:Opportunity")
      */
-    public function editOpp(Request $request, $opportunity = null)
+    public function editOpp(Request $request, Opportunity $opportunity = null)
     {
         $user = $this->getUser();
         if (null === $user || !$user->hasRole('ROLE_REP') || null === $opportunity) {

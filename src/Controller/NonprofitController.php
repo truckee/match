@@ -15,7 +15,6 @@ use App\Entity\Nonprofit;
 use App\Entity\Person;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 
 /**
  * @Route("/nonprofit")
@@ -33,9 +32,8 @@ class NonprofitController extends AbstractController
 
     /**
      * @Route("/view/{npo}", name = "npo_view")
-     * @ParamConverter("npo", class="App:Nonprofit")
      */
-    public function view($npo)
+    public function view(Nonprofit $npo)
     {
         if (!is_object($npo)) {
             $this->addFlash('warning', 'Nonprofit object not found');

@@ -23,7 +23,6 @@ use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Router\CrudUrlGenerator;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 
 class AdminController extends AbstractController
 {
@@ -60,9 +59,8 @@ class AdminController extends AbstractController
      * Activates or deactivates a nonprofit
      *
      * @Route("/admin/status/{id}", name="status")
-     * @ParamConverter("npo", class="App:Nonprofit")
      */
-    public function statusChange($npo = null)
+    public function statusChange(Nonprofit $npo = null)
     {
         $url = $this->crudUrlGenerator
                 ->build()
