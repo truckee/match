@@ -9,7 +9,7 @@
 
 //src/insert_path_here/UniquePasswordTest.php
 
-namespace App\Tests\Validator;
+namespace Tests\Validator;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 

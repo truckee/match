@@ -9,7 +9,7 @@
 
 //src/path_here/RegistrationEmailTest.php
 
-namespace App\Tests\Email;
+namespace tests\Email;
 
 use App\Services\EmailerService;
 use PHPUnit\Framework\TestCase;

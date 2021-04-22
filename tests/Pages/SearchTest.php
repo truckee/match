@@ -9,7 +9,7 @@
 
 //tests/Pages/SearchTest.php
 
-namespace App\Tests\Pages;
+namespace Tests\Pages;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
@@ -18,12 +18,13 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
  */
 class SearchTest extends WebTestCase
 {
+
     public function setup(): void
     {
         $this->client = $this->createClient();
         $this->client->followRedirects();
     }
-    
+
     public function testTargetedSearch()
     {
         $crawler = $this->client->request('GET', '/opportunity/search');
@@ -37,7 +38,7 @@ class SearchTest extends WebTestCase
 
         $this->assertStringContainsString('Turkey Fund', $this->client->getResponse()->getContent());
     }
-    
+
     public function testFocusSearch()
     {
         $crawler = $this->client->request('GET', '/opportunity/search');
@@ -49,7 +50,7 @@ class SearchTest extends WebTestCase
 
         $this->assertStringContainsString('Turkey Fund', $this->client->getResponse()->getContent());
     }
-    
+
     public function testFailedFocusSearch()
     {
         $crawler = $this->client->request('GET', '/opportunity/search');
@@ -60,7 +61,7 @@ class SearchTest extends WebTestCase
 
         $this->assertStringContainsString('No matching opportunities found', $this->client->getResponse()->getContent());
     }
-    
+
     public function testSkillSearch()
     {
         $crawler = $this->client->request('GET', '/opportunity/search');
@@ -72,7 +73,7 @@ class SearchTest extends WebTestCase
 
         $this->assertStringContainsString('Turkey Fund', $this->client->getResponse()->getContent());
     }
-    
+
     public function testFailedSkillSearch()
     {
         $crawler = $this->client->request('GET', '/opportunity/search');
@@ -83,12 +84,14 @@ class SearchTest extends WebTestCase
 
         $this->assertStringContainsString('No matching opportunities found', $this->client->getResponse()->getContent());
     }
-    
+
     public function testSearch()
     {
         $this->client->request('GET', '/opportunity/search');
         $this->client->submitForm('Search');
+        file_put_contents('g:/documents/response.html', $this->client->getResponse()->getContent());
 
         $this->assertStringContainsString('Turkey Fund', $this->client->getResponse()->getContent());
     }
+
 }

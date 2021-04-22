@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>{% block title %}Welcome!{% endblock %}</title>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8">        
@@ -11,15 +10,14 @@
     </head>
     <body>
         {% block navTop %}
-                {% include 'Default/top_menu.html.twig' %}
         {% endblock %}
         <div class="container">
-            <div>
-                
-            </div>
-            {% block nav %}
-                {% include 'Default/main_menu.html.twig' %}
-            {% endblock nav %}
+            {% if is_full_view() %}
+                {% block nav_full %}
+                    {% include 'Default/top_menu.html.twig' %}
+                    {% include 'Default/main_menu.html.twig' %}
+                {% endblock nav_full %}
+            {% endif %}
             {% for label, messages in app.flashes %}
                 {% for message in messages %}
                     <div class="alert alert-{{label}}">
@@ -28,9 +26,13 @@
                 {% endfor %}
             {% endfor %}
             {% block body %}{% endblock %}
-
+            {% if is_mobile_view() %}
+                {% block nav_mobile %}
+                    {% include 'Default/mobile_menu.html.twig' %}
+                    {% include 'Default/top_menu.html.twig' %}
+                {% endblock nav_mobile %}
+            {% endif %}
         </div>
-
         {% block javascripts %}
             {{ encore_entry_script_tags('app') }}
         {% endblock %}

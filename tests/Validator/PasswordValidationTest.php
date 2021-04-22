@@ -9,7 +9,7 @@
 
 //tests/Validator/PasswordValidationTest.php
 
-namespace App\Tests\Validator;
+namespace Tests\Validator;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 

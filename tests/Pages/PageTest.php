@@ -9,7 +9,7 @@
 
 //src/tests/Pages/PageTest.php
 
-namespace App\Tests\Pages;
+namespace Tests\Pages;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 

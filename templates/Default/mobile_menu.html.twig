@@ -1,0 +1,47 @@
+<nav class="navbar navbar-expand-md navbar-light text-right" style="font-size: 1.2rem; font-weight: bold;">
+    <a class="navbar-brand" href="{{ path('home_page') }}"><img src="{{ asset('build/images/pseudo_logo.jpg') }}" alt="Community Foundation of Western Nevada"></a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item">
+                <a class="nav-link" href="{{ path('home_page') }}">Home</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{{ path('vol_index') }}">Volunteer</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{{ path('nonprofit_index') }}">Nonprofits</a>
+            </li>
+            {% if is_granted('ROLE_ADMIN') %}
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarAdmin" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Admin
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarAdmin">
+                        <a class="dropdown-item" href="{{ path('dashboard') }}">Dashboard</a>
+                        <a class="dropdown-item" href="{{ path('ea_admin') }}">Options</a>
+                        {% if is_granted('ROLE_SUPER_ADMIN') %}
+                            <a class="dropdown-item" href="{{ path('register_person', {'type':'admin'}) }}">Invite new admin</a>
+                        {% endif %}
+                    </div>
+                </li>
+            {% endif %}
+            {% if app.user %}
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarAdmin" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Account
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarAccount">
+                        <a class="dropdown-item" href="{{ path('reset_password') }}">Change password</a>
+                        <a class="dropdown-item" href="{{ path('profile_person') }}">Edit personal profile</a>
+                        {% if is_granted("ROLE_REP") and not is_granted('ROLE_ADMIN')%}
+                            <a class="dropdown-item" href="{{ path('profile_nonprofit') }}">Edit nonprofit profile</a>
+                        {% endif %}
+                    </div>
+                </li>
+            {% endif %}
+        </ul>
+    </div>
+</nav>

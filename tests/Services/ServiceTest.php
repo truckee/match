@@ -9,7 +9,7 @@
 
 //tests/Services/OppEmailTest.php
 
-namespace App\Tests\Services;
+namespace Tests\Services;
 
 use App\Entity\Opportunity;
 use App\Entity\Person;

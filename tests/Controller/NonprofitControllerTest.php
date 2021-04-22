@@ -9,7 +9,7 @@
 
 //tests/Controller/NonprofitControllerTest.php
 
-namespace App\Tests\Controller;
+namespace Tests\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;

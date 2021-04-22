@@ -9,7 +9,7 @@
 
 //tests/Controller/RegistrationTest.php
 
-namespace App\Tests\Controller;
+namespace Tests\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 

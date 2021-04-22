@@ -9,7 +9,7 @@
 
 //tests/Controller/NonprofitRegistrationControllerTest.php
 
-namespace App\Tests\Controller;
+namespace Tests\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 

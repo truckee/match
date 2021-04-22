@@ -9,7 +9,7 @@
 
 //tests/Command/CreateAdminTest.php
 
-namespace App\Tests\Command;
+namespace Tests\Command;
 
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
