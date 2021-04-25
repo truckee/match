@@ -1,4 +1,21 @@
 {
+    "api-platform/api-pack": {
+        "version": "v1.3.0"
+    },
+    "api-platform/core": {
+        "version": "2.5",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "master",
+            "version": "2.5",
+            "ref": "a93061567140e386f107be75340ac2aee3f86cbf"
+        },
+        "files": [
+            "./config/packages/api_platform.yaml",
+            "./config/routes/api_platform.yaml",
+            "./src/Entity/.gitignore"
+        ]
+    },
     "cmen/google-charts-bundle": {
         "version": "3.1.0"
     },
@@ -120,6 +137,9 @@
     "egulias/email-validator": {
         "version": "2.1.13"
     },
+    "fig/link-util": {
+        "version": "1.2.0"
+    },
     "friendsofphp/proxy-manager-lts": {
         "version": "v1.0.3"
     },
@@ -140,6 +160,18 @@
     },
     "monolog/monolog": {
         "version": "1.25.1"
+    },
+    "nelmio/cors-bundle": {
+        "version": "1.5",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "master",
+            "version": "1.5",
+            "ref": "6bea22e6c564fba3a1391615cada1437d0bde39c"
+        },
+        "files": [
+            "./config/packages/nelmio_cors.yaml"
+        ]
     },
     "netbull/mobile-detect-bundle": {
         "version": "v5.1.5"
@@ -609,6 +641,9 @@
     },
     "webmozart/assert": {
         "version": "1.5.0"
+    },
+    "willdurand/negotiation": {
+        "version": "3.0.0"
     },
     "zendframework/zend-code": {
         "version": "3.3.2"

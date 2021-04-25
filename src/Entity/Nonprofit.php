@@ -11,6 +11,7 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiResource;
 use App\Entity\Focus;
 use App\Entity\Opportunity;
 use App\Entity\Person;
@@ -23,6 +24,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 /**
  * Nonprofit
  *
+ * @ApiResource()
  * @ORM\Table(name="nonprofit")
  * @ORM\Entity
  * @UniqueEntity(fields="ein", message="Nonprofit is already registered")
