@@ -16,23 +16,23 @@ use App\Entity\Person;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 
-/**
- * @Route("/nonprofit")
- */
+#[Route('/nonprofit')]
 class NonprofitController extends AbstractController
 {
 
     /**
-     * @Route("/", name="nonprofit_index")
+     * @
      */
+    #[Route('/', name: 'nonprofit_index')]
     public function index()
     {
         return $this->render('Nonprofit/index.html.twig');
     }
 
     /**
-     * @Route("/view/{npo}", name = "npo_view")
+     * @
      */
+    #[Route("/view/{npo}", name: "npo_view")]
     public function view(Nonprofit $npo)
     {
         if (!is_object($npo)) {
@@ -40,6 +40,8 @@ class NonprofitController extends AbstractController
 
             return $this->redirectToRoute('home_page');
         }
+
+        $em = $this->getDoctrine()->getManager();
         $rep = $em->getRepository(Person::class)->findOneBy(['nonprofit' => $npo, 'replacementStatus' => 'Replace']);
 
         return $this->render('Nonprofit/nonprofit_view.html.twig', [
